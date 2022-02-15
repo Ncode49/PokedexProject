@@ -16,12 +16,12 @@ export const PokemonCard = () => {
       {pokemonCard && (
         <figure>
           <figcaption>
-            <p>Numero: {pokemonCard.id}</p>
-            <h2>{pokemonCard.name}</h2>
+            <p className="">Numero3: 4{pokemonCard.id}</p>
+            <h2 className="">{pokemonCard.name}</h2>
             <img src={pokemonCard.sprite} alt={pokemonCard.name} />
             <div>
               {pokemonCard.types.map((type) => (
-                <span>{type}</span>
+                <span key={type}>{type}</span>
               ))}
             </div>
           </figcaption>
