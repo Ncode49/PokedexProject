@@ -1,11 +1,9 @@
-import { useEffect } from 'react'
 import { PokemonCard } from './components/PokemonCard'
-import { createCard } from './services/retrieve-pokemonlist'
-
+import './index'
 export const App = () => {
   return (
-    <>
+    <div className="">
       <PokemonCard />
-    </>
+    </div>
   )
 }
