@@ -12,5 +12,16 @@ export const PokemonListCards = () => {
     })()
   }, [])
 
-  return <div></div>
+  return (
+    <div>
+      {pokemonCard?.map((props) => (
+        <PokemonCard
+          id={props.id}
+          name={props.name}
+          types={props.types}
+          sprite={props.sprite}
+        />
+      ))}
+    </div>
+  )
 }

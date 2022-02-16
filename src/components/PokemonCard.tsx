@@ -1,10 +1,10 @@
-import { PokemonCard as pokemonDetailspokemonDetails } from '../services/PokemonType'
+import { PokemonCard as PokemonCardProps } from '../services/PokemonType'
 
 const theme: { [key: string]: string } = {
   grass: 'bg-[#9bcc50]',
 }
 
-export const PokemonCard = (pokemonDetails: pokemonDetailspokemonDetails) => {
+export const PokemonCard = (pokemonDetails: PokemonCardProps) => {
   return (
     <>
       {pokemonDetails ? (
