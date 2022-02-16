@@ -4,17 +4,17 @@ const theme: { [key: string]: string } = {
   grass: 'bg-[#9bcc50]',
 }
 
-export const PokemonCard = (pokemonDetails: PokemonCardProps) => {
+export const PokemonCard = ({ id, types, name, sprite }: PokemonCardProps) => {
   return (
     <>
-      {pokemonDetails ? (
+      {id ? (
         <figure>
           <figcaption>
-            <p>Numero3: 4{pokemonDetails.id}</p>
-            <h2>{pokemonDetails.name}</h2>
-            <img src={pokemonDetails.sprite} alt={pokemonDetails.name} />
+            <p>No{id}</p>
+            <h2>{name}</h2>
+            <img src={sprite} alt={name} />
             <div>
-              {pokemonDetails.types.map((type) => (
+              {types.map((type) => (
                 <span className={theme[type]} key={type}>
                   {type}
                 </span>
