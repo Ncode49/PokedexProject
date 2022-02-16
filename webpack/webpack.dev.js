@@ -5,6 +5,8 @@ module.exports = {
   mode: 'development',
   devtool: 'cheap-module-source-map',
   devServer: {
+    // for react router
+    historyApiFallback: true,
     hot: true,
     open: true,
   },
