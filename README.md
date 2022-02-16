@@ -20,3 +20,5 @@ yarn test -- --watchAll
 ### Components (react components)
 
 ### services (data API Rest fetch)
+
+// separer les données recus du traitement des données en deux fonctions

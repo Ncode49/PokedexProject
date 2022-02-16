@@ -1,31 +1,29 @@
-import { useEffect, useState } from 'react'
-import { PokemonCard as PokemonCardProps } from '../services/PokemonType'
-import { createCard } from '../services/retrieve-pokemonlist'
+import { PokemonCard as pokemonDetailspokemonDetails } from '../services/PokemonType'
 
-export const PokemonCard = () => {
-  const [pokemonCard, setPokemonCart] = useState<PokemonCardProps | undefined>()
+const theme: { [key: string]: string } = {
+  grass: 'bg-[#9bcc50]',
+}
 
-  useEffect(() => {
-    ;(async () => {
-      const data = await createCard('venusaur')
-      setPokemonCart(data)
-    })()
-  }, [])
+export const PokemonCard = (pokemonDetails: pokemonDetailspokemonDetails) => {
   return (
     <>
-      {pokemonCard && (
+      {pokemonDetails ? (
         <figure>
           <figcaption>
-            <p className="">Numero3: 4{pokemonCard.id}</p>
-            <h2 className="">{pokemonCard.name}</h2>
-            <img src={pokemonCard.sprite} alt={pokemonCard.name} />
+            <p>Numero3: 4{pokemonDetails.id}</p>
+            <h2>{pokemonDetails.name}</h2>
+            <img src={pokemonDetails.sprite} alt={pokemonDetails.name} />
             <div>
-              {pokemonCard.types.map((type) => (
-                <span key={type}>{type}</span>
+              {pokemonDetails.types.map((type) => (
+                <span className={theme[type]} key={type}>
+                  {type}
+                </span>
               ))}
             </div>
           </figcaption>
         </figure>
+      ) : (
+        'Pas de Pokémon'
       )}
     </>
   )
