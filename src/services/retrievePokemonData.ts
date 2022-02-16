@@ -49,7 +49,7 @@ export const createCards = async (
   }
 }
 
-const createOneCard = (pokemonDTO: PokemonDTO): PokemonCard => {
+export const createOneCard = (pokemonDTO: PokemonDTO): PokemonCard => {
   return {
     id: pokemonDTO.id,
     types: getTypePokemon(pokemonDTO.types),

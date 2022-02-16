@@ -85,7 +85,7 @@ export interface PokemonSimpleDTO {
   url: string
 }
 
-// url type/i
+// type/i is an array of pokemon name + url
 export interface PokemonTypeDTO {
   pokemon: Array<PokemonDataDTO>
 }

@@ -1,12 +1,5 @@
-import { Outlet } from 'react-router-dom'
-import { PokemonCard } from './components/PokemonCard'
-import { PokemonListCards } from './components/PokemonListCards'
 import './index'
+import { PokedexHome } from './pages/PokedexHome'
 export const App = () => {
-  return (
-    <div>
-      <PokemonListCards />
-      <Outlet />
-    </div>
-  )
+  return <PokedexHome />
 }

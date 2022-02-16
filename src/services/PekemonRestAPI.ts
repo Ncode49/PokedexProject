@@ -3,6 +3,7 @@ import { PokemonDTO, PokemonPageDTO } from './PokemonAllDTO'
 export type PokemonName = string
 export type PokemonId = string
 export type Url = string
+export type TypePokemon = string
 export const getPokemonByName = async (
   pokemonName: PokemonName
 ): Promise<PokemonDTO | undefined> => {
@@ -17,7 +18,6 @@ export const getPokemonByName = async (
     return pokemon
   } catch (error) {
     console.error(error)
-    throw new Error('erreur inconnue')
   }
 }
 
@@ -35,11 +35,10 @@ export const getPokemonById = async (
     return pokemon
   } catch (error) {
     console.error(error)
-    throw new Error('erreur inconnue')
   }
 }
 
-// throw an error if fail
+// throw an error if fail url of a pokemon, fetch an PokemonDTO based on pokemon url
 const getPokemonByUrl = async (url: Url): Promise<PokemonDTO> => {
   try {
     const res = await fetch(url)
@@ -47,7 +46,7 @@ const getPokemonByUrl = async (url: Url): Promise<PokemonDTO> => {
     return pokemon
   } catch (error) {
     console.error(error)
-    throw new Error('erreur inconnue')
+    throw new Error('Erreur inconnue')
   }
 }
 
@@ -68,7 +67,7 @@ export const getPokemonChunk = async (
     const pokemon: PokemonPageDTO = await res.json()
     return pokemon.results.map((pokemon) => pokemon.url)
   } catch (error) {
-    throw new Error('erreur inconnue')
+    console.error(error)
   }
 }
 // display the  five pokemons cards
@@ -85,5 +84,17 @@ export const getPokemonChunkDetails = async (
     } catch (err) {
       console.error(err)
     }
+  }
+}
+
+// throw an error if fail url of a pokemon get a list of PokemonDTO based on an url
+export const getPokemonByUrls = async (
+  pokemonsUrl: Array<Url>
+): Promise<Array<PokemonDTO>> => {
+  try {
+    return Promise.all(pokemonsUrl.map((url) => getPokemonByUrl(url)))
+  } catch (error) {
+    console.error(error)
+    throw new Error('Erreur inconnue')
   }
 }
