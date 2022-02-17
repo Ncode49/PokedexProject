@@ -14,7 +14,7 @@ export const PokedexHome = () => {
     ;(async () => {
       const data = await createCards()
       // gauche undefined
-      setPokemonCards(data ?? [])
+      setPokemonCards(data)
     })()
   }, [])
   // once give => change the value of the listed pokemons

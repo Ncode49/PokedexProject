@@ -5,7 +5,7 @@ import { getPokemonTypeStats } from '../services/PekemonRestAPI'
 export const PokemonDetails = () => {
   useEffect(() => {
     ;(async () => {
-      const data = await getPokemonTypeStats('normal')
+      const data = await getPokemonTypeStats(['poison', 'normal'])
       console.log(data)
     })()
   }, [])

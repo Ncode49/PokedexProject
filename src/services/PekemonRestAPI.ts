@@ -108,8 +108,16 @@ const getPokemonStats = (pokemon: PokemonDTO) =>
 
 // fonction de filtrage
 // get stats from an pokemonDTO
-export const getPokemonTypeStats = async (type: TypePokemon) => {
-  const res = await getPokemonsType(type)
+export const getPokemonTypeStats = async (types: TypePokemon[]) => {
+  let res: PokemonDTO[] = []
+  console.log(types.length)
+  for (let i = 0; i < types.length; i++) {
+    let result = await getPokemonsType(types[i])
+    console.log(result.length)
+    res.push(...result)
+  }
+  console.log(res)
+
   // flatten all stats of pokemon
   const pokemonsStats = res
     .map((pokemon) => getPokemonStats(pokemon))

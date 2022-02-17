@@ -28,7 +28,7 @@ export const createCard = async (
     console.error(error)
   }
 }
-// getPokemonDails, pareil pour nom
+// cree une liste de cards
 export const createCards = async (
   limit: number = 20,
   offset: number = 0
