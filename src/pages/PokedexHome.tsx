@@ -3,7 +3,7 @@ import { PokemonListCards } from '../components/PokemonListCards'
 import { PokemonCard as PokemonCardProps } from '../services/PokemonType'
 import { SearchBar } from '../components/SearchBar'
 import { createCards, createOneCard } from '../services/retrievePokemonData'
-import { getPokemonByName } from '../services/PekemonRestAPI'
+import { getPokemonByName } from '../services/PokemonRestAPI'
 type PokemonSearch = string
 export const PokedexHome = () => {
   // list of pokemons a undefined si pas de pokemon

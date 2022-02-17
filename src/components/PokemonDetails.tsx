@@ -1,14 +1,33 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { getPokemonTypeStats } from '../services/PekemonRestAPI'
+import {
+  Abilities,
+  getPokemonDetails,
+  getPokemonTypeStats,
+  StatPokemon,
+} from '../services/retrievePokemonData'
+
+type PokemonDetailsType = {
+  id: number
+  name: string
+  sprite: string
+  height: number
+  weight: number
+  ability: Abilities
+  averageTypeStats: StatPokemon
+  stats: StatPokemon
+}
 // get the average types
 export const PokemonDetails = () => {
+  const { pokemonName } = useParams()
+  const [pokemonDetails, setPokemonDetails] = useState<PokemonDetailsType>()
   useEffect(() => {
     ;(async () => {
-      const data = await getPokemonTypeStats(['poison', 'normal'])
-      console.log(data)
+      if (pokemonName !== undefined) {
+        const data = await getPokemonDetails(pokemonName)
+        setPokemonDetails(data)
+      }
     })()
   }, [])
-  const { pokemonName } = useParams()
-  return <div>{pokemonName}</div>
+  return <div>{JSON.stringify(pokemonDetails)}</div>
 }
