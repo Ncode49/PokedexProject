@@ -6,10 +6,8 @@ import {
 import { PokemonDTO } from './PokemonAllDTO'
 import { PokemonCard, TypesPokemon } from './PokemonType'
 
-const getTypePokemon = (types: Array<any>): TypesPokemon => {
-  if (types.length == 1) return [types[0].type.name]
-  return [types[0].type.name, types[1].type.name]
-}
+const getTypePokemon = (types: Array<any>): TypesPokemon =>
+  types.map((type) => type.type.name)
 
 // given the name, we can create card in the display screen
 export const createCard = async (
@@ -32,7 +30,7 @@ export const createCard = async (
     throw new Error('erreur inconnue')
   }
 }
-
+// getPokemonDails, pareil pour nom
 export const createCards = async (
   limit: number = 20,
   offset: number = 0
@@ -40,20 +38,18 @@ export const createCards = async (
   try {
     const pokemons = await getPokemonChunkDetails(limit, offset)
 
-    if (pokemons) {
+    if (pokemons !== undefined) {
       return pokemons.map((pokemon) => createOneCard(pokemon))
     }
   } catch (error) {
-    console.log(error)
+    console.error(error)
     throw new Error('erreur inconnue')
   }
 }
-
-export const createOneCard = (pokemonDTO: PokemonDTO): PokemonCard => {
-  return {
-    id: pokemonDTO.id,
-    types: getTypePokemon(pokemonDTO.types),
-    sprite: pokemonDTO.sprites.front_default,
-    name: pokemonDTO.name,
-  }
-}
+// si une seule ligne, on peut le retourner directement avec les arrows functions
+export const createOneCard = (pokemonDTO: PokemonDTO): PokemonCard => ({
+  id: pokemonDTO.id,
+  types: getTypePokemon(pokemonDTO.types),
+  sprite: pokemonDTO.sprites.front_default,
+  name: pokemonDTO.name,
+})
