@@ -3,10 +3,10 @@ import {
   getPokemonChunkDetails,
   PokemonName,
 } from './PekemonRestAPI'
-import { PokemonDTO } from './PokemonAllDTO'
+import { PokemonDTO, TypeDTO } from './PokemonAllDTO'
 import { PokemonCard, TypesPokemon } from './PokemonType'
 
-const getTypePokemon = (types: Array<any>): TypesPokemon =>
+const getTypePokemon = (types: Array<TypeDTO>): TypesPokemon =>
   types.map((type) => type.type.name)
 
 // given the name, we can create card in the display screen
@@ -15,8 +15,7 @@ export const createCard = async (
 ): Promise<PokemonCard | undefined> => {
   try {
     const pokemon = await getPokemonByName(pokemonName)
-
-    if (pokemon) {
+    if (pokemon !== undefined) {
       let pokemonCard: PokemonCard = {
         id: pokemon.id,
         types: getTypePokemon(pokemon.types),
@@ -26,24 +25,21 @@ export const createCard = async (
       return pokemonCard
     }
   } catch (error) {
-    console.log(error)
-    throw new Error('erreur inconnue')
+    console.error(error)
   }
 }
 // getPokemonDails, pareil pour nom
 export const createCards = async (
   limit: number = 20,
   offset: number = 0
-): Promise<Array<PokemonCard> | undefined> => {
+): Promise<Array<PokemonCard>> => {
   try {
     const pokemons = await getPokemonChunkDetails(limit, offset)
-
-    if (pokemons !== undefined) {
-      return pokemons.map((pokemon) => createOneCard(pokemon))
-    }
+    // map an empty array will produce an empty array
+    return pokemons.map((pokemon) => createOneCard(pokemon))
   } catch (error) {
     console.error(error)
-    throw new Error('erreur inconnue')
+    return []
   }
 }
 // si une seule ligne, on peut le retourner directement avec les arrows functions

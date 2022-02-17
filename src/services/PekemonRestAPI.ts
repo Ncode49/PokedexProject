@@ -4,28 +4,20 @@ export type PokemonName = string
 export type PokemonId = string
 export type Url = string
 export type TypePokemon = string
+
+type OneStat = {
+  name: string
+  value: number
+}
+type StatAverage = {
+  [key: string]: number
+}
+
 export const getPokemonByName = async (
   pokemonName: PokemonName
 ): Promise<PokemonDTO | undefined> => {
   try {
     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`)
-    // no pokemon  so no cards
-    if (res.status == 404) {
-      console.log('Error 404')
-      return undefined
-    }
-    const pokemon: PokemonDTO = await res.json()
-    return pokemon
-  } catch (error) {
-    console.error(error)
-  }
-}
-
-export const getPokemonById = async (
-  pokemonId: PokemonId
-): Promise<PokemonDTO | undefined> => {
-  try {
-    const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
     // no pokemon  so no cards
     if (res.status == 404) {
       console.log('Error 404')
@@ -77,7 +69,7 @@ export const getPokemonChunk = async (
 export const getPokemonChunkDetails = async (
   limit: number = 20,
   offset: number = 0
-): Promise<Array<PokemonDTO> | undefined> => {
+): Promise<Array<PokemonDTO>> => {
   const pokemonChunk = await getPokemonChunk(limit, offset)
   // pokemon is an array of url
   if (pokemonChunk) {
@@ -87,6 +79,7 @@ export const getPokemonChunkDetails = async (
       console.error(err)
     }
   }
+  return []
 }
 
 export const getPokemonByUrls = async (
@@ -107,9 +100,60 @@ export const getPokemonsType = async (
   return getPokemonByUrls(urlPokemonType)
 }
 
+const getPokemonStats = (pokemon: PokemonDTO) =>
+  pokemon.stats.map((stat) => ({
+    name: stat.stat.name,
+    value: stat.base_stat,
+  }))
+
 // fonction de filtrage
 // get stats from an pokemonDTO
 export const getPokemonTypeStats = async (type: TypePokemon) => {
+  const res = await getPokemonsType(type)
+  // flatten all stats of pokemon
+  const pokemonsStats = res
+    .map((pokemon) => getPokemonStats(pokemon))
+    .reduce((a, b) => a.concat(b))
+  // groupby and get array of stats for each stats
+  const statsgroupBy = groupByValue(pokemonsStats, (i: OneStat) => i.name)
+
+  // return average key in an object
+  let statsAverage: StatAverage = {}
+  for (const key in statsgroupBy) {
+    statsAverage[key] = average(statsgroupBy[key])
+  }
+  return statsAverage
+}
+
+// group by keys generic here
+// Record<K,T> is an object with <key,value> values
+// getKey is a function that take an item and return its key
+export const groupBy = <T, K extends keyof any>(
+  list: T[],
+  getKey: (item: T) => K
+) =>
+  list.reduce((previous, currentItem) => {
+    const group = getKey(currentItem)
+    if (!previous[group]) previous[group] = []
+    previous[group].push(currentItem)
+    return previous
+  }, {} as Record<K, T[]>)
+
+const groupByValue = (list: OneStat[], getKey: (item: OneStat) => string) =>
+  list.reduce((previous, currentItem) => {
+    const group = getKey(currentItem)
+    if (!previous[group]) previous[group] = []
+    previous[group].push(currentItem.value)
+    return previous
+  }, {} as Record<string, number[]>)
+
+function average(nums: number[]) {
+  return nums.reduce((a, b) => a + b) / nums.length
+}
+
+// fonction de filtrage
+// get stats from an pokemonDTO
+export const getPokemonTypeStatsMatrix = async (type: TypePokemon) => {
   const res = await getPokemonsType(type)
   const pokemonsStats = res.map((pokemon) => getPokemonStats(pokemon))
   // ligne = number of pokemon , column = on for each stats (6 column)
@@ -130,19 +174,4 @@ export const getPokemonTypeStats = async (type: TypePokemon) => {
     // add to the stats list the tuple
     stats.push({ name: name, value: stat })
   }
-  console.log(stats)
 }
-
-type OneStat = {
-  name: string
-  value: number
-}
-
-const getPokemonStats = (pokemon: PokemonDTO) =>
-  pokemon.stats.map((stat) => ({
-    name: stat.stat.name,
-    value: stat.base_stat,
-  }))
-
-const foo: number[] = [1, 2, 3, 4]
-const bar: number = foo.reduce((acc, item) => acc + item, 0)

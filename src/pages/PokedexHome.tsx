@@ -3,7 +3,6 @@ import { PokemonListCards } from '../components/PokemonListCards'
 import { PokemonCard as PokemonCardProps } from '../services/PokemonType'
 import { SearchBar } from '../components/SearchBar'
 import { createCards, createOneCard } from '../services/retrievePokemonData'
-
 import { getPokemonByName } from '../services/PekemonRestAPI'
 type PokemonSearch = string
 export const PokedexHome = () => {
@@ -21,9 +20,6 @@ export const PokedexHome = () => {
   // once give => change the value of the listed pokemons
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault()
-
-    // rechercher le pokemon
-
     // si barre verticale vide on ne fait rien
     if (!pokemonSearch) return // sinon on fetch les data
     ;(async () => {
@@ -32,7 +28,7 @@ export const PokedexHome = () => {
         const card = createOneCard(data)
         setPokemonCards([card])
       } else {
-        // mettre a undefined si non trouvé
+        // mettre a undefined si non trouvé ?? est egale a gauche si non undefined droite sinon
         setPokemonCards(data ?? [])
       }
     })()
