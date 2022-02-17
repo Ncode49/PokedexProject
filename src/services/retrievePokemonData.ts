@@ -138,9 +138,10 @@ export const getPokemonDetails = async (pokemonName: PokemonName) => {
       id: data.id,
       name: data.name,
       sprite: data.sprites.front_default,
+      types: getTypePokemon(data.types),
       height: data.height,
       weight: data.weight,
-      ability: getAbilities(data),
+      abilities: getAbilities(data),
       averageTypeStats: averageTypeStats,
       stats: stats,
     }
