@@ -8,6 +8,7 @@ import {
 } from '../services/retrievePokemonData'
 import { theme } from '../styles/TypeStyle'
 import { Table } from '../components/Table'
+import { DetailCaption } from '../components/DetailCaption'
 
 type PokemonDetailsType = {
   id: number
@@ -59,22 +60,12 @@ export const PokemonDetails = () => {
            border-black rounded"
             alt={name}
           />
-          <figcaption className="basis-2/4  rounded bg-red-500 ">
-            <p></p>
-            <ul>
-              <li>height {height / 10} m</li>
-              <li>weight {weight / 10} kg</li>
-              <li>ability {abilities.map((ability) => ability)}</li>
-              <li>
-                type
-                {types.map((type) => (
-                  <span className={theme[type]} key={type}>
-                    {type}
-                  </span>
-                ))}
-              </li>
-            </ul>
-          </figcaption>
+          <DetailCaption
+            height={height}
+            weight={weight}
+            abilities={abilities}
+            types={types}
+          />
         </figure>
         <Table keys={keys} stats={stats} averageTypeStats={averageTypeStats} />
       </section>

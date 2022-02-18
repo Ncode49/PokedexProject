@@ -1,8 +1,8 @@
 import React, {
   ChangeEvent,
+  MouseEventHandler,
   SyntheticEvent,
   useEffect,
-  useMemo,
   useState,
 } from 'react'
 import { PokemonListCards } from '../components/PokemonListCards'
@@ -16,11 +16,13 @@ export const PokedexHome = () => {
   const [pokemonSearch, setPokemonSearch] = useState<PokemonSearch>('')
   const [pokemonCards, setPokemonCards] = useState<Array<PokemonCardProps>>([])
   // display the first 20 pokemons
+  const [offsetList, setOffsetList] = useState(0)
   useEffect(() => {
     ;(async () => {
       const data = await createCards()
       // gauche undefined
       setPokemonCards(data)
+      setOffsetList((c) => c + 20)
     })()
   }, [])
 
@@ -44,6 +46,8 @@ export const PokedexHome = () => {
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPokemonSearch(e.target.value)
   }
+
+  const addPokemon = () => {}
   return (
     <>
       <SearchBar
@@ -51,7 +55,7 @@ export const PokedexHome = () => {
         onSubmit={onSubmit}
         pokemonSearch={pokemonSearch}
       />
-      <PokemonListCards listCards={pokemonCards} />
+      <PokemonListCards listCards={pokemonCards} addPokemon={addPokemon} />
     </>
   )
 }
