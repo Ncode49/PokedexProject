@@ -1,4 +1,10 @@
-import React, { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react'
+import React, {
+  ChangeEvent,
+  SyntheticEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 import { PokemonListCards } from '../components/PokemonListCards'
 import { PokemonCard as PokemonCardProps } from '../services/PokemonType'
 import { SearchBar } from '../components/SearchBar'
@@ -7,8 +13,8 @@ import { getPokemonByName } from '../services/PokemonRestAPI'
 type PokemonSearch = string
 export const PokedexHome = () => {
   // list of pokemons a undefined si pas de pokemon
-  const [pokemonCards, setPokemonCards] = useState<Array<PokemonCardProps>>([]) // search bar status
   const [pokemonSearch, setPokemonSearch] = useState<PokemonSearch>('')
+  const [pokemonCards, setPokemonCards] = useState<Array<PokemonCardProps>>([])
   // display the first 20 pokemons
   useEffect(() => {
     ;(async () => {
@@ -17,6 +23,7 @@ export const PokedexHome = () => {
       setPokemonCards(data)
     })()
   }, [])
+
   // once give => change the value of the listed pokemons
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault()

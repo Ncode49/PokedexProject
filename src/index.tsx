@@ -1,8 +1,7 @@
 import ReactDOM from 'react-dom'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { App } from './App'
-import { PokemonDetails } from './components/PokemonDetails'
-import { PokemonListCards } from './components/PokemonListCards'
+import { PokemonDetails } from './pages/PokemonDetails'
 
 import './styles.css'
 ReactDOM.render(

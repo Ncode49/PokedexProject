@@ -67,14 +67,15 @@ const getPokemonStatsList = (pokemon: PokemonDTO) =>
 // fonction de filtrage
 // get stats from an pokemonDTO
 export const getPokemonTypeStats = async (types: TypePokemon[]) => {
-  let res: PokemonDTO[] = []
-  for (let i = 0; i < types.length; i++) {
-    let result = await getPokemonsType(types[i])
-    res.push(...result)
-  }
+  // array of pokemons
+  const allTypes = await Promise.all(types.map((type) => getPokemonsType(type)))
+  const pokemons = allTypes.reduce<PokemonDTO[]>(
+    (acc, entry) => acc.concat(entry),
+    []
+  )
 
   // flatten all stats of pokemon
-  const pokemonsStats = res
+  const pokemonsStats = pokemons
     .map((pokemon) => getPokemonStatsList(pokemon))
     .reduce((a, b) => a.concat(b))
   // groupby and get array of stats for each stats
@@ -91,7 +92,7 @@ export const getPokemonTypeStats = async (types: TypePokemon[]) => {
 // group by keys generic here
 // Record<K,T> is an object with <key,value> values
 // getKey is a function that take an item and return its key
-export const groupBy = <T, K extends keyof any>(
+export const groupBy = <T, K extends keyof T>(
   list: T[],
   getKey: (item: T) => K
 ) =>
@@ -111,14 +112,12 @@ const groupByValue = (list: OneStat[], getKey: (item: OneStat) => string) =>
   }, {} as Record<string, number[]>)
 
 function average(nums: number[]) {
-  return nums.reduce((a, b) => a + b) / nums.length
+  return Math.round((nums.reduce((a, b) => a + b) / nums.length) * 10) / 10
 }
 
 const getPokemonStats = (pokemon: PokemonDTO): StatPokemon => {
   const stats: StatPokemon = {}
-  for (let i = 0; i < pokemon.stats.length; i++) {
-    stats[pokemon.stats[i].stat.name] = pokemon.stats[i].base_stat
-  }
+  pokemon.stats.forEach((stat) => (stats[stat.stat.name] = stat.base_stat))
   return stats
 }
 
