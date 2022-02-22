@@ -2,7 +2,7 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import express from "express";
-import { env } from "process";
+import { env, off } from "process";
 import { Request, Response } from "express";
 dotenv.config();
 const app = express();
@@ -22,6 +22,12 @@ const posts = [
     title: "Post2",
   },
 ];
+type User = {
+  name: string;
+};
+// refresh token (normally in data base)
+
+let refreshTokens: string[] = [];
 // can use through multiple server
 app.get("/posts", authenticateToken, (req, res) => {
   // take only the good user
@@ -47,6 +53,7 @@ function authenticateToken(req: Request, res: Response, next: Next) {
     });
   }
 }
+
 app.listen(3000);
 console.log("listen to port 3000");
 // refresh token one server creation deletion and have an expiration
@@ -61,16 +68,37 @@ app.post("/login", (req: Request, res: Response) => {
   const user = { name: username };
   const accessToken = generateAcessToken(user);
   if (env.REFRESH_TOKEN_SECRET !== undefined) {
+    // handle refresh token
     const refreshToken = jwt.sign(user, env.REFRESH_TOKEN_SECRET);
     res.json({ accessToken: accessToken, refreshToken: refreshToken });
   }
   // return the token
 });
 
-app.post("/token", (req, res) => {});
+app.post("/token", (req: Request, res: Response) => {
+  // make refresh token as a string to correct type
+  const refreshToken: string = req.body.token;
 
-function generateAcessToken(user: { name: string }) {
-  console.log("cc");
+  if (refreshToken == null) return res.status(401);
+  // test if refreshToken is valide (valid, remove)
+  if (!refreshTokens.includes(refreshToken)) return res.status(403);
+
+  if (env.REFRESH_TOKEN_SECRET) {
+    jwt.verify(refreshToken, env.REFRESH_TOKEN_SECRET, (err, user) => {
+      if (err) return res.status(403);
+      if (user !== undefined) {
+        const accessToken = generateAcessToken({ name: "test" });
+        res.json({ accessToken: accessToken });
+      }
+    });
+  }
+});
+
+app.delete("/logout", (req: Request, res: Response) => {
+  refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
+  res.status(204);
+});
+function generateAcessToken(user: User) {
   if (env.ACCESS_TOKEN_SECRET !== undefined)
     return jwt.sign(user, env.ACCESS_TOKEN_SECRET, {
       expiresIn: "15s",

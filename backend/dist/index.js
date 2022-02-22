@@ -23,6 +23,8 @@ const posts = [
         title: "Post2",
     },
 ];
+// refresh token (normally in data base)
+const refreshTokens = [];
 // can use through multiple server
 app.get("/posts", authenticateToken, (req, res) => {
     // take only the good user
@@ -62,14 +64,32 @@ app.post("/login", (req, res) => {
     const user = { name: username };
     const accessToken = generateAcessToken(user);
     if (process_1.env.REFRESH_TOKEN_SECRET !== undefined) {
+        // handle refresh token
         const refreshToken = jsonwebtoken_1.default.sign(user, process_1.env.REFRESH_TOKEN_SECRET);
         res.json({ accessToken: accessToken, refreshToken: refreshToken });
     }
     // return the token
 });
-app.post("/token", (req, res) => { });
+app.post("/token", (req, res) => {
+    // make refresh token as a string to correct type
+    const refreshToken = req.body.token;
+    if (refreshToken == null)
+        return res.status(401);
+    // test if refreshToken is valide (valid, remove)
+    if (!refreshTokens.includes(refreshToken))
+        return res.status(403);
+    if (process_1.env.REFRESH_TOKEN_SECRET) {
+        jsonwebtoken_1.default.verify(refreshToken, process_1.env.REFRESH_TOKEN_SECRET, (err, user) => {
+            if (err)
+                return res.status(403);
+            if (user !== undefined) {
+                const accessToken = generateAcessToken({ name: user.name });
+                res.json({ accessToken: accessToken });
+            }
+        });
+    }
+});
 function generateAcessToken(user) {
-    console.log("cc");
     if (process_1.env.ACCESS_TOKEN_SECRET !== undefined)
         return jsonwebtoken_1.default.sign(user, process_1.env.ACCESS_TOKEN_SECRET, {
             expiresIn: "15s",
