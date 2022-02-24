@@ -1,11 +1,10 @@
 import { Request, Response, NextFunction } from "express";
-import logging from "../../config/logging";
+import logging from "../../../config/logging";
 import bcryptjs from "bcryptjs";
 import { Client } from "pg";
-import config from "../../config/config";
-import { addUserPasswordQuery, selectAllQuery } from "../postgre/query";
-const NAMESPACE = "Auth";
-const values = ["briancin", "brian.m.carlson@gmail.com"];
+import config from "../../../config/config";
+import { addUserPasswordQuery } from "../../postgre/query";
+const NAMESPACE = "Auth register";
 export const validateToken = (
   req: Request,
   res: Response,
@@ -34,19 +33,20 @@ export const register = (req: Request, res: Response, next: NextFunction) => {
       text: addUserPasswordQuery,
       values: [username, hash],
     };
+
+    let message = "";
     try {
       await client.connect();
       const res = await client.query(query);
-      console.log(res.rows);
     } catch (error) {
       const err = error as Error;
-      console.error(err.message);
+      message = err.message;
     } finally {
       client.end();
     }
-  });
-  // erreur lors de l'ecriture du hash
-  return res.status(200).json({
-    message: "la personne a bien été ajouté",
+
+    return res.status(200).json({
+      message: message,
+    });
   });
 };

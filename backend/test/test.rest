@@ -5,3 +5,34 @@ Content-Type: application/json
     "username":"Kyles",
     "password": "cc"
 }
+
+### bon mot de passe
+POST http://localhost:3000/auth/login
+Content-Type: application/json 
+
+{
+    "username":"Kyles",
+    "password": "cc"
+}
+
+### Mauvais mot de passe
+POST http://localhost:3000/auth/login
+Content-Type: application/json 
+
+{
+    "username":"Kyles",
+    "password": "ccc"
+}
+
+
+### Test le token est correct expirée ici
+GET http://localhost:3000/auth/validateToken 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikt5bGVzIiwiaWF0IjoxNjQ1NzA3NzU2LCJleHAiOjE2NDU3MDc4MTZ9.Xj3KgPm6aHsvEV90dn5-7bg7c80_gyE1I8QWACczhqU
+
+### Test le token est incorrect 
+GET http://localhost:3000/auth/validateToken 
+Authorization: Bearer salut
+
+###
+GET http://localhost:3000/auth/validateToken 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikt5bGVzIiwiaWF0IjoxNjQ1NzA3OTA0LCJleHAiOjE2NDU3MDc5NjR9.DMPkxakAj7d6qc8y_qjHQ3cCWDowm9r7ubOW6UJ3ne8

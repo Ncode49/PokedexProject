@@ -4,13 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = exports.validateToken = void 0;
-const logging_1 = __importDefault(require("../../config/logging"));
+const logging_1 = __importDefault(require("../../../config/logging"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const pg_1 = require("pg");
-const config_1 = __importDefault(require("../../config/config"));
-const query_1 = require("../postgre/query");
-const NAMESPACE = "Auth";
-const values = ["briancin", "brian.m.carlson@gmail.com"];
+const config_1 = __importDefault(require("../../../config/config"));
+const query_1 = require("../../postgre/query");
+const NAMESPACE = "Auth register";
 const validateToken = (req, res, next) => {
     logging_1.default.info(NAMESPACE, "Token validated authorized");
     return res.status(200).json({
@@ -33,21 +32,21 @@ const register = (req, res, next) => {
             text: query_1.addUserPasswordQuery,
             values: [username, hash],
         };
+        let message = "";
         try {
             await client.connect();
             const res = await client.query(query);
-            console.log(res.rows);
         }
         catch (error) {
             const err = error;
-            console.error(err.message);
+            message = err.message;
         }
         finally {
             client.end();
         }
-    });
-    return res.status(200).json({
-        message: "la personne a bien été ajouté",
+        return res.status(200).json({
+            message: message,
+        });
     });
 };
 exports.register = register;
