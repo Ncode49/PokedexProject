@@ -3,11 +3,9 @@ import logging from "../../config/logging";
 import bcryptjs from "bcryptjs";
 import { Client } from "pg";
 import config from "../../config/config";
+import { addUserPasswordQuery, selectAllQuery } from "../postgre/query";
 const NAMESPACE = "Auth";
-const selectAllQuery = "select * from users";
-const addUserPasswordQuery = "";
-const text =
-  "INSERT INTO users(username, password) VALUES('salut', 'michel') RETURNING *";
+const values = ["briancin", "brian.m.carlson@gmail.com"];
 export const validateToken = (
   req: Request,
   res: Response,
@@ -23,25 +21,32 @@ export const validateToken = (
 export const register = (req: Request, res: Response, next: NextFunction) => {
   // on recoit les données de l'inscription
   const { username, password } = req.body;
-  bcryptjs.hash(password, 10, (err, hash) => {
+  bcryptjs.hash(password, 10, async (err, hash) => {
     if (err) {
       return res.status(401).json({
         message: err.message,
         error: err,
       });
     }
+
     const client = new Client(config.postgres);
-    client.connect(function (err) {
-      if (err) throw err;
-      console.log("Connected!");
-    });
-    client.query(selectAllQuery, (err, res) => {
-      if (!err) {
-        console.log(res.rows);
-      } else {
-        console.error(err.message);
-      }
-    });
+    const query = {
+      text: addUserPasswordQuery,
+      values: [username, hash],
+    };
+    try {
+      await client.connect();
+      const res = await client.query(query);
+      console.log(res.rows);
+    } catch (error) {
+      const err = error as Error;
+      console.error(err.message);
+    } finally {
+      client.end();
+    }
   });
   // erreur lors de l'ecriture du hash
+  return res.status(200).json({
+    message: "la personne a bien été ajouté",
+  });
 };

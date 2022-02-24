@@ -8,10 +8,9 @@ const logging_1 = __importDefault(require("../../config/logging"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const pg_1 = require("pg");
 const config_1 = __importDefault(require("../../config/config"));
+const query_1 = require("../postgre/query");
 const NAMESPACE = "Auth";
-const selectAllQuery = "select * from users";
-const addUserPasswordQuery = "";
-const text = "INSERT INTO users(username, password) VALUES('salut', 'michel') RETURNING *";
+const values = ["briancin", "brian.m.carlson@gmail.com"];
 const validateToken = (req, res, next) => {
     logging_1.default.info(NAMESPACE, "Token validated authorized");
     return res.status(200).json({
@@ -22,7 +21,7 @@ exports.validateToken = validateToken;
 const register = (req, res, next) => {
     // on recoit les données de l'inscription
     const { username, password } = req.body;
-    bcryptjs_1.default.hash(password, 10, (err, hash) => {
+    bcryptjs_1.default.hash(password, 10, async (err, hash) => {
         if (err) {
             return res.status(401).json({
                 message: err.message,
@@ -30,20 +29,26 @@ const register = (req, res, next) => {
             });
         }
         const client = new pg_1.Client(config_1.default.postgres);
-        client.connect(function (err) {
-            if (err)
-                throw err;
-            console.log("Connected!");
-        });
-        client.query(selectAllQuery, (err, res) => {
-            if (!err) {
-                console.log(res.rows);
-            }
-            else {
-                console.error(err.message);
-            }
-        });
+        const query = {
+            text: query_1.addUserPasswordQuery,
+            values: [username, hash],
+        };
+        try {
+            await client.connect();
+            const res = await client.query(query);
+            console.log(res.rows);
+        }
+        catch (error) {
+            const err = error;
+            console.error(err.message);
+        }
+        finally {
+            client.end();
+        }
     });
     // erreur lors de l'ecriture du hash
+    return res.status(200).json({
+        message: "la personne a bien été ajouté",
+    });
 };
 exports.register = register;
