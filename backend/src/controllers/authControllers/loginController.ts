@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from "express";
 import { Client } from "pg";
-import config from "../../../config/config";
-import { findUserByUsername } from "../../postgre/query";
+import config from "../../config/config";
 import bcryptjs from "bcryptjs";
-import { IUser } from "../../interface/IUser";
 import {
   generateAccessToken,
   generateRefreshToken,
 } from "../../functions/generateToken";
+import { findUserByUsername } from "../../postgre/query";
+import { IUser } from "../../interface/IUser";
 export const login = async (
   req: Request,
   res: Response,

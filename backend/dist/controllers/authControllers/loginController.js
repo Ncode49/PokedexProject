@@ -5,10 +5,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = void 0;
 const pg_1 = require("pg");
-const config_1 = __importDefault(require("../../../config/config"));
-const query_1 = require("../../postgre/query");
+const config_1 = __importDefault(require("../../config/config"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const generateToken_1 = require("../../functions/generateToken");
+const query_1 = require("../../postgre/query");
 const login = async (req, res, next) => {
     // on recoit les données du login
     const { username, password } = req.body;

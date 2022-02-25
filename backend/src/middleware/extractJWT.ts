@@ -1,8 +1,8 @@
 // take token,
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import config from "../../config/config";
-import logging from "../../config/logging";
+import config from "../config/config";
+import logging from "../config/logging";
 const NAMESPACE = "Auth";
 // 401 unauthorized
 export const extractJWT = (req: Request, res: Response, next: NextFunction) => {

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import bcryptjs from "bcryptjs";
 import { Client } from "pg";
-import config from "../../../config/config";
+import config from "../../config/config";
 import { addUserPasswordQuery } from "../../postgre/query";
 const NAMESPACE = "Auth register";
 

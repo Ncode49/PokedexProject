@@ -1,5 +1,7 @@
 import express from "express";
+import { AuthController } from "./controllers/authControllers/AuthController";
 import config from "./config/config";
+import { authRouter } from "./routes/authRouter";
 const app = express();
 
 // load middleware we need
@@ -19,13 +21,22 @@ app.use((_req, res, next) => {
   );
   next();
 });
+// gérer le client ici
 // define controller les methodes utilisé
-const AuthController = () => {
-  return () => {};
+/*
+const foo = (param1: string) => {
+  return (param2: string) => {
+    return param1 + param2;
+  };
 };
+// param1 controller
+// fonctionnalité du controleur
+// param2 req,res,next
+*/
+
 // add routes for auth
-app.use("/auth", AuthController());
-// AuthSErvice contient repository ou autre service
+app.use("/auth", authRouter(new AuthController()));
+// AuthService contient repository ou autre service
 // const authService = AuthService(...)
 // définit toutes les routes
 // const authController = AuthController(authService)

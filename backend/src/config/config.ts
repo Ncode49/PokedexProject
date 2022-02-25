@@ -1,9 +1,7 @@
-import dotenv from "dotenv";
-
-dotenv.config();
+// trouver lib qui gère cela
 
 const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || "localhost";
-const SERVER_PORT = process.env.SERVER_PORT || 1337;
+const SERVER_PORT = process.env.SERVER_PORT || 3000;
 
 const SERVER_ACCESS_TOKEN_SECRET =
   process.env.SERVER_ACCESS_TOKEN_SECRET ||
@@ -19,17 +17,13 @@ const SERVER = {
     refreshTokenSecret: SERVER_REFRESH_TOKEN_SECRET,
   },
 };
-const POSTGRES_USER = process.env.POSTGRES_USER || "postgres";
-const POSTGRES_HOST = process.env.POSTGRES_HOST || "localhost";
-const POSTGRES_DATABASE = process.env.POSTGRES_DATABASE || "postgres";
-const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD || "Tching@43@";
-const POSTGRES_PORT = 5432;
+
 const POSTGRES = {
-  user: POSTGRES_USER,
-  host: POSTGRES_HOST,
-  database: POSTGRES_DATABASE,
-  password: POSTGRES_PASSWORD,
-  port: POSTGRES_PORT,
+  user: process.env.POSTGRES_USER || "postgres",
+  host: process.env.POSTGRES_HOST || "localhost",
+  database: process.env.POSTGRES_DATABASE || "postgres",
+  password: process.env.POSTGRES_PASSWORD || "Tching@43@",
+  port: 5432,
 };
 const config = {
   server: SERVER,
