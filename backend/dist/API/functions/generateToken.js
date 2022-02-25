@@ -16,7 +16,7 @@ const generateAccessToken = (user) => {
 exports.generateAccessToken = generateAccessToken;
 // durée de vie longue
 const generateRefreshToken = (user) => {
-    return jsonwebtoken_1.default.sign(user, config_1.default.server.token.accessTokenSecret, {
+    return jsonwebtoken_1.default.sign({ user }, config_1.default.server.token.refreshTokenSecret, {
         algorithm: "HS256",
         expiresIn: "1y",
     });

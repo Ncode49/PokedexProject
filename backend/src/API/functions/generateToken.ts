@@ -11,7 +11,7 @@ export const generateAccessToken = (user: string) => {
 
 // durée de vie longue
 export const generateRefreshToken = (user: string) => {
-  return jwt.sign(user, config.server.token.accessTokenSecret, {
+  return jwt.sign({ user }, config.server.token.refreshTokenSecret, {
     algorithm: "HS256",
     expiresIn: "1y",
   });

@@ -12,7 +12,7 @@ const NAMESPACE = "Auth register";
 const register = (req, res, next) => {
     // on recoit les données de l'inscription
     const { username, password } = req.body;
-    const hash = bcryptjs_1.default.hash(password, 10, async (err, hash) => {
+    bcryptjs_1.default.hash(password, 10, async (err, hash) => {
         if (err) {
             return res.status(401).json({
                 message: err.message,

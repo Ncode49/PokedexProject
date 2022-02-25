@@ -4,8 +4,10 @@ import config from "../../../config/config";
 import { findUserByUsername } from "../../postgre/query";
 import bcryptjs from "bcryptjs";
 import { IUser } from "../../interface/IUser";
-import jwt from "jsonwebtoken";
-import { generateAccessToken } from "../../functions/generateToken";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+} from "../../functions/generateToken";
 export const login = async (
   req: Request,
   res: Response,
@@ -41,10 +43,12 @@ export const login = async (
       return res.status(401).json({
         message: "password mismatched",
       });
-    const token = generateAccessToken(username);
+    const accessToken = generateAccessToken(username);
+    const refreshToken = generateRefreshToken(username);
     return res.status(200).json({
-      token: token,
-      message: "OK",
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      message: "les tokens ont été générés",
     });
   } catch (error) {
     const err = error as Error;

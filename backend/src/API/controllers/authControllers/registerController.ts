@@ -9,7 +9,7 @@ export const register = (req: Request, res: Response, next: NextFunction) => {
   // on recoit les données de l'inscription
   const { username, password } = req.body;
 
-  const hash = bcryptjs.hash(password, 10, async (err, hash) => {
+  bcryptjs.hash(password, 10, async (err, hash) => {
     if (err) {
       return res.status(401).json({
         message: err.message,

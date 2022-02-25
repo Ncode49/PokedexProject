@@ -37,10 +37,12 @@ const login = async (req, res, next) => {
             return res.status(401).json({
                 message: "password mismatched",
             });
-        const token = (0, generateToken_1.generateAccessToken)(username);
+        const accessToken = (0, generateToken_1.generateAccessToken)(username);
+        const refreshToken = (0, generateToken_1.generateRefreshToken)(username);
         return res.status(200).json({
-            token: token,
-            message: "OK",
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+            message: "les tokens ont été générés",
         });
     }
     catch (error) {

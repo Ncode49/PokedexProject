@@ -59,3 +59,14 @@ Content-Type: application/json
     "username":"Nicky",
     "password": "ccoucou"
 }
+
+
+### RefreshToken test 
+POST http://localhost:3000/auth/refreshToken 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTmlja3kiLCJpYXQiOjE2NDU3NzI2NzAsImV4cCI6MTY3NzMzMDI3MH0.rc7kODyJI7vGgfJSGF3I4m35FrPpfQ8sRs2iLi3d_do
+
+
+### Test new accessToken
+GET http://localhost:3000/auth/validateToken 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDU3NzI2ODEsImV4cCI6MTY0NTc3Mjc0MX0.Z4KOL8kOaPG_NsORleynwnf4Rt9O5X8zIfJ91l2kq1k
+###
