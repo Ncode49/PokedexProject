@@ -7,16 +7,15 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const SERVER_HOSTNAME = process.env.SERVER_HOSTNAME || "localhost";
 const SERVER_PORT = process.env.SERVER_PORT || 1337;
-const SERVER_TOKEN_EXPIRETIME = process.env.SERVER_TOKEN_EXPIRETIME || 3600;
-const SERVER_TOKEN_ISSUER = process.env.SERVER_TOKEN_ISSUER || "issuer";
-const SERVER_TOKEN_SECRET = process.env.SERVER_TOKEN_SECRET || "secret";
+const SERVER_ACCESS_TOKEN_SECRET = process.env.SERVER_ACCESS_TOKEN_SECRET ||
+    "355B1BBFC96725CDCE8F4A2708FDA310A80E6D13315AEC4E5EED2A75FE8032CE";
+const SERVER_REFRESH_TOKEN_SECRET = process.env.SERVER_REFRESH_TOKEN_SECRET || "refreshToken";
 const SERVER = {
     hostname: SERVER_HOSTNAME,
     port: SERVER_PORT,
     token: {
-        expireTime: SERVER_TOKEN_EXPIRETIME,
-        issuer: SERVER_TOKEN_ISSUER,
-        secret: SERVER_TOKEN_SECRET,
+        accessTokenSecret: SERVER_ACCESS_TOKEN_SECRET,
+        refreshTokenSecret: SERVER_REFRESH_TOKEN_SECRET,
     },
 };
 const POSTGRES_USER = process.env.POSTGRES_USER || "postgres";

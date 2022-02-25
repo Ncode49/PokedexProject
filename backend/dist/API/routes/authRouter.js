@@ -5,13 +5,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const loginController_1 = require("../controllers/authControllers/loginController");
+const refreshtokenController_1 = require("../controllers/authControllers/refreshtokenController");
 const registerController_1 = require("../controllers/authControllers/registerController");
-const extractJWT_1 = __importDefault(require("../middleware/extractJWT"));
+const validateController_1 = require("../controllers/authControllers/validateController");
+const extractJWT_1 = require("../middleware/extractJWT");
 // get the different routes
 const authRouter = express_1.default.Router();
 authRouter.post("/register", registerController_1.register);
-//authRouter.get("/validate", extractJWT, validateToken);
 authRouter.post("/login", loginController_1.login);
 exports.default = authRouter;
+authRouter.post("/refreshToken", refreshtokenController_1.refreshToken);
 // route to test if the middleware is valid
-authRouter.get("/validateToken", extractJWT_1.default, registerController_1.validateToken);
+authRouter.get("/validateToken", extractJWT_1.extractJWT, validateController_1.validateToken);

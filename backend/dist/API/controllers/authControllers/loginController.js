@@ -8,7 +8,7 @@ const pg_1 = require("pg");
 const config_1 = __importDefault(require("../../../config/config"));
 const query_1 = require("../../postgre/query");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const generateToken_1 = require("../../functions/generateToken");
 const login = async (req, res, next) => {
     // on recoit les données du login
     const { username, password } = req.body;
@@ -37,27 +37,17 @@ const login = async (req, res, next) => {
             return res.status(401).json({
                 message: "password mismatched",
             });
+        const token = (0, generateToken_1.generateAccessToken)(username);
+        return res.status(200).json({
+            token: token,
+            message: "OK",
+        });
     }
     catch (error) {
+        const err = error;
         return res.status(400).json({
-            message: "erreur",
+            message: err.message,
         });
     }
-    // payload, secret sign for it
-    jsonwebtoken_1.default.sign({ username: username }, config_1.default.server.token.secret, {
-        algorithm: "HS256",
-        expiresIn: "1m",
-    }, (err, token) => {
-        if (err) {
-            return res.status(400).json({
-                message: "error token creation",
-            });
-        }
-        // the token will be fetch and add to the localsotrage in the client side
-        return res.status(200).json({
-            message: "password ok",
-            token: token,
-        });
-    });
 };
 exports.login = login;

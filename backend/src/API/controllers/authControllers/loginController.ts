@@ -5,6 +5,7 @@ import { findUserByUsername } from "../../postgre/query";
 import bcryptjs from "bcryptjs";
 import { IUser } from "../../interface/IUser";
 import jwt from "jsonwebtoken";
+import { generateAccessToken } from "../../functions/generateToken";
 export const login = async (
   req: Request,
   res: Response,
@@ -40,30 +41,15 @@ export const login = async (
       return res.status(401).json({
         message: "password mismatched",
       });
+    const token = generateAccessToken(username);
+    return res.status(200).json({
+      token: token,
+      message: "OK",
+    });
   } catch (error) {
+    const err = error as Error;
     return res.status(400).json({
-      message: "erreur",
+      message: err.message,
     });
   }
-  // payload, secret sign for it
-  jwt.sign(
-    { username: username },
-    config.server.token.secret,
-    {
-      algorithm: "HS256",
-      expiresIn: "1m",
-    },
-    (err, token) => {
-      if (err) {
-        return res.status(400).json({
-          message: "error token creation",
-        });
-      }
-      // the token will be fetch and add to the localsotrage in the client side
-      return res.status(200).json({
-        message: "password ok",
-        token: token,
-      });
-    }
-  );
 };
