@@ -1,6 +1,5 @@
 import express from "express";
 import config from "./config/config";
-import authRouter from "./API/routes/authRouter";
 const app = express();
 
 // load middleware we need
@@ -20,9 +19,17 @@ app.use((_req, res, next) => {
   );
   next();
 });
-
+// define controller les methodes utilisé
+const AuthController = () => {
+  return () => {};
+};
 // add routes for auth
-app.use("/auth", authRouter);
+app.use("/auth", AuthController());
+// AuthSErvice contient repository ou autre service
+// const authService = AuthService(...)
+// définit toutes les routes
+// const authController = AuthController(authService)
+// app.use("/auth", authRouter(authController));
 // listen
 app.listen(config.server.port, () => {
   console.log(`listening on ${config.server.port}`);

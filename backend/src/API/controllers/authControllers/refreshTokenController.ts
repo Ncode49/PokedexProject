@@ -35,3 +35,24 @@ export const refreshToken = (req: Request, res: Response) => {
     });
   });
 };
+
+type Success = {
+  code: number;
+  message?: string;
+};
+
+type Error = {
+  code: number;
+  message: string;
+};
+
+// 200 204 202
+type Result<S, E> = {
+  success?: S;
+  error?: E;
+};
+
+const isSuccess = <S, E>(response: Result<S, E>): boolean => {
+  if (response.success != undefined) return true;
+  return false;
+};

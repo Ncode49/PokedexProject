@@ -48,7 +48,6 @@ export const login = async (
     return res.status(200).json({
       accessToken: accessToken,
       refreshToken: refreshToken,
-      message: "les tokens ont été générés",
     });
   } catch (error) {
     const err = error as Error;
