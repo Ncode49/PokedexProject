@@ -1,10 +1,11 @@
 import { Client } from "pg";
 import bcryptjs from "bcryptjs";
+export type Message = string;
 export const registerService = async (
   client: Client,
   username: string,
   password: string
-): Promise<string> => {
+): Promise<Message> => {
   try {
     bcryptjs.hash(password, 10, async (err, hash) => {
       if (err) return err.message;

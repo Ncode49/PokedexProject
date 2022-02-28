@@ -4,7 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const AuthController_1 = require("./controllers/authControllers/AuthController");
+const AutControllerDI_1 = require("./authentification/AutControllerDI");
+const Client_1 = require("./authentification/services/Client");
 const config_1 = __importDefault(require("./config/config"));
 const authRouter_1 = require("./routes/authRouter");
 const app = (0, express_1.default)();
@@ -31,8 +32,12 @@ const foo = (param1: string) => {
 // fonctionnalité du controleur
 // param2 req,res,next
 */
+// instanciation du controller
+const authController = (0, AutControllerDI_1.AuthControllerDI)({
+    client: Client_1.client,
+});
 // add routes for auth
-app.use("/auth", (0, authRouter_1.authRouter)(new AuthController_1.AuthController()));
+app.use("/auth", (0, authRouter_1.authRouter)(authController));
 // AuthService contient repository ou autre service
 // const authService = AuthService(...)
 // définit toutes les routes
