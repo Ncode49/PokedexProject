@@ -6,7 +6,6 @@ import {
   getPokemonDetails,
   StatPokemon,
 } from '../services/retrievePokemonData'
-import { theme } from '../styles/TypeStyle'
 import { Table } from '../components/Table'
 import { DetailCaption } from '../components/DetailCaption'
 

@@ -9,19 +9,51 @@ import {
 import jwt from "jsonwebtoken";
 import { findUserByUsername } from "../../postgre/query";
 import { IUser } from "../../interface/IUser";
+type AuthService = string;
+
+// ensemble des fonctionnalité que doit implémenter le controler (type)
+interface AuthControllerType {
+  register: (username: string) => void;
+}
+// list of services peut etre utilisé pour d'autre controller
+// client dans les dépendances des repositories qui dépendent des services rentrer en services
+// les dépendances pour le client
+
+// ensemble des services dont dépend le controller
+interface AutnControllerDeps {
+  authService: AuthService;
+  // ....
+}
+export const client = new Client(config.postgres);
+// instanciation du controler
+export const AuthControllerDI = (
+  deps: AutnControllerDeps
+): AuthControllerType => {
+  return {
+    register: register(deps.authService),
+  };
+};
+
+// prend en paramaetre les méthode qui renvoit un service
+const register = (service: string) => (username: string) => {
+  console.log(username);
+};
+
+// utilisation
+const foo = AuthControllerDI({
+  authService: "toto",
+});
 
 type payload = {
   username: string;
 };
-export interface Authentification {
-  register: (req: Request, res: Response, next: NextFunction) => any;
-  login: (req: Request, res: Response, next: NextFunction) => any;
-  refreshToken: (req: Request, res: Response, next: NextFunction) => any;
-  validateToken: (req: Request, res: Response, next: NextFunction) => any;
-}
 
-export class AuthController implements Authentification {
-  constructor() {}
+export class AuthController {
+  // les services en methodes
+  constructor() {
+    // les services
+  }
+
   async register(req: Request, res: Response, next: NextFunction) {
     // on recoit les données du login
     const { username, password } = req.body;
