@@ -1,6 +1,7 @@
 import express from "express";
 import { AuthControllerDI } from "./authentification/AutControllerDI";
 import { client } from "./authentification/services/Client";
+import { cryptService } from "./authentification/services/cryptoService/CryptoService";
 import { queryService } from "./authentification/services/queryService/QueryService";
 import { registerService } from "./authentification/services/registerService/registerService";
 import { tokenService } from "./authentification/services/tokenService/tokenService";
@@ -44,6 +45,7 @@ const authController = AuthControllerDI({
     queryService: queryService({ client: client }),
   }),
   tokenService: tokenService(),
+  cryptoService: cryptService(),
 });
 // add routes for auth
 app.use("/auth", authRouter(authController));

@@ -10,7 +10,7 @@ export const authRouter = (authController: AuthControllerType) => {
   // authRouter.post("/refreshToken", authController.refreshToken);
   // route to test if the middleware is valid
   // est ce que l'on doit ajouter des services dans les middlewares ?
-  //authRouter.get("/validateToken", extractJWT, authController.validateToken);
+  authRouter.get("/validateToken", extractJWT, authController.validateToken);
 
   return authRouter;
 };

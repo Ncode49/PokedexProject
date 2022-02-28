@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const AutControllerDI_1 = require("./authentification/AutControllerDI");
 const Client_1 = require("./authentification/services/Client");
+const CryptoService_1 = require("./authentification/services/cryptoService/CryptoService");
 const QueryService_1 = require("./authentification/services/queryService/QueryService");
 const registerService_1 = require("./authentification/services/registerService/registerService");
 const tokenService_1 = require("./authentification/services/tokenService/tokenService");
@@ -42,6 +43,7 @@ const authController = (0, AutControllerDI_1.AuthControllerDI)({
         queryService: (0, QueryService_1.queryService)({ client: Client_1.client }),
     }),
     tokenService: (0, tokenService_1.tokenService)(),
+    cryptoService: (0, CryptoService_1.cryptService)(),
 });
 // add routes for auth
 app.use("/auth", (0, authRouter_1.authRouter)(authController));
