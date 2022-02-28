@@ -1,5 +1,7 @@
 import { Client } from "pg";
+import { QueryServiceType } from "../queryService/QueryServiceType";
 
+// ???
 export interface RegisterServiceDeps {
-  client: Client;
+  queryService: QueryServiceType;
 }

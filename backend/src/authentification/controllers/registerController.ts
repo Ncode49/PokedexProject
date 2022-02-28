@@ -6,12 +6,11 @@ import { RegisterServiceType } from "../services/registerService/RegisterService
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé
 // client est la dépendance
 export const register =
-  (client: Client, registerService: RegisterServiceType) =>
+  (registerService: RegisterServiceType) =>
   async (req: Request, res: Response) => {
     const { username, password } = req.body;
     try {
       const { message } = await registerService.registerUser(
-        client,
         username,
         password
       );
