@@ -2,6 +2,11 @@ export type QueryBdd = {
   text: string;
   values: string[];
 };
+export interface IUser {
+  username: string;
+  password: string;
+}
+
 export const selectAllQuery = "select * from users";
 export const addUserPasswordQuery =
   "INSERT INTO users(username, password) VALUES($1, $2) RETURNING *";

@@ -8,11 +8,13 @@ export const addUser =
     try {
       await client.connect();
       const res = await client.query(query);
-      await client.end();
-
-      return { message: "l'utilisateur a ete enregistré" };
+      return { message: "l'utilisateur a été enregistré" };
     } catch (error) {
       const err = error as Error;
+      console.log(err.message);
       return { message: err.message };
+    } finally {
+      client.end();
+      console.log("client déconnecté");
     }
   };

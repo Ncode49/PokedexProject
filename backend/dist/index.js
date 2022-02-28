@@ -8,6 +8,7 @@ const AutControllerDI_1 = require("./authentification/AutControllerDI");
 const Client_1 = require("./authentification/services/Client");
 const QueryService_1 = require("./authentification/services/queryService/QueryService");
 const registerService_1 = require("./authentification/services/registerService/registerService");
+const tokenService_1 = require("./authentification/services/tokenService/tokenService");
 const config_1 = __importDefault(require("./config/config"));
 const authRouter_1 = require("./routes/authRouter");
 const app = (0, express_1.default)();
@@ -36,8 +37,11 @@ const foo = (param1: string) => {
 */
 // instanciation du controller
 const authController = (0, AutControllerDI_1.AuthControllerDI)({
-    queryService: (0, QueryService_1.queryService)(Client_1.client),
-    registerService: (0, registerService_1.registerService)({ queryService: (0, QueryService_1.queryService)(Client_1.client) }),
+    queryService: (0, QueryService_1.queryService)({ client: Client_1.client }),
+    registerService: (0, registerService_1.registerService)({
+        queryService: (0, QueryService_1.queryService)({ client: Client_1.client }),
+    }),
+    tokenService: (0, tokenService_1.tokenService)(),
 });
 // add routes for auth
 app.use("/auth", (0, authRouter_1.authRouter)(authController));

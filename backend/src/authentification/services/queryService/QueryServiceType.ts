@@ -1,4 +1,3 @@
-import { Client } from "pg";
 import { QueryBdd } from "../../../postgre/query";
 import { Message } from "../registerService/registerService";
 

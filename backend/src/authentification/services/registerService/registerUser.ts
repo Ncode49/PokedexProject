@@ -1,9 +1,7 @@
 import bcryptjs from "bcryptjs";
 import { addUserPasswordQuery } from "../../../postgre/query";
 import { QueryServiceType } from "../queryService/QueryServiceType";
-export type Message = {
-  message: string;
-};
+import { Message } from "./registerService";
 
 export const registerUser =
   (queryService: QueryServiceType) =>
@@ -23,7 +21,4 @@ export const registerUser =
         message: err.message,
       };
     }
-    return {
-      message: `le client ${username} a été correctemnt enregistré en base de données,`,
-    };
   };

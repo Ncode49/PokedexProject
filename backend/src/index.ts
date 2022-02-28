@@ -3,6 +3,7 @@ import { AuthControllerDI } from "./authentification/AutControllerDI";
 import { client } from "./authentification/services/Client";
 import { queryService } from "./authentification/services/queryService/QueryService";
 import { registerService } from "./authentification/services/registerService/registerService";
+import { tokenService } from "./authentification/services/tokenService/tokenService";
 import config from "./config/config";
 import { authRouter } from "./routes/authRouter";
 const app = express();
@@ -38,8 +39,11 @@ const foo = (param1: string) => {
 */
 // instanciation du controller
 const authController = AuthControllerDI({
-  queryService: queryService(client),
-  registerService: registerService({ queryService: queryService(client) }),
+  queryService: queryService({ client: client }),
+  registerService: registerService({
+    queryService: queryService({ client: client }),
+  }),
+  tokenService: tokenService(),
 });
 // add routes for auth
 app.use("/auth", authRouter(authController));

@@ -1,6 +1,5 @@
 // prend en paramaetre les méthode qui renvoit un service
 
-import { Client } from "pg";
 import { Request, Response } from "express";
 import { RegisterServiceType } from "../services/registerService/RegisterServiceType";
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé

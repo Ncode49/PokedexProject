@@ -1,7 +1,7 @@
-import { Client } from "pg";
 import { addUser } from "./addUser";
+import { QueryServiceDeps } from "./QueryServiceDeps";
 import { QueryServiceType } from "./QueryServiceType";
 
-export const queryService = (client: Client): QueryServiceType => {
-  return { addUser: addUser(client) };
+export const queryService = (deps: QueryServiceDeps): QueryServiceType => {
+  return { addUser: addUser(deps.client) };
 };

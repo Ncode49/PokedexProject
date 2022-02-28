@@ -23,8 +23,5 @@ const registerUser = (queryService) => async (username, password) => {
             message: err.message,
         };
     }
-    return {
-        message: `le client ${username} a été correctemnt enregistré en base de données,`,
-    };
 };
 exports.registerUser = registerUser;
