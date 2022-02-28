@@ -5,7 +5,7 @@ const registerController_1 = require("./controllers/registerController");
 // // definition du controller principal
 const AuthControllerDI = (deps) => {
     return {
-        register: (0, registerController_1.register)(deps.client),
+        register: (0, registerController_1.register)(deps.client, deps.registerService),
     };
 };
 exports.AuthControllerDI = AuthControllerDI;

@@ -7,6 +7,6 @@ export const AuthControllerDI = (
   deps: AutnControllerDeps
 ): AuthControllerType => {
   return {
-    register: register(deps.client),
+    register: register(deps.client, deps.registerService),
   };
 };
