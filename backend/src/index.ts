@@ -1,5 +1,6 @@
 import express from "express";
-import { AuthController } from "./controllers/authControllers/AuthController";
+import { AuthControllerDI } from "./authentification/AutControllerDI";
+import { client } from "./authentification/services/Client";
 import config from "./config/config";
 import { authRouter } from "./routes/authRouter";
 const app = express();
@@ -33,9 +34,12 @@ const foo = (param1: string) => {
 // fonctionnalité du controleur
 // param2 req,res,next
 */
-
+// instanciation du controller
+const authController = AuthControllerDI({
+  client: client,
+});
 // add routes for auth
-app.use("/auth", authRouter(new AuthController()));
+app.use("/auth", authRouter(authController));
 // AuthService contient repository ou autre service
 // const authService = AuthService(...)
 // définit toutes les routes
