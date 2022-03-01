@@ -1,5 +1,5 @@
 import bcryptjs from "bcryptjs";
-import { Message } from "../registerService/registerService";
+import { Message } from "../Message";
 export const compareHash = async (
   password: string,
   hash: string

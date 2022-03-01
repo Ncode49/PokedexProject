@@ -1,6 +1,7 @@
-import { QueryBdd } from "../../../postgre/query";
-import { Message } from "../registerService/registerService";
+import { Message } from "../Message";
+import { Password } from "./findUser";
 
 export type QueryServiceType = {
-  addUser: (query: QueryBdd) => Promise<Message>;
+  addUser: (username: string, password: string) => Promise<Message>;
+  findUser: (username: string, password: string) => Promise<Message | Password>;
 };

@@ -1,12 +1,16 @@
 import { Client } from "pg";
-import { QueryBdd } from "../../../postgre/query";
-import { Message } from "../registerService/registerService";
+import { Message } from "../Message";
+import { addUserPasswordQuery, QueryBdd } from "./query";
 
 export const addUser =
   (client: Client) =>
-  async (query: QueryBdd): Promise<Message> => {
+  async (username: string, hash: string): Promise<Message> => {
     try {
       await client.connect();
+      const query = {
+        text: addUserPasswordQuery,
+        values: [username, hash],
+      };
       const res = await client.query(query);
       return { message: "l'utilisateur a été enregistré" };
     } catch (error) {
