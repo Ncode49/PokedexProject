@@ -1,9 +1,9 @@
-import { CryptoServiceType } from "../services/cryptoService/CryptoServiceType";
-import { QueryServiceType } from "../services/queryService/QueryServiceType";
-import { TokenServiceType } from "../services/tokenService/TokenServiceType";
+import { CryptoServiceType } from "../../services/cryptoService/CryptoServiceType";
+import { QueryServiceType } from "../../services/queryService/QueryServiceType";
+import { TokenServiceType } from "../../services/tokenService/TokenServiceType";
 import { Request, Response } from "express";
-import { Message } from "../services/Message";
-import { Password } from "../services/queryService/findUser";
+import { Message } from "../../services/Message";
+import { Password } from "../../services/queryService/findUser";
 const isMessage = (data: Password | Message): data is Message => {
   return (data as Message).message !== undefined;
 };

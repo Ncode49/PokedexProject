@@ -4,13 +4,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = void 0;
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé
 // client est la dépendance
-const register = (registerService) => async (req, res) => {
+const register = (queryService, cryptoService) => async (req, res) => {
     const { username, password } = req.body;
     try {
-        const { message } = await registerService.registerUser(username, password);
-        return res.status(400).json({
-            message: message,
-        });
+        const hash = await cryptoService.hashPassword(password);
+        const message = await queryService.addUser(username, hash);
+        return res.status(400).json(message);
     }
     catch (error) {
         const err = error;

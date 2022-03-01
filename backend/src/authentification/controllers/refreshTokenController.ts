@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { TokenServiceType } from "../services/tokenService/TokenServiceType";
+import { TokenServiceType } from "../../services/tokenService/TokenServiceType";
 import jwt from "jsonwebtoken";
 type payload = {
   username: string;

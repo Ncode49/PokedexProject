@@ -1,8 +1,8 @@
 // prend en paramaetre les méthode qui renvoit un service
 
 import { Request, Response } from "express";
-import { CryptoServiceType } from "../services/cryptoService/CryptoServiceType";
-import { QueryServiceType } from "../services/queryService/QueryServiceType";
+import { CryptoServiceType } from "../../services/cryptoService/CryptoServiceType";
+import { QueryServiceType } from "../../services/queryService/QueryServiceType";
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé
 // client est la dépendance
 export const register =
