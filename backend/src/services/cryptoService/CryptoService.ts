@@ -1,5 +1,5 @@
 import bcryptjs from "bcryptjs";
-import { createCatchErrorMessage, ErrorS } from "../ServiceType/Error";
+import { createCatchErrorMessage, ErrorS } from "../Error";
 export type Hash = string;
 export type CryptoServiceType = {
   compareHash: (password: string, hash: string) => Promise<boolean | ErrorS>;

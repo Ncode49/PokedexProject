@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import config from "../../config/config";
-import { createCatchErrorMessage, ErrorS } from "../ServiceType/Error";
+import { createCatchErrorMessage, ErrorS } from "../Error";
 export type TokenServiceType = {
   generateAccessToken: (user: string) => Token | ErrorS;
   generateRefreshToken: (user: string) => Token | ErrorS;

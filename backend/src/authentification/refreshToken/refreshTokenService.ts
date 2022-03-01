@@ -2,7 +2,7 @@ import {
   createCatchErrorMessage,
   createErrorMessage,
   ErrorS,
-} from "../../services/ServiceType/Error";
+} from "../../services/Error";
 import {
   Token,
   TokenServiceType,

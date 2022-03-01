@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   createCatchErrorMessage,
   createErrorMessage,
-} from "../../services/ServiceType/Error";
+} from "../../services/Error";
 import { RefreshTokenServiceType } from "./refreshTokenService";
 
 export const refreshTokenController =
