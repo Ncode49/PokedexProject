@@ -4,9 +4,13 @@ import {
   createErrorMessage,
 } from "../../services/Error";
 import { RefreshTokenServiceType } from "./refreshTokenService";
+export type RefreshTokenControllerType = (
+  req: Request,
+  res: Response
+) => Promise<Response<any, Record<string, any>>>;
 
 export const refreshTokenController =
-  (refreshTokenService: RefreshTokenServiceType) =>
+  (refreshTokenService: RefreshTokenServiceType): RefreshTokenControllerType =>
   async (req: Request, res: Response) => {
     try {
       const token = req.headers.authorization?.split(" ")[1];
