@@ -23,6 +23,8 @@ app.use((_req, res, next) => {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
     next();
 });
+// instanciation des services
+// instantiation du controller
 const authController = (0, AutControllerDI_1.AuthControllerDI)({
     queryService: (0, QueryService_1.queryService)({ client: Client_1.client }),
     tokenService: (0, tokenService_1.tokenService)(),

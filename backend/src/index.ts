@@ -26,6 +26,9 @@ app.use((_req, res, next) => {
   next();
 });
 
+// instanciation des services
+
+// instantiation du controller
 const authController = AuthControllerDI({
   queryService: queryService({ client: client }),
   tokenService: tokenService(),

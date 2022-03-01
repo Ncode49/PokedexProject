@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import { Message } from "../Message";
+import { Message } from "../ServiceType/Message";
 import { addUserPasswordQuery, QueryBdd } from "./query";
 
 export const addUser =
