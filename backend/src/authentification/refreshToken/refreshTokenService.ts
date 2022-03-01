@@ -1,8 +1,8 @@
 import {
   createCatchErrorMessage,
   createErrorMessage,
-} from "../../services/ServiceType/Message";
-import { ErrorS } from "../../services/ServiceType/Result";
+  ErrorS,
+} from "../../services/ServiceType/Error";
 import {
   Token,
   TokenServiceType,

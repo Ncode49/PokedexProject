@@ -1,6 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.cryptService = void 0;
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const Error_1 = require("../ServiceType/Error");
 const cryptService = () => {
     return {
         hashPassword: hashPassword,
@@ -9,20 +14,18 @@ const cryptService = () => {
 };
 exports.cryptService = cryptService;
 const compareHash = async (password, hash) => {
-    const valid = await bcryptjs.compare(password, hash);
-    if (valid)
-        return { message: "mot de passe correct" };
-    return { message: "mot de passe incorrect" };
+    try {
+        return await bcryptjs_1.default.compare(password, hash);
+    }
+    catch (error) {
+        return (0, Error_1.createCatchErrorMessage)(error);
+    }
 };
 const hashPassword = async (password) => {
     try {
-        const hash = await bcryptjs.hash(password, 10);
-        return hash;
+        return await bcryptjs_1.default.hash(password, 10);
     }
     catch (error) {
-        const err = error;
-        return {
-            message: err.message,
-        };
+        return (0, Error_1.createCatchErrorMessage)(error);
     }
 };

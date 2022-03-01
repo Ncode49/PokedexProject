@@ -1,9 +1,9 @@
-import { Message } from "../ServiceType/Message";
-import { ServiceReturn } from "../ServiceType/Result";
-
+import bcryptjs from "bcryptjs";
+import { createCatchErrorMessage, ErrorS } from "../ServiceType/Error";
+export type Hash = string;
 export type CryptoServiceType = {
-  compareHash: (password: string, hash: string) => Promise<Message>;
-  hashPassword: (password: string) => Promise<Hash>;
+  compareHash: (password: string, hash: string) => Promise<boolean | ErrorS>;
+  hashPassword: (password: string) => Promise<Hash | ErrorS>;
 };
 
 export const cryptService = () => {
@@ -16,23 +16,18 @@ export const cryptService = () => {
 const compareHash = async (
   password: string,
   hash: string
-): Promise<Message> => {
-  const valid = await bcryptjs.compare(password, hash);
-  if (valid) return { message: "mot de passe correct" };
-  return { message: "mot de passe incorrect" };
+): Promise<boolean | ErrorS> => {
+  try {
+    return await bcryptjs.compare(password, hash);
+  } catch (error) {
+    return createCatchErrorMessage(error);
+  }
 };
 
-export type Hash = string;
-const hashPassword = async (
-  password: string
-): Promise<ServiceReturn<Hash, Message>> => {
+const hashPassword = async (password: string): Promise<Hash | ErrorS> => {
   try {
-    const hash = await bcryptjs.hash(password, 10);
-    return hash;
+    return await bcryptjs.hash(password, 10);
   } catch (error) {
-    const err = error as Error;
-    return {
-      message: err.message,
-    };
+    return createCatchErrorMessage(error);
   }
 };

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Message } from "../../services/ServiceType/Message";
+import { Message } from "../../services/ServiceType/Error";
 import { Password } from "../../services/queryService/findUser";
 import { QueryServiceType } from "../../services/queryService/QueryService";
 import { CryptoServiceType } from "../../services/cryptoService/CryptoService";

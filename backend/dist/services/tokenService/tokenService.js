@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.tokenService = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config/config"));
+const Error_1 = require("../ServiceType/Error");
 const tokenService = () => {
     return {
         generateAccessToken: generateAccessToken,
@@ -33,10 +34,7 @@ const generateAccessToken = (user) => {
         });
     }
     catch (error) {
-        const err = error;
-        return {
-            message: err.message,
-        };
+        return (0, Error_1.createCatchErrorMessage)(error);
     }
 };
 // durée de vie longue
@@ -48,9 +46,6 @@ const generateRefreshToken = (user) => {
         });
     }
     catch (error) {
-        const err = error;
-        return {
-            message: err.message,
-        };
+        return (0, Error_1.createCatchErrorMessage)(error);
     }
 };

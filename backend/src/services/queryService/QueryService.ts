@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import { Message } from "../ServiceType/Message";
+import { Message } from "../ServiceType/Error";
 import { addUser } from "./addUser";
 import { findUser, Password } from "./findUser";
 export interface QueryServiceDeps {

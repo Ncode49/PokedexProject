@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import config from "../../config/config";
-import { ErrorS } from "../ServiceType/Result";
+import { createCatchErrorMessage, ErrorS } from "../ServiceType/Error";
 export type TokenServiceType = {
   generateAccessToken: (user: string) => Token | ErrorS;
   generateRefreshToken: (user: string) => Token | ErrorS;
@@ -38,10 +38,7 @@ const generateAccessToken = (user: string): Token | ErrorS => {
       expiresIn: "1m",
     });
   } catch (error) {
-    const err = error as Error;
-    return {
-      message: err.message,
-    };
+    return createCatchErrorMessage(error);
   }
 };
 
@@ -53,9 +50,6 @@ const generateRefreshToken = (user: string): Token | ErrorS => {
       expiresIn: "1y",
     });
   } catch (error) {
-    const err = error as Error;
-    return {
-      message: err.message,
-    };
+    return createCatchErrorMessage(error);
   }
 };

@@ -1,4 +1,4 @@
-export type Message = {
+export type ErrorS = {
   message: string;
 };
 export const createErrorMessage = (message: string) => {

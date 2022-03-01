@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import { Message } from "../ServiceType/Message";
+import { Message } from "../ServiceType/Error";
 import { findUserByUsername, IUser } from "./query";
 export type Password = {
   password: string;
