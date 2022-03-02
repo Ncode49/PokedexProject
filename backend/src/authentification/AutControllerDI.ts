@@ -1,19 +1,19 @@
 import {
   validateTokenController,
   ValidateTokenControllerType,
-} from "./validateToken/validateTokenController";
+} from "./ValidateToken/ValidateTokenController";
 import {
   refreshTokenController,
   RefreshTokenControllerType,
-} from "./refreshToken/refreshTokenController";
-import { loginController, LoginControllerType } from "./login/loginController";
+} from "./RefreshToken/RefreshTokenController";
+import { LoginControllerType } from "./Login/LoginController";
 import {
   registerController,
   registerControllerType,
-} from "./register/registerController";
-import { RegisterServiceType } from "./register/registerService";
-import { LoginServiceType } from "./login/loginService";
-import { RefreshTokenServiceType } from "./refreshToken/refreshTokenService";
+} from "./Register/RegisterController";
+import { RegisterServiceType } from "./Register/RegisterService";
+import { LoginServiceType } from "./Login/LoginService";
+import { RefreshTokenServiceType } from "./RefreshToken/RefreshTokenService";
 import { UserRType } from "../services/UserR/UserR";
 // // definition du controller principal
 // ensemble des services dont dépend le controller
