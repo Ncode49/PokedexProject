@@ -3,43 +3,47 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserR = void 0;
 const Error_1 = require("../Error");
 const UserQuery_1 = require("./UserQuery");
-const UserR = (client) => {
+const UserR = (pool) => {
     return {
-        addUser: addUser(client),
-        findUser: findUser(client),
+        addUser: addUser(pool),
+        findUser: findUser(pool),
     };
 };
 exports.UserR = UserR;
-const addUser = (client) => async (username, hash) => {
+const addUser = (pool) => async (username, hash) => {
+    const client = await pool.connect();
     try {
-        await client.connect();
         const query = {
             text: UserQuery_1.addUserPasswordQuery,
             values: [username, hash],
         };
+        await client.query("BEGIN");
         await client.query(query);
+        await client.query("COMMIT");
         return {
             type: "success",
             message: "l'utilisateur a été enregistré en bdd",
         };
     }
     catch (error) {
+        await client.query("ROLLBACK");
         return (0, Error_1.createCatchErrorMessage)(error);
     }
     finally {
-        client.end();
-        console.log("client déconnecté");
+        client.release();
     }
 };
-const findUser = (client) => async (username, password) => {
+const findUser = (pool) => async (username, password) => {
+    const client = await pool.connect();
     try {
-        client.connect();
         const query = {
             text: UserQuery_1.findUserByUsername,
             values: [username],
         };
-        const data = await client.query(query);
-        const users = data.rows;
+        await client.query("BEGIN");
+        const { rows } = await client.query(query);
+        await client.query("COMMIT");
+        const users = rows;
         if (users.length == 0)
             return {
                 type: "error",
@@ -48,9 +52,10 @@ const findUser = (client) => async (username, password) => {
         return { type: "success", password: users[0].password };
     }
     catch (error) {
+        await client.query("ROLLBACK");
         return (0, Error_1.createCatchErrorMessage)(error);
     }
     finally {
-        client.end();
+        client.release();
     }
 };

@@ -2,7 +2,7 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json 
 
 {
-    "username":"kiliadsdsa",
+    "username":"kiliadsdsadsds",
     "password": "cc"
 }
 ###
@@ -68,5 +68,6 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTmlja3kiL
 
 ### Test new accessToken
 GET http://localhost:3000/auth/validateToken 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDU3NzI2ODEsImV4cCI6MTY0NTc3Mjc0MX0.Z4KOL8kOaPG_NsORleynwnf4Rt9O5X8zIfJ91l2kq1k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYyMzE5NTAsImV4cCI6MTY0NjIzMjAxMH0.Nwi5HA2QpyOx9g_rCkZdWcm8YP2U8CdH2KmCPdSfXLo
+
 ###

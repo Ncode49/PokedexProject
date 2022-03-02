@@ -10,10 +10,8 @@ const extractJWT_1 = require("../authentification/middleware/extractJWT");
 const authRouter = (authController) => {
     const authRouter = express_1.default.Router();
     authRouter.post("/register", authController.register);
-    //authRouter.post("/login", authController.login);
-    // authRouter.post("/refreshToken", authController.refreshToken);
-    // route to test if the middleware is valid
-    // est ce que l'on doit ajouter des services dans les middlewares ?
+    authRouter.post("/login", authController.login);
+    authRouter.post("/refreshToken", authController.refreshToken);
     authRouter.get("/validateToken", extractJWT_1.extractJWT, authController.validateToken);
     return authRouter;
 };

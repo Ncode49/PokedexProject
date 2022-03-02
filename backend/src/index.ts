@@ -1,5 +1,5 @@
 import express from "express";
-import { Client } from "pg";
+import { Client, Pool } from "pg";
 import {
   AuthControllerDI,
   LoginController,
@@ -35,11 +35,11 @@ app.use((_req, res, next) => {
   next();
 });
 // instanciation du client
-const client = new Client(config.postgres);
+const pool = new Pool(config.postgres);
 // instantiation des services génériques
 const tokenService = TokenService();
 const cryptoService = CryptService();
-const userR = UserR(client);
+const userR = UserR(pool);
 // instanciation des services spécifiques
 const loginService = LoginService(userR, cryptoService, tokenService);
 const registerService = RegisterService(userR, cryptoService);

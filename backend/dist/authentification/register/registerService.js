@@ -2,7 +2,7 @@
 // prend en paramaetre les méthode qui renvoit un service
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.register = exports.RegisterService = void 0;
-const Error_1 = require("../../services/Error");
+const services_1 = require("../../services");
 const RegisterService = (userR, cryptoService) => {
     return {
         register: (0, exports.register)(userR, cryptoService),
@@ -17,7 +17,7 @@ const register = (userR, cryptoService) => async (username, password) => {
         return await userR.addUser(username, hashOrError.hash);
     }
     catch (error) {
-        return (0, Error_1.createCatchErrorMessage)(error);
+        return (0, services_1.createCatchErrorMessage)(error);
     }
 };
 exports.register = register;

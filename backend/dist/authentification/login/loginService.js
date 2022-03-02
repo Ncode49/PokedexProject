@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.login = exports.LoginService = void 0;
-const Error_1 = require("../../services/Error");
+const services_1 = require("../../services");
 const LoginService = (userR, cryptoService, tokenService) => {
     return {
         login: (0, exports.login)(userR, cryptoService, tokenService),
@@ -16,6 +16,13 @@ const login = (userR, cryptoService, tokenService) => async (username, password)
         const message = await cryptoService.compareHash(password, data.password);
         if (message.type === "error")
             return message;
+        if (!message.bool) {
+            const err = {
+                type: "error",
+                message: "password incorrect",
+            };
+            return err;
+        }
         const accessToken = tokenService.generateAccessToken(username);
         if (accessToken.type === "error")
             return accessToken;
@@ -31,7 +38,7 @@ const login = (userR, cryptoService, tokenService) => async (username, password)
         return success;
     }
     catch (error) {
-        return (0, Error_1.createCatchErrorMessage)(error);
+        return (0, services_1.createCatchErrorMessage)(error);
     }
 };
 exports.login = login;

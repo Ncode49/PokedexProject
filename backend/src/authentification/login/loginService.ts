@@ -39,6 +39,13 @@ export const login =
       if (data.type === "error") return data;
       const message = await cryptoService.compareHash(password, data.password);
       if (message.type === "error") return message;
+      if (!message.bool) {
+        const err: ErrorS = {
+          type: "error",
+          message: "password incorrect",
+        };
+        return err;
+      }
       const accessToken = tokenService.generateAccessToken(username);
       if (accessToken.type === "error") return accessToken;
       const refreshToken = tokenService.generateRefreshToken(username);

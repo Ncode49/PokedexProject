@@ -5,18 +5,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.extractJWT = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const Error_1 = require("../../services/Error");
+const config_1 = __importDefault(require("../../config/config"));
 // 401 unauthorized
 const extractJWT = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
+    console.log(config_1.default.server.token.accessTokenSecret);
     if (token == null)
-        return res.sendStatus(401);
-    jsonwebtoken_1.default.verify(token, process.env.TOKEN_SECRET, (err, _user) => {
+        return res
+            .status(401)
+            .json({ type: "error", message: "no token in header" });
+    jsonwebtoken_1.default.verify(token, config_1.default.server.token.accessTokenSecret, (err, _user) => {
         if (err)
-            return res.sendStatus(403);
+            return res.status(403).json(err.message);
+        console.log("next function ");
         next();
     });
-    return res.status(401).json((0, Error_1.createErrorMessage)("No token UnAuthorized"));
 };
 exports.extractJWT = extractJWT;

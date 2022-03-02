@@ -1,4 +1,4 @@
-import { Client } from "pg";
+import { Client, Pool } from "pg";
 import { createCatchErrorMessage, ErrorS } from "../Error";
 import { addUserPasswordQuery, findUserByUsername, IUser } from "./UserQuery";
 
@@ -7,10 +7,10 @@ export type UserRType = {
   findUser: (username: string, password: string) => Promise<PasswordS | ErrorS>;
 };
 
-export const UserR = (client: Client): UserRType => {
+export const UserR = (pool: Pool): UserRType => {
   return {
-    addUser: addUser(client),
-    findUser: findUser(client),
+    addUser: addUser(pool),
+    findUser: findUser(pool),
   };
 };
 
@@ -24,38 +24,42 @@ type PasswordS = {
   password: string;
 };
 const addUser =
-  (client: Client) =>
+  (pool: Pool) =>
   async (username: string, hash: string): Promise<MessageS | ErrorS> => {
+    const client = await pool.connect();
     try {
-      await client.connect();
       const query = {
         text: addUserPasswordQuery,
         values: [username, hash],
       };
+      await client.query("BEGIN");
       await client.query(query);
+      await client.query("COMMIT");
       return {
         type: "success",
         message: "l'utilisateur a été enregistré en bdd",
       };
     } catch (error) {
+      await client.query("ROLLBACK");
       return createCatchErrorMessage(error);
     } finally {
-      client.end();
-      console.log("client déconnecté");
+      client.release();
     }
   };
 
 const findUser =
-  (client: Client) =>
+  (pool: Pool) =>
   async (username: string, password: string): Promise<ErrorS | PasswordS> => {
+    const client = await pool.connect();
     try {
-      client.connect();
       const query = {
         text: findUserByUsername,
         values: [username],
       };
-      const data = await client.query<IUser>(query);
-      const users = data.rows;
+      await client.query("BEGIN");
+      const { rows } = await client.query<IUser>(query);
+      await client.query("COMMIT");
+      const users = rows;
       if (users.length == 0)
         return {
           type: "error",
@@ -63,8 +67,9 @@ const findUser =
         };
       return { type: "success", password: users[0].password };
     } catch (error) {
+      await client.query("ROLLBACK");
       return createCatchErrorMessage(error);
     } finally {
-      client.end();
+      client.release();
     }
   };
