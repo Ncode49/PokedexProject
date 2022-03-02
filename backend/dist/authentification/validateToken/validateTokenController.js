@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.validateTokenController = void 0;
-const validateTokenController = (res) => {
+exports.ValidateTokenController = void 0;
+const ValidateTokenController = (res) => {
     return res.status(200).json({
         message: "Token(s) validated",
     });
 };
-exports.validateTokenController = validateTokenController;
+exports.ValidateTokenController = ValidateTokenController;

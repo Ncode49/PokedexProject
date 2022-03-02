@@ -1,7 +1,7 @@
 // take token,
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { createErrorMessage } from "../../services/Error";
+import { createErrorMessage } from "../../services";
 // 401 unauthorized
 export const extractJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"];

@@ -1,12 +1,10 @@
 import {
-  createCatchErrorMessage,
-  createErrorMessage,
-  ErrorS,
-} from "../../services/Error";
-import {
   TokenS,
+  ErrorS,
   TokenServiceType,
-} from "../../services/TokenService/TokenService";
+  createCatchErrorMessage,
+} from "../../services";
+
 export type AccessToken = {
   accessToken: string;
 };

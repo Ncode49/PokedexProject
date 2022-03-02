@@ -1,22 +1,18 @@
 "use strict";
 // prend en paramaetre les méthode qui renvoit un service
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = void 0;
-// ce qui est dans les ervice peut etre appelée dans la methode renvoyé
-// client est la dépendance
-const register = (queryService, cryptoService) => async (req, res) => {
-    const { username, password } = req.body;
+exports.RegisterController = void 0;
+const Error_1 = require("../../services/Error");
+const RegisterController = (registerService) => async (req, res) => {
     try {
-        const hash = await cryptoService.hashPassword(password);
-        const message = await queryService.addUser(username, hash);
-        return res.status(400).json(message);
+        const { username, password } = req.body;
+        const message = await registerService.register(username, password);
+        if (message.type == "success")
+            return res.status(200).json(message);
+        return res.status(500).json(message);
     }
     catch (error) {
-        const err = error;
-        return res.status(400).json({
-            error: err,
-            message: err.message,
-        });
+        return res.status(400).json((0, Error_1.createCatchErrorMessage)(error));
     }
 };
-exports.register = register;
+exports.RegisterController = RegisterController;

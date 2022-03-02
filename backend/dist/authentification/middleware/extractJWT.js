@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.extractJWT = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const Error_1 = require("../../services/ServiceType/Error");
+const Error_1 = require("../../services/Error");
 // 401 unauthorized
 const extractJWT = (req, res, next) => {
     const authHeader = req.headers["authorization"];

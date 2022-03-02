@@ -1,19 +1,20 @@
 import express from "express";
 import { Client } from "pg";
-import { AuthControllerDI } from "./authentification/AutControllerDI";
-import { LoginController } from "./authentification/Login/LoginController";
-import { LoginService } from "./authentification/login/LoginService";
-import { RefreshTokenController } from "./authentification/RefreshToken/RefreshTokenController";
-import { RefreshTokenService } from "./authentification/refreshToken/RefreshTokenService";
-import { RegisterController } from "./authentification/Register/RegisterController";
-import { RegisterService } from "./authentification/Register/RegisterService";
-import { ValidateTokenController } from "./authentification/ValidateToken/ValidateTokenController";
+import {
+  AuthControllerDI,
+  LoginController,
+  LoginService,
+  RefreshTokenController,
+  RefreshTokenService,
+  RegisterController,
+  RegisterService,
+  ValidateTokenController,
+} from "./authentification";
 
 import config from "./config/config";
 import { authRouter } from "./routes/authRouter";
-import { CryptService } from "./services/CryptoService/CryptoService";
-import { TokenService } from "./services/TokenService/TokenService";
-import { UserR } from "./services/UserR/UserR";
+import { CryptService, TokenService, UserR } from "./services";
+
 const app = express();
 
 // load middleware we need

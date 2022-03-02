@@ -3,19 +3,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cryptService = void 0;
+exports.CryptService = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const Error_1 = require("../ServiceType/Error");
-const cryptService = () => {
+const Error_1 = require("../Error");
+const CryptService = () => {
     return {
         hashPassword: hashPassword,
         compareHash: compareHash,
     };
 };
-exports.cryptService = cryptService;
+exports.CryptService = CryptService;
 const compareHash = async (password, hash) => {
     try {
-        return await bcryptjs_1.default.compare(password, hash);
+        const bool = await bcryptjs_1.default.compare(password, hash);
+        return {
+            type: "success",
+            bool: bool,
+        };
     }
     catch (error) {
         return (0, Error_1.createCatchErrorMessage)(error);
@@ -23,7 +27,11 @@ const compareHash = async (password, hash) => {
 };
 const hashPassword = async (password) => {
     try {
-        return await bcryptjs_1.default.hash(password, 10);
+        const hash = await bcryptjs_1.default.hash(password, 10);
+        return {
+            type: "success",
+            hash: hash,
+        };
     }
     catch (error) {
         return (0, Error_1.createCatchErrorMessage)(error);

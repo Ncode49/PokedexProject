@@ -1,22 +1,19 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.refreshTokenService = void 0;
-const Error_1 = require("../../services/ServiceType/Error");
-const refreshTokenService = (tokenservice) => {
+exports.RefreshTokenService = void 0;
+const Error_1 = require("../../services/Error");
+const RefreshTokenService = (tokenservice) => {
     return {
         refreshToken: refreshToken(tokenservice),
     };
 };
-exports.refreshTokenService = refreshTokenService;
+exports.RefreshTokenService = RefreshTokenService;
 const refreshToken = (tokenService) => (token) => {
     try {
         const payload = tokenService.verifyRefreshToken(token);
-        if ("username" in payload) {
-            return tokenService.generateAccessToken(payload.username);
-        }
-        if ("message" in payload)
+        if (payload.type === "error")
             return payload;
-        return (0, Error_1.createErrorMessage)("error refreshToken");
+        return tokenService.generateAccessToken(payload.payload.username);
     }
     catch (error) {
         return (0, Error_1.createCatchErrorMessage)(error);

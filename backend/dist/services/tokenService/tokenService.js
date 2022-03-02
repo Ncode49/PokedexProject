@@ -3,18 +3,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tokenService = void 0;
+exports.generateRefreshToken = exports.generateAccessToken = exports.TokenService = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = __importDefault(require("../../config/config"));
-const Error_1 = require("../ServiceType/Error");
-const tokenService = () => {
+const Error_1 = require("../Error");
+const TokenService = () => {
     return {
-        generateAccessToken: generateAccessToken,
-        generateRefreshToken: generateRefreshToken,
+        generateAccessToken: exports.generateAccessToken,
+        generateRefreshToken: exports.generateRefreshToken,
         verifyRefreshToken: verifyRefreshToken,
     };
 };
-exports.tokenService = tokenService;
+exports.TokenService = TokenService;
 const verifyRefreshToken = (token) => {
     jsonwebtoken_1.default.verify(token, config_1.default.server.token.refreshTokenSecret, (err, _user) => {
         if (err)
@@ -23,29 +23,42 @@ const verifyRefreshToken = (token) => {
             };
     });
     const decoded = jsonwebtoken_1.default.decode(token);
-    return decoded;
+    return {
+        type: "success",
+        payload: decoded,
+    };
 };
 // durée de vie courte
 const generateAccessToken = (user) => {
     try {
-        return jsonwebtoken_1.default.sign({ user }, config_1.default.server.token.accessTokenSecret, {
+        const token = jsonwebtoken_1.default.sign({ user }, config_1.default.server.token.accessTokenSecret, {
             algorithm: "HS256",
             expiresIn: "1m",
         });
+        return {
+            type: "success",
+            token: token,
+        };
     }
     catch (error) {
         return (0, Error_1.createCatchErrorMessage)(error);
     }
 };
+exports.generateAccessToken = generateAccessToken;
 // durée de vie longue
 const generateRefreshToken = (user) => {
     try {
-        return jsonwebtoken_1.default.sign({ user }, config_1.default.server.token.refreshTokenSecret, {
+        const token = jsonwebtoken_1.default.sign({ user }, config_1.default.server.token.refreshTokenSecret, {
             algorithm: "HS256",
             expiresIn: "1y",
         });
+        return {
+            type: "success",
+            token: token,
+        };
     }
     catch (error) {
         return (0, Error_1.createCatchErrorMessage)(error);
     }
 };
+exports.generateRefreshToken = generateRefreshToken;

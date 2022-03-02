@@ -1,8 +1,13 @@
 // prend en paramaetre les méthode qui renvoit un service
 
-import { CryptoServiceType } from "../../services/CryptoService/CryptoService";
-import { createCatchErrorMessage, ErrorS } from "../../services/Error";
-import { MessageS, UserRType } from "../../services/UserR/UserR";
+import {
+  MessageS,
+  ErrorS,
+  UserRType,
+  CryptoServiceType,
+  createCatchErrorMessage,
+} from "../../services";
+
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé
 // client est la dépendance
 export type RegisterServiceType = {

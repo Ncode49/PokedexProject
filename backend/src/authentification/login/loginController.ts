@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-
-import { createCatchErrorMessage } from "../../services/Error";
-import { LoginServiceType } from "./LoginService";
+import { LoginServiceType } from "..";
+import { createCatchErrorMessage } from "../../services";
 
 export type LoginControllerType = (
   req: Request,

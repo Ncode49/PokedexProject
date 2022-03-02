@@ -1,9 +1,11 @@
-import { Request, Response } from "express";
+import {
+  UserRType,
+  CryptoServiceType,
+  TokenServiceType,
+  ErrorS,
+  createCatchErrorMessage,
+} from "../../services";
 
-import { UserRType } from "../../services/UserR/UserR";
-import { CryptoServiceType } from "../../services/CryptoService/CryptoService";
-import { TokenServiceType } from "../../services/TokenService/TokenService";
-import { createCatchErrorMessage, ErrorS } from "../../services/Error";
 export const LoginService = (
   userR: UserRType,
   cryptoService: CryptoServiceType,

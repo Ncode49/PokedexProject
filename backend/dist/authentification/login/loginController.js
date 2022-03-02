@@ -1,37 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = void 0;
-const isMessage = (data) => {
-    return data.message !== undefined;
-};
-const isValid = (message) => {
-    if (message.message === "mot de passe incorrect")
-        return false;
-    return true;
-};
-const login = (queryService, cryptoService, tokenService) => async (req, res) => {
+exports.LoginController = void 0;
+const Error_1 = require("../../services/Error");
+const LoginController = (loginService) => async (req, res) => {
     try {
         const { username, password } = req.body;
-        const data = await queryService.findUser(username, password);
-        if (isMessage(data)) {
+        const data = await loginService.login(username, password);
+        if (data.type == "error")
             return res.status(400).json(data);
-        }
-        const hash = data.password;
-        const message = await cryptoService.compareHash(password, hash);
-        if (!isValid(message))
-            return res.status(400).json(message);
-        const accessToken = tokenService.generateAccessToken(username);
-        const refreshToken = tokenService.generateRefreshToken(username);
-        return res.status(200).json({
-            accessToken: accessToken,
-            refreshToken: refreshToken,
-        });
+        return res.status(200).json(data);
     }
     catch (error) {
-        const err = error;
-        return res.status(400).json({
-            message: err.message,
-        });
+        return res.status(500).json((0, Error_1.createCatchErrorMessage)(error));
     }
 };
-exports.login = login;
+exports.LoginController = LoginController;

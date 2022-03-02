@@ -1,7 +1,9 @@
-import { ValidateTokenControllerType } from "./ValidateToken/ValidateTokenController";
-import { RefreshTokenControllerType } from "./RefreshToken/RefreshTokenController";
-import { LoginControllerType } from "./Login/LoginController";
-import { RegisterControllerType } from "./Register/RegisterController";
+import {
+  RegisterControllerType,
+  LoginControllerType,
+  RefreshTokenControllerType,
+  ValidateTokenControllerType,
+} from ".";
 
 export type AuthControllerType = {
   register: RegisterControllerType;
