@@ -13,7 +13,8 @@ export const LoginController =
   async (req: Request, res: Response) => {
     try {
       const { username, password } = req.body;
-      const data = loginService.login(username, password);
+      const data = await loginService.login(username, password);
+      if (data.type == "error") return res.status(400).json(data);
       return res.status(200).json(data);
     } catch (error) {
       return res.status(500).json(createCatchErrorMessage(error));

@@ -2,6 +2,7 @@ import { Response } from "express";
 export type ValidateTokenControllerType = (
   res: Response
 ) => Response<any, Record<string, string>>;
+
 export const ValidateTokenController: ValidateTokenControllerType = (
   res: Response
 ) => {

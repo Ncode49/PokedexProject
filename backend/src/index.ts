@@ -4,24 +4,15 @@ import { AuthControllerDI } from "./authentification/AutControllerDI";
 import { LoginController } from "./authentification/Login/LoginController";
 import { LoginService } from "./authentification/login/LoginService";
 import { RefreshTokenController } from "./authentification/RefreshToken/RefreshTokenController";
-import {
-  RefreshTokenService,
-  refreshTokenService,
-} from "./authentification/refreshToken/RefreshTokenService";
+import { RefreshTokenService } from "./authentification/refreshToken/RefreshTokenService";
 import { RegisterController } from "./authentification/Register/RegisterController";
-import {
-  RegisterService,
-  registerService,
-} from "./authentification/Register/RegisterService";
+import { RegisterService } from "./authentification/Register/RegisterService";
 import { ValidateTokenController } from "./authentification/ValidateToken/ValidateTokenController";
 
 import config from "./config/config";
 import { authRouter } from "./routes/authRouter";
 import { CryptService } from "./services/CryptoService/CryptoService";
-import {
-  TokenService,
-  tokenService,
-} from "./services/TokenService/TokenService";
+import { TokenService } from "./services/TokenService/TokenService";
 import { UserR } from "./services/UserR/UserR";
 const app = express();
 
@@ -57,9 +48,13 @@ const loginController = LoginController(loginService);
 const registerController = RegisterController(registerService);
 const refreshTokenController = RefreshTokenController(refreshtokenService);
 const validateTokenController = ValidateTokenController;
-
 // instanciation du controller globale
-const authController = AuthControllerDI();
+const authController = AuthControllerDI(
+  registerController,
+  loginController,
+  refreshTokenController,
+  validateTokenController
+);
 app.use("/auth", authRouter(authController));
 
 app.listen(config.server.port, () => {
