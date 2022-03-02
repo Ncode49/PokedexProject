@@ -2,8 +2,8 @@ import express from "express";
 import { AuthControllerDI } from "./authentification/AutControllerDI";
 import { client } from "./services/Client";
 import { cryptService } from "./services/cryptoService/CryptoService";
-import { queryService } from "./services/queryService/QueryService";
-import { tokenService } from "./services/tokenService/tokenService";
+import { queryService } from "./services/UserR/UserR";
+import { tokenService } from "./services/tokenService/TokenService";
 import config from "./config/config";
 import { authRouter } from "./routes/authRouter";
 const app = express();
@@ -29,11 +29,11 @@ app.use((_req, res, next) => {
 // instanciation des services
 
 // instantiation du controller
-const authController = AuthControllerDI({
-  queryService: queryService({ client: client }),
+const authController = AuthControllerDI(
+  userR: userR({ client: client }),
   tokenService: tokenService(),
   cryptoService: cryptService(),
-});
+);
 app.use("/auth", authRouter(authController));
 
 app.listen(config.server.port, () => {

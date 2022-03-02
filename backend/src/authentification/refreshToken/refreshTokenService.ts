@@ -4,14 +4,15 @@ import {
   ErrorS,
 } from "../../services/Error";
 import {
-  Token,
+  TokenS,
   TokenServiceType,
-} from "../../services/tokenService/tokenService";
+} from "../../services/tokenService/TokenService";
 export type AccessToken = {
   accessToken: string;
 };
+
 export type RefreshTokenServiceType = {
-  refreshToken: (token: string) => Token | ErrorS;
+  refreshToken: (token: string) => TokenS | ErrorS;
 };
 export const refreshTokenService = (tokenservice: TokenServiceType) => {
   return {
@@ -21,14 +22,11 @@ export const refreshTokenService = (tokenservice: TokenServiceType) => {
 
 const refreshToken =
   (tokenService: TokenServiceType) =>
-  (token: Token): Token | ErrorS => {
+  (token: string): TokenS | ErrorS => {
     try {
       const payload = tokenService.verifyRefreshToken(token);
-      if ("username" in payload) {
-        return tokenService.generateAccessToken(payload.username);
-      }
-      if ("message" in payload) return payload;
-      return createErrorMessage("error refreshToken");
+      if (payload.type === "error") return payload;
+      return tokenService.generateAccessToken(payload.payload.username);
     } catch (error) {
       return createCatchErrorMessage(error);
     }
