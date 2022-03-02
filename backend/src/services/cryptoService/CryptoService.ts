@@ -1,10 +1,10 @@
 import bcryptjs from "bcryptjs";
 import { createCatchErrorMessage, ErrorS } from "../Error";
-export type HashS = {
+type HashS = {
   type: "success";
   hash: string;
 };
-export type BoolS = {
+type BoolS = {
   type: "success";
   bool: boolean;
 };
@@ -13,7 +13,7 @@ export type CryptoServiceType = {
   hashPassword: (password: string) => Promise<HashS | ErrorS>;
 };
 
-export const cryptService = () => {
+export const CryptService = (): CryptoServiceType => {
   return {
     hashPassword: hashPassword,
     compareHash: compareHash,

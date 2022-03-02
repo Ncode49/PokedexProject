@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
 
 import { createCatchErrorMessage } from "../../services/Error";
-import { LoginServiceType } from "./loginService";
+import { LoginServiceType } from "./LoginService";
 
 export type LoginControllerType = (
   req: Request,
   res: Response
 ) => Promise<Response<any, Record<string, any>>>;
 
-export const loginController =
+export const LoginController =
   (loginService: LoginServiceType): LoginControllerType =>
   async (req: Request, res: Response) => {
     try {

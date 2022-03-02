@@ -7,7 +7,7 @@ export type TokenServiceType = {
   verifyRefreshToken: (token: string) => PayloadS | ErrorS;
 };
 
-export const tokenService = (): TokenServiceType => {
+export const TokenService = (): TokenServiceType => {
   return {
     generateAccessToken: generateAccessToken,
     generateRefreshToken: generateRefreshToken,
@@ -42,7 +42,7 @@ const verifyRefreshToken = (token: string): PayloadS | ErrorS => {
 };
 
 // durée de vie courte
-const generateAccessToken = (user: string): TokenS | ErrorS => {
+export const generateAccessToken = (user: string): TokenS | ErrorS => {
   try {
     const token = jwt.sign({ user }, config.server.token.accessTokenSecret, {
       algorithm: "HS256",
@@ -58,7 +58,7 @@ const generateAccessToken = (user: string): TokenS | ErrorS => {
 };
 
 // durée de vie longue
-const generateRefreshToken = (user: string): TokenS | ErrorS => {
+export const generateRefreshToken = (user: string): TokenS | ErrorS => {
   try {
     const token = jwt.sign({ user }, config.server.token.refreshTokenSecret, {
       algorithm: "HS256",

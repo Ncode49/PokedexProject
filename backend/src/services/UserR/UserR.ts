@@ -2,19 +2,15 @@ import { Client } from "pg";
 import { createCatchErrorMessage, ErrorS } from "../Error";
 import { addUserPasswordQuery, findUserByUsername, IUser } from "./UserQuery";
 
-export interface UserRDeps {
-  client: Client;
-}
-
 export type UserRType = {
   addUser: (username: string, password: string) => Promise<MessageS | ErrorS>;
   findUser: (username: string, password: string) => Promise<PasswordS | ErrorS>;
 };
 
-export const UserR = (deps: UserRDeps): UserRType => {
+export const UserR = (client: Client): UserRType => {
   return {
-    addUser: addUser(deps.client),
-    findUser: findUser(deps.client),
+    addUser: addUser(client),
+    findUser: findUser(client),
   };
 };
 
@@ -23,11 +19,11 @@ export type MessageS = {
   message: string;
 };
 
-export type PasswordS = {
+type PasswordS = {
   type: "success";
   password: string;
 };
-export const addUser =
+const addUser =
   (client: Client) =>
   async (username: string, hash: string): Promise<MessageS | ErrorS> => {
     try {
@@ -49,7 +45,7 @@ export const addUser =
     }
   };
 
-export const findUser =
+const findUser =
   (client: Client) =>
   async (username: string, password: string): Promise<ErrorS | PasswordS> => {
     try {

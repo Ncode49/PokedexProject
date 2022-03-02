@@ -1,11 +1,28 @@
 import express from "express";
+import { Client } from "pg";
 import { AuthControllerDI } from "./authentification/AutControllerDI";
-import { client } from "./services/Client";
-import { cryptService } from "./services/cryptoService/CryptoService";
-import { queryService } from "./services/UserR/UserR";
-import { tokenService } from "./services/tokenService/TokenService";
+import { LoginController } from "./authentification/Login/LoginController";
+import { LoginService } from "./authentification/login/LoginService";
+import { RefreshTokenController } from "./authentification/RefreshToken/RefreshTokenController";
+import {
+  RefreshTokenService,
+  refreshTokenService,
+} from "./authentification/refreshToken/RefreshTokenService";
+import { RegisterController } from "./authentification/Register/RegisterController";
+import {
+  RegisterService,
+  registerService,
+} from "./authentification/Register/RegisterService";
+import { ValidateTokenController } from "./authentification/ValidateToken/ValidateTokenController";
+
 import config from "./config/config";
 import { authRouter } from "./routes/authRouter";
+import { CryptService } from "./services/CryptoService/CryptoService";
+import {
+  TokenService,
+  tokenService,
+} from "./services/TokenService/TokenService";
+import { UserR } from "./services/UserR/UserR";
 const app = express();
 
 // load middleware we need
@@ -25,15 +42,24 @@ app.use((_req, res, next) => {
   );
   next();
 });
+// instanciation du client
+const client = new Client(config.postgres);
+// instantiation des services génériques
+const tokenService = TokenService();
+const cryptoService = CryptService();
+const userR = UserR(client);
+// instanciation des services spécifiques
+const loginService = LoginService(userR, cryptoService, tokenService);
+const registerService = RegisterService(userR, cryptoService);
+const refreshtokenService = RefreshTokenService(tokenService);
+// instantiation des controllers spécifiques
+const loginController = LoginController(loginService);
+const registerController = RegisterController(registerService);
+const refreshTokenController = RefreshTokenController(refreshtokenService);
+const validateTokenController = ValidateTokenController;
 
-// instanciation des services
-
-// instantiation du controller
-const authController = AuthControllerDI(
-  userR: userR({ client: client }),
-  tokenService: tokenService(),
-  cryptoService: cryptService(),
-);
+// instanciation du controller globale
+const authController = AuthControllerDI();
 app.use("/auth", authRouter(authController));
 
 app.listen(config.server.port, () => {

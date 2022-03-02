@@ -1,24 +1,28 @@
 import { Request, Response } from "express";
 
 import { UserRType } from "../../services/UserR/UserR";
-import { CryptoServiceType } from "../../services/cryptoService/CryptoService";
-import { TokenServiceType } from "../../services/tokenService/TokenService";
+import { CryptoServiceType } from "../../services/CryptoService/CryptoService";
+import { TokenServiceType } from "../../services/TokenService/TokenService";
 import { createCatchErrorMessage, ErrorS } from "../../services/Error";
-export const loginService = (
+export const LoginService = (
   userR: UserRType,
   cryptoService: CryptoServiceType,
   tokenService: TokenServiceType
-) => {
+): LoginServiceType => {
   return {
     login: login(userR, cryptoService, tokenService),
   };
 };
-export type AccessRefreshToken = {
-  accesstoken: string;
+export type AccessRefreshTokenS = {
+  type: "success";
+  accessToken: string;
   refreshToken: string;
 };
 export type LoginServiceType = {
-  login: (username: string, password: string) => ErrorS | AccessRefreshToken;
+  login: (
+    username: string,
+    password: string
+  ) => Promise<ErrorS | AccessRefreshTokenS>;
 };
 
 export const login =
@@ -37,11 +41,14 @@ export const login =
       if (accessToken.type === "error") return accessToken;
       const refreshToken = tokenService.generateRefreshToken(username);
       if (refreshToken.type === "error") return refreshToken;
-      return {
+      // obliger pour typer le retour
+      const success: AccessRefreshTokenS = {
+        type: "success",
         accessToken: accessToken.token,
         refreshToken: refreshToken.token,
       };
+      return success;
     } catch (error) {
-      createCatchErrorMessage(error);
+      return createCatchErrorMessage(error);
     }
   };

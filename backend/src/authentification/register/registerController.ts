@@ -2,7 +2,7 @@
 
 import { Request, Response } from "express";
 import { createCatchErrorMessage } from "../../services/Error";
-import { RegisterServiceType } from "./registerService";
+import { RegisterServiceType } from "./RegisterService";
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé
 // client est la dépendance
 
@@ -10,7 +10,7 @@ export type registerControllerType = (
   req: Request,
   res: Response
 ) => Promise<Response<any, Record<any, string>>>;
-export const registerController =
+export const RegisterController =
   (registerService: RegisterServiceType) =>
   async (req: Request, res: Response) => {
     try {

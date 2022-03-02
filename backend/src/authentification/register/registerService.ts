@@ -1,18 +1,18 @@
 // prend en paramaetre les méthode qui renvoit un service
 
-import { CryptoServiceType } from "../../services/cryptoService/CryptoService";
+import { CryptoServiceType } from "../../services/CryptoService/CryptoService";
 import { createCatchErrorMessage, ErrorS } from "../../services/Error";
-import { UserRType } from "../../services/UserR/UserR";
+import { MessageS, UserRType } from "../../services/UserR/UserR";
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé
 // client est la dépendance
 export type RegisterServiceType = {
-  register: (username: string, password: string) => string | ErrorS;
+  register: (username: string, password: string) => Promise<MessageS | ErrorS>;
 };
 
-export const registerService = (
+export const RegisterService = (
   userR: UserRType,
   cryptoService: CryptoServiceType
-) => {
+): RegisterServiceType => {
   return {
     register: register(userR, cryptoService),
   };

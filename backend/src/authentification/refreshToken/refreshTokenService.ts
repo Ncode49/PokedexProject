@@ -6,7 +6,7 @@ import {
 import {
   TokenS,
   TokenServiceType,
-} from "../../services/tokenService/TokenService";
+} from "../../services/TokenService/TokenService";
 export type AccessToken = {
   accessToken: string;
 };
@@ -14,7 +14,7 @@ export type AccessToken = {
 export type RefreshTokenServiceType = {
   refreshToken: (token: string) => TokenS | ErrorS;
 };
-export const refreshTokenService = (tokenservice: TokenServiceType) => {
+export const RefreshTokenService = (tokenservice: TokenServiceType) => {
   return {
     refreshToken: refreshToken(tokenservice),
   };

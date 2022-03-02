@@ -3,13 +3,13 @@ import {
   createCatchErrorMessage,
   createErrorMessage,
 } from "../../services/Error";
-import { RefreshTokenServiceType } from "./refreshTokenService";
+import { RefreshTokenServiceType } from "./RefreshTokenService";
 export type RefreshTokenControllerType = (
   req: Request,
   res: Response
 ) => Promise<Response<any, Record<string, any>>>;
 
-export const refreshTokenController =
+export const RefreshTokenController =
   (refreshTokenService: RefreshTokenServiceType): RefreshTokenControllerType =>
   async (req: Request, res: Response) => {
     try {
