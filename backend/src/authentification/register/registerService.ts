@@ -2,7 +2,7 @@
 
 import { CryptoServiceType } from "../../services/cryptoService/CryptoService";
 import { createCatchErrorMessage, ErrorS } from "../../services/Error";
-import { QueryServiceType } from "../../services/queryService/QueryService";
+import { UserRType } from "../../services/UserR/UserR";
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé
 // client est la dépendance
 export type RegisterServiceType = {
@@ -10,23 +10,21 @@ export type RegisterServiceType = {
 };
 
 export const registerService = (
-  queryService: QueryServiceType,
+  userR: UserRType,
   cryptoService: CryptoServiceType
 ) => {
   return {
-    register: register(queryService, cryptoService),
+    register: register(userR, cryptoService),
   };
 };
 
 export const register =
-  (queryService: QueryServiceType, cryptoService: CryptoServiceType) =>
+  (userR: UserRType, cryptoService: CryptoServiceType) =>
   async (username: string, password: string) => {
     try {
       const hashOrError = await cryptoService.hashPassword(password);
-      if (typeof hashOrError === "string") {
-        const message = await queryService.addUser(username, hashOrError);
-      }
-      return hashOrError;
+      if (hashOrError.type == "error") return hashOrError;
+      return await userR.addUser(username, hashOrError.hash);
     } catch (error) {
       return createCatchErrorMessage(error);
     }

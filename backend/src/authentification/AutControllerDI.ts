@@ -14,6 +14,7 @@ import {
 import { RegisterServiceType } from "./register/registerService";
 import { LoginServiceType } from "./login/loginService";
 import { RefreshTokenServiceType } from "./refreshToken/refreshTokenService";
+import { UserRType } from "../services/UserR/UserR";
 // // definition du controller principal
 // ensemble des services dont dépend le controller
 export interface AutnControllerDeps {

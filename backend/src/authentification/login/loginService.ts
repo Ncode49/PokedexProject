@@ -1,16 +1,16 @@
 import { Request, Response } from "express";
 
-import { QueryServiceType } from "../../services/queryService/QueryService";
+import { UserRType } from "../../services/UserR/UserR";
 import { CryptoServiceType } from "../../services/cryptoService/CryptoService";
-import { TokenServiceType } from "../../services/tokenService/tokenService";
+import { TokenServiceType } from "../../services/tokenService/TokenService";
 import { createCatchErrorMessage, ErrorS } from "../../services/Error";
 export const loginService = (
-  queryService: QueryServiceType,
+  userR: UserRType,
   cryptoService: CryptoServiceType,
   tokenService: TokenServiceType
 ) => {
   return {
-    login: login(queryService, cryptoService, tokenService),
+    login: login(userR, cryptoService, tokenService),
   };
 };
 export type AccessRefreshToken = {
@@ -23,20 +23,23 @@ export type LoginServiceType = {
 
 export const login =
   (
-    queryService: QueryServiceType,
+    userR: UserRType,
     cryptoService: CryptoServiceType,
     tokenService: TokenServiceType
   ) =>
   async (username: string, password: string) => {
     try {
-      const data = await queryService.findUser(username, password);
+      const data = await userR.findUser(username, password);
+      if (data.type === "error") return data;
       const message = await cryptoService.compareHash(password, data.password);
-
+      if (message.type === "error") return message;
       const accessToken = tokenService.generateAccessToken(username);
+      if (accessToken.type === "error") return accessToken;
       const refreshToken = tokenService.generateRefreshToken(username);
+      if (refreshToken.type === "error") return refreshToken;
       return {
-        accessToken: accessToken,
-        refreshToken: refreshToken,
+        accessToken: accessToken.token,
+        refreshToken: refreshToken.token,
       };
     } catch (error) {
       createCatchErrorMessage(error);

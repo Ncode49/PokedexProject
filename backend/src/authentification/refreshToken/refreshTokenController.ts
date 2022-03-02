@@ -18,10 +18,12 @@ export const refreshTokenController =
         return res
           .status(400)
           .json(createErrorMessage("token is undefined unauthorized"));
+
       const tokenOrError = refreshTokenService.refreshToken(token);
-      if (typeof tokenOrError === "string")
-        return res.status(200).json({ accessToken: tokenOrError });
-      return res.status(400).json(tokenOrError);
+      if (tokenOrError.type == "error")
+        return res.status(400).json(tokenOrError);
+
+      return res.status(200).json({ accessToken: tokenOrError });
     } catch (error) {
       return res.status(500).json(createCatchErrorMessage(error));
     }

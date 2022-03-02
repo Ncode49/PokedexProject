@@ -2,9 +2,9 @@ import jwt from "jsonwebtoken";
 import config from "../../config/config";
 import { createCatchErrorMessage, ErrorS } from "../Error";
 export type TokenServiceType = {
-  generateAccessToken: (user: string) => Token | ErrorS;
-  generateRefreshToken: (user: string) => Token | ErrorS;
-  verifyRefreshToken: (token: string) => Payload | ErrorS;
+  generateAccessToken: (user: string) => TokenS | ErrorS;
+  generateRefreshToken: (user: string) => TokenS | ErrorS;
+  verifyRefreshToken: (token: string) => PayloadS | ErrorS;
 };
 
 export const tokenService = (): TokenServiceType => {
@@ -14,12 +14,20 @@ export const tokenService = (): TokenServiceType => {
     verifyRefreshToken: verifyRefreshToken,
   };
 };
-export type Token = string;
+export type TokenS = {
+  type: "success";
+  token: string;
+};
+
+export type PayloadS = {
+  type: "success";
+  payload: Payload;
+};
 
 export type Payload = {
   username: string;
 };
-const verifyRefreshToken = (token: string): Payload | ErrorS => {
+const verifyRefreshToken = (token: string): PayloadS | ErrorS => {
   jwt.verify(token, config.server.token.refreshTokenSecret, (err, _user) => {
     if (err)
       return {
@@ -27,28 +35,39 @@ const verifyRefreshToken = (token: string): Payload | ErrorS => {
       };
   });
   const decoded = jwt.decode(token) as Payload;
-  return decoded;
+  return {
+    type: "success",
+    payload: decoded,
+  };
 };
 
 // durée de vie courte
-const generateAccessToken = (user: string): Token | ErrorS => {
+const generateAccessToken = (user: string): TokenS | ErrorS => {
   try {
-    return jwt.sign({ user }, config.server.token.accessTokenSecret, {
+    const token = jwt.sign({ user }, config.server.token.accessTokenSecret, {
       algorithm: "HS256",
       expiresIn: "1m",
     });
+    return {
+      type: "success",
+      token: token,
+    };
   } catch (error) {
     return createCatchErrorMessage(error);
   }
 };
 
 // durée de vie longue
-const generateRefreshToken = (user: string): Token | ErrorS => {
+const generateRefreshToken = (user: string): TokenS | ErrorS => {
   try {
-    return jwt.sign({ user }, config.server.token.refreshTokenSecret, {
+    const token = jwt.sign({ user }, config.server.token.refreshTokenSecret, {
       algorithm: "HS256",
       expiresIn: "1y",
     });
+    return {
+      type: "success",
+      token: token,
+    };
   } catch (error) {
     return createCatchErrorMessage(error);
   }

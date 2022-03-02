@@ -1,9 +1,16 @@
 import bcryptjs from "bcryptjs";
 import { createCatchErrorMessage, ErrorS } from "../Error";
-export type Hash = string;
+export type HashS = {
+  type: "success";
+  hash: string;
+};
+export type BoolS = {
+  type: "success";
+  bool: boolean;
+};
 export type CryptoServiceType = {
-  compareHash: (password: string, hash: string) => Promise<boolean | ErrorS>;
-  hashPassword: (password: string) => Promise<Hash | ErrorS>;
+  compareHash: (password: string, hash: string) => Promise<BoolS | ErrorS>;
+  hashPassword: (password: string) => Promise<HashS | ErrorS>;
 };
 
 export const cryptService = () => {
@@ -16,17 +23,25 @@ export const cryptService = () => {
 const compareHash = async (
   password: string,
   hash: string
-): Promise<boolean | ErrorS> => {
+): Promise<BoolS | ErrorS> => {
   try {
-    return await bcryptjs.compare(password, hash);
+    const bool = await bcryptjs.compare(password, hash);
+    return {
+      type: "success",
+      bool: bool,
+    };
   } catch (error) {
     return createCatchErrorMessage(error);
   }
 };
 
-const hashPassword = async (password: string): Promise<Hash | ErrorS> => {
+const hashPassword = async (password: string): Promise<HashS | ErrorS> => {
   try {
-    return await bcryptjs.hash(password, 10);
+    const hash = await bcryptjs.hash(password, 10);
+    return {
+      type: "success",
+      hash: hash,
+    };
   } catch (error) {
     return createCatchErrorMessage(error);
   }
