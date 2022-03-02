@@ -8,6 +8,7 @@ const LoginService = (userR, cryptoService, tokenService) => {
     };
 };
 exports.LoginService = LoginService;
+// ErrorS => APIError
 const login = (userR, cryptoService, tokenService) => async (username, password) => {
     try {
         const data = await userR.findUser(username, password);
@@ -23,17 +24,17 @@ const login = (userR, cryptoService, tokenService) => async (username, password)
             };
             return err;
         }
-        const accessToken = tokenService.generateAccessToken(username);
-        if (accessToken.type === "error")
-            return accessToken;
-        const refreshToken = tokenService.generateRefreshToken(username);
-        if (refreshToken.type === "error")
-            return refreshToken;
+        const accessTokenResult = tokenService.generateAccessToken(username);
+        if (accessTokenResult.type === "error")
+            return accessTokenResult;
+        const refreshTokenResult = tokenService.generateRefreshToken(username);
+        if (refreshTokenResult.type === "error")
+            return refreshTokenResult;
         // obliger pour typer le retour
         const success = {
             type: "success",
-            accessToken: accessToken.token,
-            refreshToken: refreshToken.token,
+            accessToken: accessTokenResult.token,
+            refreshToken: refreshTokenResult.token,
         };
         return success;
     }

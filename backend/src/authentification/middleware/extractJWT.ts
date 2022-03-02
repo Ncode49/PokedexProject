@@ -17,7 +17,6 @@ export const extractJWT = (req: Request, res: Response, next: NextFunction) => {
     config.server.token.accessTokenSecret as string,
     (err, _user) => {
       if (err) return res.status(403).json(err.message);
-      console.log("next function ");
       next();
     }
   );

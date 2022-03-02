@@ -1,4 +1,4 @@
-import { Client, Pool } from "pg";
+import { Pool } from "pg";
 import { createCatchErrorMessage, ErrorS } from "../Error";
 import { addUserPasswordQuery, findUserByUsername, IUser } from "./UserQuery";
 

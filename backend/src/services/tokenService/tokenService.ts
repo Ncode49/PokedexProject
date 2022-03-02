@@ -72,3 +72,5 @@ export const generateRefreshToken = (user: string): TokenS | ErrorS => {
     return createCatchErrorMessage(error);
   }
 };
+
+// Logout générer deconnexion token

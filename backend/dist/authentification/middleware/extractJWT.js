@@ -18,7 +18,6 @@ const extractJWT = (req, res, next) => {
     jsonwebtoken_1.default.verify(token, config_1.default.server.token.accessTokenSecret, (err, _user) => {
         if (err)
             return res.status(403).json(err.message);
-        console.log("next function ");
         next();
     });
 };

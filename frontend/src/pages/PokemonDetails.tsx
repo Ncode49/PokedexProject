@@ -29,6 +29,7 @@ export const PokemonDetails = () => {
     ;(async () => {
       if (pokemonName !== undefined) {
         const data = await getPokemonDetails(pokemonName)
+        // creer un hook personnalisé ici pour le setPokemon details
         setPokemonDetails(data)
       }
     })()

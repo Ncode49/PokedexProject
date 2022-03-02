@@ -5,6 +5,18 @@ import {
   ErrorS,
   createCatchErrorMessage,
 } from "../../services";
+export type AccessRefreshTokenS = {
+  type: "success";
+  accessToken: string;
+  refreshToken: string;
+};
+export type LoginSErviceResultType = ErrorS | AccessRefreshTokenS;
+export type LoginServiceType = {
+  login: (
+    username: string,
+    password: string
+  ) => Promise<LoginSErviceResultType>;
+};
 
 export const LoginService = (
   userR: UserRType,
@@ -15,18 +27,7 @@ export const LoginService = (
     login: login(userR, cryptoService, tokenService),
   };
 };
-export type AccessRefreshTokenS = {
-  type: "success";
-  accessToken: string;
-  refreshToken: string;
-};
-export type LoginServiceType = {
-  login: (
-    username: string,
-    password: string
-  ) => Promise<ErrorS | AccessRefreshTokenS>;
-};
-
+// ErrorS => APIError
 export const login =
   (
     userR: UserRType,
@@ -46,15 +47,16 @@ export const login =
         };
         return err;
       }
-      const accessToken = tokenService.generateAccessToken(username);
-      if (accessToken.type === "error") return accessToken;
-      const refreshToken = tokenService.generateRefreshToken(username);
-      if (refreshToken.type === "error") return refreshToken;
+
+      const accessTokenResult = tokenService.generateAccessToken(username);
+      if (accessTokenResult.type === "error") return accessTokenResult;
+      const refreshTokenResult = tokenService.generateRefreshToken(username);
+      if (refreshTokenResult.type === "error") return refreshTokenResult;
       // obliger pour typer le retour
       const success: AccessRefreshTokenS = {
         type: "success",
-        accessToken: accessToken.token,
-        refreshToken: refreshToken.token,
+        accessToken: accessTokenResult.token,
+        refreshToken: refreshTokenResult.token,
       };
       return success;
     } catch (error) {

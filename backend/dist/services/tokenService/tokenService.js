@@ -62,3 +62,4 @@ const generateRefreshToken = (user) => {
     }
 };
 exports.generateRefreshToken = generateRefreshToken;
+// Logout générer deconnexion token
