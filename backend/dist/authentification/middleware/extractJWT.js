@@ -14,14 +14,11 @@ const ExtractJWT = (jwtService) => (req, res, next) => {
         const jwtResult = jwtService.verifyAccessToken(token);
         if (jwtResult.type == "error")
             return res.status(401).json({ jwtResult });
+        next();
     }
     catch (error) {
-        console.log("throw an error");
         const err = error;
         return res.status(403).json(err.message);
     }
-    next();
-    console.log("finit");
-    return;
 };
 exports.ExtractJWT = ExtractJWT;

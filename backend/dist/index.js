@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const pg_1 = require("pg");
 const authentification_1 = require("./authentification");
 const config_1 = __importDefault(require("./config/config"));
-const authRouter_1 = require("./routes/authRouter");
+const authRouter_1 = require("./authentification/authRouter");
 const services_1 = require("./services");
 const app = (0, express_1.default)();
 // load middleware we need
@@ -26,7 +26,7 @@ const pool = new pg_1.Pool(config_1.default.postgres);
 // instantiation des services génériques
 const jwtService = (0, services_1.JWTService)();
 const cryptoService = (0, services_1.CryptService)();
-const userR = (0, services_1.UserR)(pool);
+const userR = (0, services_1.UserRepository)(pool);
 // instanciation des middleware
 const extractJWT = (0, authentification_1.ExtractJWT)(jwtService);
 // instantiation du service spécifique

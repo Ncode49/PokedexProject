@@ -9,7 +9,7 @@ export type AuthControllerType = {
   register: (req: Request, res: Response) => AuthRegisterType;
   login: (req: Request, res: Response) => AuthLoginType;
   refreshToken: (req: Request, res: Response) => AuthRefreshTokenType;
-  validateToken: (res: Response) => AuthValidateTokenType;
+  validateToken: (req: Request, res: Response) => AuthValidateTokenType;
 };
 
 export const AuthControllerDI = (authService: AuthServiceType) => {

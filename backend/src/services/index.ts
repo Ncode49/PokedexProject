@@ -1,4 +1,4 @@
-export * from "./CryptoService/CryptoService";
-export * from "./jwtService/JWTService";
-export * from "./UserR/UserR";
+export * from "./cryptoService/CryptoService";
+export * from "./jwtService/jwtService";
+export * from "./Repository/UserRepository";
 export * from "./Error";

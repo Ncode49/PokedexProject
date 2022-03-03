@@ -5,7 +5,7 @@ import {
   MessageS,
   TokenS,
   JWTServiceType,
-  UserRType,
+  UserRepositoryType,
 } from "../services";
 type AccessRefreshTokenS = {
   type: "success";
@@ -21,7 +21,7 @@ export type AuthServiceType = {
   refreshToken: (token: string) => RefreshTokenResultType;
 };
 export const AuthService = (
-  userR: UserRType,
+  userR: UserRepositoryType,
   cryptoService: CryptoServiceType,
   jwtService: JWTServiceType
 ) => {
@@ -34,7 +34,7 @@ export const AuthService = (
 
 const login =
   (
-    userR: UserRType,
+    userR: UserRepositoryType,
     cryptoService: CryptoServiceType,
     jwtService: JWTServiceType
   ) =>
@@ -79,7 +79,7 @@ const refreshToken =
     }
   };
 const register =
-  (userR: UserRType, cryptoService: CryptoServiceType) =>
+  (userR: UserRepositoryType, cryptoService: CryptoServiceType) =>
   async (username: string, password: string): RegisterResultType => {
     try {
       const hashResult = await cryptoService.hashPassword(password);

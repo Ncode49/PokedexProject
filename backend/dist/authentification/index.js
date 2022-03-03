@@ -17,3 +17,4 @@ Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./AutControllerDI"), exports);
 __exportStar(require("./AuthService"), exports);
 __exportStar(require("./middleware/ExtractJWT"), exports);
+__exportStar(require("./authRouter"), exports);

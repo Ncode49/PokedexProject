@@ -2,8 +2,8 @@ import express from "express";
 import { Pool } from "pg";
 import { AuthService, AuthControllerDI, ExtractJWT } from "./authentification";
 import config from "./config/config";
-import { authRouter } from "./routes/authRouter";
-import { CryptService, JWTService, UserR } from "./services";
+import { authRouter } from "./authentification/authRouter";
+import { JWTService, CryptService, UserRepository } from "./services";
 
 const app = express();
 
@@ -29,7 +29,7 @@ const pool = new Pool(config.postgres);
 // instantiation des services génériques
 const jwtService = JWTService();
 const cryptoService = CryptService();
-const userR = UserR(pool);
+const userR = UserRepository(pool);
 
 // instanciation des middleware
 const extractJWT = ExtractJWT(jwtService);
