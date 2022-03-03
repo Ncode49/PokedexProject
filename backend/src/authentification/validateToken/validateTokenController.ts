@@ -1,13 +1,14 @@
 import { Response, Request } from "express";
+export type ValidateTokenControllerResultType = Response<
+  any,
+  Record<string, string>
+>;
 export type ValidateTokenControllerType = (
-  req: Request,
   res: Response
-) => Response<any, Record<string, string>>;
-
+) => ValidateTokenControllerResultType;
 export const ValidateTokenController: ValidateTokenControllerType = (
-  req: Request,
   res: Response
-) => {
+): ValidateTokenControllerResultType => {
   console.log("pass in controller");
   return res.status(200).json({
     message: "Token(s) validated",

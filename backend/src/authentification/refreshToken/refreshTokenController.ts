@@ -4,10 +4,13 @@ import {
   createErrorMessage,
 } from "../../services/Error";
 import { RefreshTokenServiceType } from "./RefreshTokenService";
+export type RefreshTokenControllerResultType = Promise<
+  Response<any, Record<string, any>>
+>;
 export type RefreshTokenControllerType = (
   req: Request,
   res: Response
-) => Promise<Response<any, Record<string, any>>>;
+) => RefreshTokenControllerResultType;
 
 export const RefreshTokenController =
   (refreshTokenService: RefreshTokenServiceType): RefreshTokenControllerType =>

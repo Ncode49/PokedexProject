@@ -1,5 +1,5 @@
 import bcryptjs from "bcryptjs";
-import { createCatchErrorMessage, ErrorS } from "../Error";
+import { createCatchErrorMessage, APIError } from "../Error";
 type HashS = {
   type: "success";
   hash: string;
@@ -8,9 +8,12 @@ type BoolS = {
   type: "success";
   bool: boolean;
 };
+
+export type CompareHashResultType = Promise<BoolS | APIError>;
+export type HashPasswordResultType = Promise<HashS | APIError>;
 export type CryptoServiceType = {
-  compareHash: (password: string, hash: string) => Promise<BoolS | ErrorS>;
-  hashPassword: (password: string) => Promise<HashS | ErrorS>;
+  compareHash: (password: string, hash: string) => CompareHashResultType;
+  hashPassword: (password: string) => HashPasswordResultType;
 };
 
 export const CryptService = (): CryptoServiceType => {
@@ -23,7 +26,7 @@ export const CryptService = (): CryptoServiceType => {
 const compareHash = async (
   password: string,
   hash: string
-): Promise<BoolS | ErrorS> => {
+): CompareHashResultType => {
   try {
     const bool = await bcryptjs.compare(password, hash);
     return {
@@ -35,7 +38,7 @@ const compareHash = async (
   }
 };
 
-const hashPassword = async (password: string): Promise<HashS | ErrorS> => {
+const hashPassword = async (password: string): HashPasswordResultType => {
   try {
     const hash = await bcryptjs.hash(password, 10);
     return {

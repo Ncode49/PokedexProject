@@ -1,7 +1,3 @@
-export type QueryBdd = {
-  text: string;
-  values: string[];
-};
 export interface IUser {
   username: string;
   password: string;

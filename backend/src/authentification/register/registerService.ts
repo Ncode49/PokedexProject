@@ -2,7 +2,7 @@
 
 import {
   MessageS,
-  ErrorS,
+  APIError,
   UserRType,
   CryptoServiceType,
   createCatchErrorMessage,
@@ -10,8 +10,10 @@ import {
 
 // ce qui est dans les ervice peut etre appelée dans la methode renvoyé
 // client est la dépendance
+
+export type RegisterResultType = Promise<MessageS | APIError>;
 export type RegisterServiceType = {
-  register: (username: string, password: string) => Promise<MessageS | ErrorS>;
+  register: (username: string, password: string) => RegisterResultType;
 };
 
 export const RegisterService = (
@@ -25,11 +27,11 @@ export const RegisterService = (
 
 export const register =
   (userR: UserRType, cryptoService: CryptoServiceType) =>
-  async (username: string, password: string) => {
+  async (username: string, password: string): RegisterResultType => {
     try {
-      const hashOrError = await cryptoService.hashPassword(password);
-      if (hashOrError.type == "error") return hashOrError;
-      return await userR.addUser(username, hashOrError.hash);
+      const hashResult = await cryptoService.hashPassword(password);
+      if (hashResult.type == "error") return hashResult;
+      return await userR.addUser(username, hashResult.hash);
     } catch (error) {
       return createCatchErrorMessage(error);
     }

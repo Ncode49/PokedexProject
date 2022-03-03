@@ -1,6 +1,6 @@
 import {
   TokenS,
-  ErrorS,
+  APIError,
   TokenServiceType,
   createCatchErrorMessage,
 } from "../../services";
@@ -8,9 +8,9 @@ import {
 export type AccessToken = {
   accessToken: string;
 };
-
+export type RefreshTokenResultType = TokenS | APIError;
 export type RefreshTokenServiceType = {
-  refreshToken: (token: string) => TokenS | ErrorS;
+  refreshToken: (token: string) => RefreshTokenResultType;
 };
 export const RefreshTokenService = (tokenservice: TokenServiceType) => {
   return {
@@ -20,7 +20,7 @@ export const RefreshTokenService = (tokenservice: TokenServiceType) => {
 
 const refreshToken =
   (tokenService: TokenServiceType) =>
-  (token: string): TokenS | ErrorS => {
+  (token: string): RefreshTokenResultType => {
     try {
       const payload = tokenService.verifyRefreshToken(token);
       if (payload.type === "error") return payload;

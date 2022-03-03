@@ -1,10 +1,11 @@
 import { Pool } from "pg";
-import { createCatchErrorMessage, ErrorS } from "../Error";
+import { createCatchErrorMessage, APIError } from "../Error";
 import { addUserPasswordQuery, findUserByUsername, IUser } from "./UserQuery";
-
+export type FindUserResultType = Promise<APIError | PasswordS>;
+export type AddUserResultType = Promise<MessageS | APIError>;
 export type UserRType = {
-  addUser: (username: string, password: string) => Promise<MessageS | ErrorS>;
-  findUser: (username: string, password: string) => Promise<PasswordS | ErrorS>;
+  addUser: (username: string, password: string) => AddUserResultType;
+  findUser: (username: string, password: string) => FindUserResultType;
 };
 
 export const UserR = (pool: Pool): UserRType => {
@@ -25,7 +26,7 @@ type PasswordS = {
 };
 const addUser =
   (pool: Pool) =>
-  async (username: string, hash: string): Promise<MessageS | ErrorS> => {
+  async (username: string, hash: string): AddUserResultType => {
     const client = await pool.connect();
     try {
       const query = {
@@ -49,7 +50,7 @@ const addUser =
 
 const findUser =
   (pool: Pool) =>
-  async (username: string, password: string): Promise<ErrorS | PasswordS> => {
+  async (username: string, password: string): FindUserResultType => {
     const client = await pool.connect();
     try {
       const query = {

@@ -2,7 +2,7 @@ import {
   UserRType,
   CryptoServiceType,
   TokenServiceType,
-  ErrorS,
+  APIError,
   createCatchErrorMessage,
 } from "../../services";
 export type AccessRefreshTokenS = {
@@ -10,12 +10,9 @@ export type AccessRefreshTokenS = {
   accessToken: string;
   refreshToken: string;
 };
-export type LoginSErviceResultType = ErrorS | AccessRefreshTokenS;
+export type LoginResultType = Promise<APIError | AccessRefreshTokenS>;
 export type LoginServiceType = {
-  login: (
-    username: string,
-    password: string
-  ) => Promise<LoginSErviceResultType>;
+  login: (username: string, password: string) => LoginResultType;
 };
 
 export const LoginService = (
@@ -27,21 +24,20 @@ export const LoginService = (
     login: login(userR, cryptoService, tokenService),
   };
 };
-// ErrorS => APIError
 export const login =
   (
     userR: UserRType,
     cryptoService: CryptoServiceType,
     tokenService: TokenServiceType
   ) =>
-  async (username: string, password: string) => {
+  async (username: string, password: string): LoginResultType => {
     try {
       const data = await userR.findUser(username, password);
       if (data.type === "error") return data;
       const message = await cryptoService.compareHash(password, data.password);
       if (message.type === "error") return message;
       if (!message.bool) {
-        const err: ErrorS = {
+        const err: APIError = {
           type: "error",
           message: "password incorrect",
         };

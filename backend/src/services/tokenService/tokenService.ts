@@ -1,10 +1,13 @@
 import jwt from "jsonwebtoken";
 import config from "../../config/config";
-import { createCatchErrorMessage, ErrorS } from "../Error";
+import { createCatchErrorMessage, APIError } from "../Error";
+export type GenerateAccessTokenResultType = TokenS | APIError;
+export type GenerateRefreshTokenResultType = TokenS | APIError;
+export type VerifyRefreshTokenResultType = PayloadS | APIError;
 export type TokenServiceType = {
-  generateAccessToken: (user: string) => TokenS | ErrorS;
-  generateRefreshToken: (user: string) => TokenS | ErrorS;
-  verifyRefreshToken: (token: string) => PayloadS | ErrorS;
+  generateAccessToken: (user: string) => GenerateAccessTokenResultType;
+  generateRefreshToken: (user: string) => GenerateRefreshTokenResultType;
+  verifyRefreshToken: (token: string) => VerifyRefreshTokenResultType;
 };
 
 export const TokenService = (): TokenServiceType => {
@@ -27,7 +30,7 @@ export type PayloadS = {
 export type Payload = {
   username: string;
 };
-const verifyRefreshToken = (token: string): PayloadS | ErrorS => {
+const verifyRefreshToken = (token: string): VerifyRefreshTokenResultType => {
   jwt.verify(token, config.server.token.refreshTokenSecret, (err, _user) => {
     if (err)
       return {
@@ -42,7 +45,9 @@ const verifyRefreshToken = (token: string): PayloadS | ErrorS => {
 };
 
 // durée de vie courte
-export const generateAccessToken = (user: string): TokenS | ErrorS => {
+export const generateAccessToken = (
+  user: string
+): GenerateAccessTokenResultType => {
   try {
     const token = jwt.sign({ user }, config.server.token.accessTokenSecret, {
       algorithm: "HS256",
@@ -58,7 +63,9 @@ export const generateAccessToken = (user: string): TokenS | ErrorS => {
 };
 
 // durée de vie longue
-export const generateRefreshToken = (user: string): TokenS | ErrorS => {
+export const generateRefreshToken = (
+  user: string
+): GenerateRefreshTokenResultType => {
   try {
     const token = jwt.sign({ user }, config.server.token.refreshTokenSecret, {
       algorithm: "HS256",
