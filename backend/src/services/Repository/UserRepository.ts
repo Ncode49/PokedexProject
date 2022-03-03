@@ -94,3 +94,5 @@ const getPasswordByUsername =
     return { type: "success", password: rows[0].password };
   };
 // abstraction des transactions
+// cree une fonction qui fait le traitement
+// function( client => client.query)
