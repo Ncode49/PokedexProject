@@ -1,5 +1,6 @@
 import express from "express";
-import { AuthControllerType } from "../authentification";
+import { AuthControllerType } from "../authentification/AutControllerDI";
+
 import { extractJWT } from "../authentification/middleware/extractJWT";
 
 // le controleur contient les methodes associé aux routes

@@ -6,7 +6,7 @@ const UserQuery_1 = require("./UserQuery");
 const UserR = (pool) => {
     return {
         addUser: addUser(pool),
-        findUser: findUser(pool),
+        getPasswordByUsername: getPasswordByUsername(pool),
     };
 };
 exports.UserR = UserR;
@@ -33,11 +33,11 @@ const addUser = (pool) => async (username, hash) => {
         client.release();
     }
 };
-const findUser = (pool) => async (username, password) => {
+const getPasswordByUsername = (pool) => async (username) => {
     const client = await pool.connect();
     try {
         const query = {
-            text: UserQuery_1.findUserByUsername,
+            text: UserQuery_1.getUserByUsername,
             values: [username],
         };
         await client.query("BEGIN");

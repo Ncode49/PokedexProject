@@ -7,7 +7,6 @@ import { createErrorMessage } from "../../services";
 export const extractJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  console.log(config.server.token.accessTokenSecret);
   if (token == null)
     return res
       .status(401)

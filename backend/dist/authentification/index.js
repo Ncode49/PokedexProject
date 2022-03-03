@@ -14,12 +14,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./Login/LoginService"), exports);
-__exportStar(require("./Login/loginController"), exports);
-__exportStar(require("./RefreshToken/RefreshTokenService"), exports);
-__exportStar(require("./RefreshToken/refreshTokenController"), exports);
-__exportStar(require("./Register/registerService"), exports);
-__exportStar(require("./Register/registerController"), exports);
-__exportStar(require("./ValidateToken/ValidateTokenController"), exports);
 __exportStar(require("./AutControllerDI"), exports);
+__exportStar(require("./AuthService"), exports);
 __exportStar(require("./middleware/extractJWT"), exports);

@@ -27,17 +27,10 @@ const pool = new pg_1.Pool(config_1.default.postgres);
 const tokenService = (0, services_1.TokenService)();
 const cryptoService = (0, services_1.CryptService)();
 const userR = (0, services_1.UserR)(pool);
-// instanciation des services spécifiques
-const loginService = (0, authentification_1.LoginService)(userR, cryptoService, tokenService);
-const registerService = (0, authentification_1.RegisterService)(userR, cryptoService);
-const refreshtokenService = (0, authentification_1.RefreshTokenService)(tokenService);
-// instantiation des controllers spécifiques
-const loginController = (0, authentification_1.LoginController)(loginService);
-const registerController = (0, authentification_1.RegisterController)(registerService);
-const refreshTokenController = (0, authentification_1.RefreshTokenController)(refreshtokenService);
-const validateTokenController = authentification_1.ValidateTokenController;
+// instantiation du service spécifique
+const authService = (0, authentification_1.AuthService)(userR, cryptoService, tokenService);
 // instanciation du controller globale
-const authController = (0, authentification_1.AuthControllerDI)(registerController, loginController, refreshTokenController, validateTokenController);
+const authController = (0, authentification_1.AuthControllerDI)(authService);
 app.use("/auth", (0, authRouter_1.authRouter)(authController));
 app.listen(config_1.default.server.port, () => {
     console.log(`listening on ${config_1.default.server.port}`);

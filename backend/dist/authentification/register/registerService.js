@@ -11,10 +11,10 @@ const RegisterService = (userR, cryptoService) => {
 exports.RegisterService = RegisterService;
 const register = (userR, cryptoService) => async (username, password) => {
     try {
-        const hashOrError = await cryptoService.hashPassword(password);
-        if (hashOrError.type == "error")
-            return hashOrError;
-        return await userR.addUser(username, hashOrError.hash);
+        const hashResult = await cryptoService.hashPassword(password);
+        if (hashResult.type == "error")
+            return hashResult;
+        return await userR.addUser(username, hashResult.hash);
     }
     catch (error) {
         return (0, services_1.createCatchErrorMessage)(error);

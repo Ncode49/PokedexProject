@@ -1,16 +1,6 @@
 import express from "express";
-import { Client, Pool } from "pg";
-import {
-  AuthControllerDI,
-  LoginController,
-  LoginService,
-  RefreshTokenController,
-  RefreshTokenService,
-  RegisterController,
-  RegisterService,
-  ValidateTokenController,
-} from "./authentification";
-
+import { Pool } from "pg";
+import { AuthService, AuthControllerDI } from "./authentification";
 import config from "./config/config";
 import { authRouter } from "./routes/authRouter";
 import { CryptService, TokenService, UserR } from "./services";
@@ -40,22 +30,11 @@ const pool = new Pool(config.postgres);
 const tokenService = TokenService();
 const cryptoService = CryptService();
 const userR = UserR(pool);
-// instanciation des services spécifiques
-const loginService = LoginService(userR, cryptoService, tokenService);
-const registerService = RegisterService(userR, cryptoService);
-const refreshtokenService = RefreshTokenService(tokenService);
-// instantiation des controllers spécifiques
-const loginController = LoginController(loginService);
-const registerController = RegisterController(registerService);
-const refreshTokenController = RefreshTokenController(refreshtokenService);
-const validateTokenController = ValidateTokenController;
+
+// instantiation du service spécifique
+const authService = AuthService(userR, cryptoService, tokenService);
 // instanciation du controller globale
-const authController = AuthControllerDI(
-  registerController,
-  loginController,
-  refreshTokenController,
-  validateTokenController
-);
+const authController = AuthControllerDI(authService);
 app.use("/auth", authRouter(authController));
 
 app.listen(config.server.port, () => {

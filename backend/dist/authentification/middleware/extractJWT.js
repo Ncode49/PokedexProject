@@ -10,7 +10,6 @@ const config_1 = __importDefault(require("../../config/config"));
 const extractJWT = (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader && authHeader.split(" ")[1];
-    console.log(config_1.default.server.token.accessTokenSecret);
     if (token == null)
         return res
             .status(401)
