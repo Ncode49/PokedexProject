@@ -1,23 +1,27 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractJWT = void 0;
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const config_1 = __importDefault(require("../../config/config"));
+exports.ExtractJWT = void 0;
 // 401 unauthorized
-const extractJWT = (req, res, next) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader && authHeader.split(" ")[1];
-    if (token == null)
-        return res
-            .status(401)
-            .json({ type: "error", message: "no token in header" });
-    jsonwebtoken_1.default.verify(token, config_1.default.server.token.accessTokenSecret, (err, _user) => {
-        if (err)
-            return res.status(403).json(err.message);
-        next();
-    });
+// How to eliminate the any ???
+const ExtractJWT = (jwtService) => (req, res, next) => {
+    try {
+        const authHeader = req.headers["authorization"];
+        const token = authHeader && authHeader.split(" ")[1];
+        if (token == null)
+            return res
+                .status(401)
+                .json({ type: "middleware error", message: "token in empty" });
+        const jwtResult = jwtService.verifyAccessToken(token);
+        if (jwtResult.type == "error")
+            return res.status(401).json({ jwtResult });
+    }
+    catch (error) {
+        console.log("throw an error");
+        const err = error;
+        return res.status(403).json(err.message);
+    }
+    next();
+    console.log("finit");
+    return;
 };
-exports.extractJWT = extractJWT;
+exports.ExtractJWT = ExtractJWT;

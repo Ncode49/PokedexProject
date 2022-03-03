@@ -1,9 +1,9 @@
 import express from "express";
 import { Pool } from "pg";
-import { AuthService, AuthControllerDI } from "./authentification";
+import { AuthService, AuthControllerDI, ExtractJWT } from "./authentification";
 import config from "./config/config";
 import { authRouter } from "./routes/authRouter";
-import { CryptService, TokenService, UserR } from "./services";
+import { CryptService, JWTService, UserR } from "./services";
 
 const app = express();
 
@@ -27,15 +27,17 @@ app.use((_req, res, next) => {
 // instanciation du client
 const pool = new Pool(config.postgres);
 // instantiation des services génériques
-const tokenService = TokenService();
+const jwtService = JWTService();
 const cryptoService = CryptService();
 const userR = UserR(pool);
 
+// instanciation des middleware
+const extractJWT = ExtractJWT(jwtService);
 // instantiation du service spécifique
-const authService = AuthService(userR, cryptoService, tokenService);
+const authService = AuthService(userR, cryptoService, jwtService);
 // instanciation du controller globale
 const authController = AuthControllerDI(authService);
-app.use("/auth", authRouter(authController));
+app.use("/auth", authRouter(authController, extractJWT));
 
 app.listen(config.server.port, () => {
   console.log(`listening on ${config.server.port}`);

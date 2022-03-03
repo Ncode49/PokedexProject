@@ -68,5 +68,5 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTmlja3kiL
 
 ### Test new accessToken
 GET http://localhost:3000/auth/validateToken 
-Authorization: Bearer
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
 ###

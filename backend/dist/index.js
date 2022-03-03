@@ -24,14 +24,16 @@ app.use((_req, res, next) => {
 // instanciation du client
 const pool = new pg_1.Pool(config_1.default.postgres);
 // instantiation des services génériques
-const tokenService = (0, services_1.TokenService)();
+const jwtService = (0, services_1.JWTService)();
 const cryptoService = (0, services_1.CryptService)();
 const userR = (0, services_1.UserR)(pool);
+// instanciation des middleware
+const extractJWT = (0, authentification_1.ExtractJWT)(jwtService);
 // instantiation du service spécifique
-const authService = (0, authentification_1.AuthService)(userR, cryptoService, tokenService);
+const authService = (0, authentification_1.AuthService)(userR, cryptoService, jwtService);
 // instanciation du controller globale
 const authController = (0, authentification_1.AuthControllerDI)(authService);
-app.use("/auth", (0, authRouter_1.authRouter)(authController));
+app.use("/auth", (0, authRouter_1.authRouter)(authController, extractJWT));
 app.listen(config_1.default.server.port, () => {
     console.log(`listening on ${config_1.default.server.port}`);
 });

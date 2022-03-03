@@ -40,7 +40,7 @@ const refreshToken = (authService) => async (req, res) => {
         return res.status(500).json((0, services_1.createCatchErrorMessage)(error));
     }
 };
-const validateToken = (res) => {
+const validateToken = (req, res) => {
     return res.status(200).json({
         message: "Token(s) validated",
     });

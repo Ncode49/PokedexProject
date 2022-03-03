@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { createCatchErrorMessage, createErrorMessage } from "../services";
 import { AuthServiceType } from "./AuthService";
 export type AuthRegisterType = Promise<Response<any, Record<any, string>>>;
 export type AuthLoginType = Promise<Response<any, Record<any, string>>>;
 export type AuthRefreshTokenType = Promise<Response<any, Record<string, any>>>;
-export type AuthValidateTokenType = Response<any, Record<string, string>>;
+export type AuthValidateTokenType = Response<any, Record<string, any>>;
 export type AuthControllerType = {
   register: (req: Request, res: Response) => AuthRegisterType;
   login: (req: Request, res: Response) => AuthLoginType;
@@ -54,7 +54,7 @@ const refreshToken =
     }
   };
 
-const validateToken = (res: Response): AuthValidateTokenType => {
+const validateToken = (req: Request, res: Response): AuthValidateTokenType => {
   return res.status(200).json({
     message: "Token(s) validated",
   });

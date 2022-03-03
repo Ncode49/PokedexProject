@@ -4,7 +4,7 @@ import {
   CryptoServiceType,
   MessageS,
   TokenS,
-  TokenServiceType,
+  JWTServiceType,
   UserRType,
 } from "../services";
 type AccessRefreshTokenS = {
@@ -23,12 +23,12 @@ export type AuthServiceType = {
 export const AuthService = (
   userR: UserRType,
   cryptoService: CryptoServiceType,
-  tokenService: TokenServiceType
+  jwtService: JWTServiceType
 ) => {
   return {
-    login: login(userR, cryptoService, tokenService),
+    login: login(userR, cryptoService, jwtService),
     register: register(userR, cryptoService),
-    refreshToken: refreshToken(tokenService),
+    refreshToken: refreshToken(jwtService),
   };
 };
 
@@ -36,7 +36,7 @@ const login =
   (
     userR: UserRType,
     cryptoService: CryptoServiceType,
-    tokenService: TokenServiceType
+    jwtService: JWTServiceType
   ) =>
   async (username: string, password: string): LoginResultType => {
     try {
@@ -51,9 +51,9 @@ const login =
         };
         return err;
       }
-      const accessTokenResult = tokenService.generateAccessToken(username);
+      const accessTokenResult = jwtService.generateAccessToken(username);
       if (accessTokenResult.type === "error") return accessTokenResult;
-      const refreshTokenResult = tokenService.generateRefreshToken(username);
+      const refreshTokenResult = jwtService.generateRefreshToken(username);
       if (refreshTokenResult.type === "error") return refreshTokenResult;
       // obliger pour typer le retour
       const success: AccessRefreshTokenS = {
@@ -68,12 +68,12 @@ const login =
   };
 
 const refreshToken =
-  (tokenService: TokenServiceType) =>
+  (jwtService: JWTServiceType) =>
   (token: string): RefreshTokenResultType => {
     try {
-      const payload = tokenService.verifyRefreshToken(token);
+      const payload = jwtService.verifyRefreshToken(token);
       if (payload.type === "error") return payload;
-      return tokenService.generateAccessToken(payload.payload.username);
+      return jwtService.generateAccessToken(payload.payload.username);
     } catch (error) {
       return createCatchErrorMessage(error);
     }
@@ -84,7 +84,7 @@ const register =
     try {
       const hashResult = await cryptoService.hashPassword(password);
       if (hashResult.type == "error") return hashResult;
-      return await userR.addUser(username, hashResult.hash);
+      return userR.addUser(username, hashResult.hash);
     } catch (error) {
       return createCatchErrorMessage(error);
     }

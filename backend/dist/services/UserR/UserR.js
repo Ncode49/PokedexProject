@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserR = void 0;
 const Error_1 = require("../Error");
-const UserQuery_1 = require("./UserQuery");
 const UserR = (pool) => {
     return {
         addUser: addUser(pool),
@@ -10,15 +9,15 @@ const UserR = (pool) => {
     };
 };
 exports.UserR = UserR;
+// transaction((client) => client.query({text: ...., values: [...]}))
 const addUser = (pool) => async (username, hash) => {
     const client = await pool.connect();
     try {
-        const query = {
-            text: UserQuery_1.addUserPasswordQuery,
-            values: [username, hash],
-        };
         await client.query("BEGIN");
-        await client.query(query);
+        await client.query({
+            text: "INSERT INTO users(username, password) VALUES($1, $2) RETURNING *",
+            values: [username, hash],
+        });
         await client.query("COMMIT");
         return {
             type: "success",
@@ -37,7 +36,7 @@ const getPasswordByUsername = (pool) => async (username) => {
     const client = await pool.connect();
     try {
         const query = {
-            text: UserQuery_1.getUserByUsername,
+            text: "SELECT *  FROM users WHERE username = $1",
             values: [username],
         };
         await client.query("BEGIN");
@@ -59,3 +58,6 @@ const getPasswordByUsername = (pool) => async (username) => {
         client.release();
     }
 };
+// mettre les query dans le userR
+// Appel de service par le middleware
+// abstraction des transactions

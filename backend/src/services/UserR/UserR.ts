@@ -1,6 +1,9 @@
 import { Pool } from "pg";
 import { createCatchErrorMessage, APIError } from "../Error";
-import { addUserPasswordQuery, getUserByUsername, IUser } from "./UserQuery";
+export interface IUser {
+  username: string;
+  password: string;
+}
 export type GetPasswordByUsernameResultType = Promise<APIError | PasswordS>;
 export type AddUserResultType = Promise<MessageS | APIError>;
 export type UserRType = {
@@ -27,17 +30,18 @@ type PasswordS = {
   type: "success";
   password: string;
 };
+// transaction((client) => client.query({text: ...., values: [...]}))
+
 const addUser =
   (pool: Pool) =>
   async (username: string, hash: string): AddUserResultType => {
     const client = await pool.connect();
     try {
-      const query = {
-        text: addUserPasswordQuery,
-        values: [username, hash],
-      };
       await client.query("BEGIN");
-      await client.query(query);
+      await client.query({
+        text: "INSERT INTO users(username, password) VALUES($1, $2) RETURNING *",
+        values: [username, hash],
+      });
       await client.query("COMMIT");
       return {
         type: "success",
@@ -57,7 +61,7 @@ const getPasswordByUsername =
     const client = await pool.connect();
     try {
       const query = {
-        text: getUserByUsername,
+        text: "SELECT *  FROM users WHERE username = $1",
         values: [username],
       };
       await client.query("BEGIN");
@@ -77,3 +81,6 @@ const getPasswordByUsername =
       client.release();
     }
   };
+// mettre les query dans le userR
+// Appel de service par le middleware
+// abstraction des transactions

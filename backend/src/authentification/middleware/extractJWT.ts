@@ -1,22 +1,27 @@
 // take token,
 import { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import config from "../../config/config";
-import { createErrorMessage } from "../../services";
+import { JWTServiceType } from "../../services";
+export type ExtractJWTType = Response<any, Record<string, any>> | undefined;
 // 401 unauthorized
-export const extractJWT = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token == null)
-    return res
-      .status(401)
-      .json({ type: "error", message: "no token in header" });
-  jwt.verify(
-    token,
-    config.server.token.accessTokenSecret as string,
-    (err, _user) => {
-      if (err) return res.status(403).json(err.message);
-      next();
+// How to eliminate the any ???
+export const ExtractJWT =
+  (jwtService: JWTServiceType) =>
+  (req: Request, res: Response, next: NextFunction): any => {
+    try {
+      const authHeader = req.headers["authorization"];
+      const token = authHeader && authHeader.split(" ")[1];
+      if (token == null)
+        return res
+          .status(401)
+          .json({ type: "middleware error", message: "token in empty" });
+      const jwtResult = jwtService.verifyAccessToken(token);
+      if (jwtResult.type == "error") return res.status(401).json({ jwtResult });
+    } catch (error) {
+      console.log("throw an error");
+      const err = error as Error;
+      return res.status(403).json(err.message);
     }
-  );
-};
+    next();
+    console.log("finit");
+    return;
+  };

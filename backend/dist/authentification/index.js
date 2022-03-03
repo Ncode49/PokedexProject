@@ -16,4 +16,4 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./AutControllerDI"), exports);
 __exportStar(require("./AuthService"), exports);
-__exportStar(require("./middleware/extractJWT"), exports);
+__exportStar(require("./middleware/ExtractJWT"), exports);
