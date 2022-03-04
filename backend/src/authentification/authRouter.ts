@@ -1,5 +1,5 @@
-import express, { ErrorRequestHandler, RequestHandler } from "express";
-import { AuthControllerType, ExtractJWTType } from ".";
+import express from "express";
+import { AuthControllerType } from ".";
 
 // le controleur contient les methodes associé aux routes
 export const authRouter = (

@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import { createCatchErrorMessage, createErrorMessage } from "../services";
 import { AuthServiceType } from "./AuthService";
 export type AuthRegisterType = Promise<Response<any, Record<any, string>>>;

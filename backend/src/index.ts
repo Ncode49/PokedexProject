@@ -2,8 +2,11 @@ import express from "express";
 import { Pool } from "pg";
 import { AuthService, AuthControllerDI, ExtractJWT } from "./authentification";
 import config from "./config/config";
-import { authRouter } from "./authentification/authRouter";
+import { authRouter } from "./authentification/AuthRouter";
 import { JWTService, CryptService, UserRepository } from "./services";
+import { likeRouter, LikeRouter } from "./like/likeRouter";
+import { LikeController } from "./like/LikeController";
+import { LikeService } from "./like";
 
 const app = express();
 
@@ -35,10 +38,12 @@ const userR = UserRepository(pool);
 const extractJWT = ExtractJWT(jwtService);
 // instantiation du service spécifique
 const authService = AuthService(userR, cryptoService, jwtService);
+const likeService = LikeService;
 // instanciation du controller globale
 const authController = AuthControllerDI(authService);
+const likeController = LikeController(likeService);
 app.use("/auth", authRouter(authController, extractJWT));
-
+app.use("/like", likeRouter(likeController, extractJWT));
 app.listen(config.server.port, () => {
   console.log(`listening on ${config.server.port}`);
 });

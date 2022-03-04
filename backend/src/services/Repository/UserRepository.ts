@@ -1,18 +1,10 @@
-import { Pool, QueryResult } from "pg";
-import { createCatchErrorMessage, APIError } from "../Error";
+import { Pool } from "pg";
+import { APIError } from "../Error";
+import { MessageS, oneTransaction } from "./utils";
 export interface IUser {
   username: string;
   password: string;
 }
-export type Query = {
-  text: string;
-  values: string[];
-};
-
-export type MessageS = {
-  type: "success";
-  message: string;
-};
 
 type PasswordS = {
   type: "success";
@@ -21,11 +13,6 @@ type PasswordS = {
 export type GetPasswordByUsernameResultType = Promise<APIError | PasswordS>;
 export type AddUserResultType = Promise<MessageS | APIError>;
 
-type TransactionType<QueryReturn> = Promise<QueryType<QueryReturn> | APIError>;
-type QueryType<QueryReturn> = {
-  type: "success";
-  queryReturn: QueryResult<QueryReturn>;
-};
 export type UserRepositoryType = {
   addUser: (username: string, password: string) => AddUserResultType;
   getPasswordByUsername: (
@@ -42,27 +29,7 @@ export const UserRepository = (pool: Pool): UserRepositoryType => {
 };
 
 // transaction((client) => client.query({text: ...., values: [...]}))
-const oneTransaction = async <QueryReturn>(
-  pool: Pool,
-  query: Query
-): TransactionType<QueryReturn> => {
-  const client = await pool.connect();
-  try {
-    await client.query("BEGIN");
-    const queryReturn: QueryResult<QueryReturn> =
-      await client.query<QueryReturn>(query);
-    await client.query("COMMIT");
-    return {
-      type: "success",
-      queryReturn: queryReturn,
-    };
-  } catch (error) {
-    await client.query("ROLLBACK");
-    return createCatchErrorMessage(error);
-  } finally {
-    client.release();
-  }
-};
+
 const addUser =
   (pool: Pool) =>
   async (username: string, hash: string): AddUserResultType => {
