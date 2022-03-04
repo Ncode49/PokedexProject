@@ -6,6 +6,7 @@ export const likeRouter = (
   extractJWT: any
 ) => {
   const likeRouter = express.Router();
-  likeRouter.post("/addlike", extractJWT, likeController.addLike);
+  likeRouter.post("/addLike", extractJWT, likeController.addLike);
+  likeRouter.post("/getLike", extractJWT, likeController.getLike);
   return likeRouter;
 };

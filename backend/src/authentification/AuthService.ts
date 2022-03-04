@@ -2,11 +2,11 @@ import {
   APIError,
   createCatchErrorMessage,
   CryptoServiceType,
-  MessageS,
   TokenS,
   JWTServiceType,
   UserRepositoryType,
 } from "../services";
+import { MessageS } from "../services/Repository/utils";
 type AccessRefreshTokenS = {
   type: "success";
   accessToken: string;
@@ -21,26 +21,29 @@ export type AuthServiceType = {
   refreshToken: (token: string) => RefreshTokenResultType;
 };
 export const AuthService = (
-  userR: UserRepositoryType,
+  userRepository: UserRepositoryType,
   cryptoService: CryptoServiceType,
   jwtService: JWTServiceType
 ) => {
   return {
-    login: login(userR, cryptoService, jwtService),
-    register: register(userR, cryptoService),
+    login: login(userRepository, cryptoService, jwtService),
+    register: register(userRepository, cryptoService),
     refreshToken: refreshToken(jwtService),
   };
 };
 
 const login =
   (
-    userR: UserRepositoryType,
+    userRepository: UserRepositoryType,
     cryptoService: CryptoServiceType,
     jwtService: JWTServiceType
   ) =>
   async (username: string, password: string): LoginResultType => {
     try {
-      const data = await userR.getPasswordByUsername(username, password);
+      const data = await userRepository.getPasswordByUsername(
+        username,
+        password
+      );
       if (data.type === "error") return data;
       const message = await cryptoService.compareHash(password, data.password);
       if (message.type === "error") return message;
@@ -79,12 +82,12 @@ const refreshToken =
     }
   };
 const register =
-  (userR: UserRepositoryType, cryptoService: CryptoServiceType) =>
+  (userRepository: UserRepositoryType, cryptoService: CryptoServiceType) =>
   async (username: string, password: string): RegisterResultType => {
     try {
       const hashResult = await cryptoService.hashPassword(password);
       if (hashResult.type == "error") return hashResult;
-      return userR.addUser(username, hashResult.hash);
+      return userRepository.addUser(username, hashResult.hash);
     } catch (error) {
       return createCatchErrorMessage(error);
     }

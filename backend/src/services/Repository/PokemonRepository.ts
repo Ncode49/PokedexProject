@@ -1,4 +1,3 @@
-import { query } from "express";
 import { Pool, QueryResult } from "pg";
 import { APIError, createCatchErrorMessage } from "..";
 import { MessageS, oneTransaction } from "./utils";
@@ -12,14 +11,14 @@ export type Likes = {
 };
 export type AddPokemonLikeResultType = Promise<MessageS | APIError>;
 export type GetPokemonLikesResultType = Promise<Likes | APIError>;
-export type LikeRepositoryType = {
+export type PokemonRepositoryType = {
   getPokemonLikes: (pokemonName: string) => GetPokemonLikesResultType;
   addPokemonLike: (
     pokemonName: string,
     likeNumber: number
   ) => AddPokemonLikeResultType;
 };
-export const LikeRepository = (pool: Pool): LikeRepositoryType => {
+export const PokemonRepository = (pool: Pool): PokemonRepositoryType => {
   return {
     getPokemonLikes: getPokemonLikes(pool),
     addPokemonLike: addPokemonLike(pool),
@@ -44,15 +43,15 @@ const getPokemonLikes = (pool: Pool) => async (pokemonName: string) => {
   return likeResult;
 };
 
-// make a double return
+// function not finished
 const addPokemonLike =
   (pool: Pool) => async (pokemonName: string, likeNumber: number) => {
+    let result = {};
     const client = await pool.connect();
-
     try {
       await client.query("BEGIN");
       const query = {
-        text: "SELECT *  FROM users WHERE name = $1",
+        text: "SELECT * FROM pokemon WHERE name = $1",
         values: [pokemonName],
       };
       const queryReturn: QueryResult<IPokemonLike> =
@@ -60,20 +59,35 @@ const addPokemonLike =
       const { rows } = queryReturn;
       if (rows.length == 0) {
         console.log("l'utilisateur n'existe pas en base de données");
+        if (likeNumber == -1)
+          result = {
+            type: "error",
+            message: "nombre de like negatifs",
+          };
+        const addPokemonQuery = {
+          text: "INSERT INTO pokemon(name,like) VALUES($1, $2) RETURNING *",
+          values: [pokemonName, 1],
+        };
+        await client.query(addPokemonQuery);
         // pokemon == -1 => error
       }
-      // cas = 1, cas = -1
       const numberLikes = rows[0].likes;
       const sum = numberLikes + likeNumber;
       if (sum == 0) {
+        const deletePokemon = {
+          text: "DELETE FROM pokemon WHERE name = $1",
+          values: [pokemonName],
+        };
+        await client.query(deletePokemon);
         console.log("on le supprime de la bdd");
       }
       // on l'ajoute en base de données
       await client.query("COMMIT");
-      return {
+      const success: MessageS = {
         type: "success",
-        queryReturn: queryReturn,
+        message: "le like a été correctement ajouté en base de données",
       };
+      return success;
     } catch (error) {
       await client.query("ROLLBACK");
       return createCatchErrorMessage(error);

@@ -4,8 +4,9 @@ import { AuthService, AuthControllerDI, ExtractJWT } from "./authentification";
 import config from "./config/config";
 import { authRouter } from "./authentification/AuthRouter";
 import { JWTService, CryptService, UserRepository } from "./services";
-import { likeRouter, LikeRouter } from "./like/likeRouter";
+import { likeRouter } from "./like/likeRouter";
 import { LikeController } from "./like/LikeController";
+import { PokemonRepository } from "./services/Repository/PokemonRepository";
 import { LikeService } from "./like";
 
 const app = express();
@@ -32,13 +33,13 @@ const pool = new Pool(config.postgres);
 // instantiation des services génériques
 const jwtService = JWTService();
 const cryptoService = CryptService();
-const userR = UserRepository(pool);
-
+const userRepository = UserRepository(pool);
+const pokemonRepository = PokemonRepository(pool);
 // instanciation des middleware
 const extractJWT = ExtractJWT(jwtService);
 // instantiation du service spécifique
-const authService = AuthService(userR, cryptoService, jwtService);
-const likeService = LikeService;
+const authService = AuthService(userRepository, cryptoService, jwtService);
+const likeService = LikeService(pokemonRepository);
 // instanciation du controller globale
 const authController = AuthControllerDI(authService);
 const likeController = LikeController(likeService);

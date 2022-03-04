@@ -48,7 +48,7 @@ const getPasswordByUsername =
   (pool: Pool) =>
   async (username: string): GetPasswordByUsernameResultType => {
     const transactionResult = await oneTransaction<IUser>(pool, {
-      text: "SELECT *  FROM users WHERE username = $1",
+      text: "SELECT * FROM users WHERE username = $1",
       values: [username],
     });
     if (transactionResult.type == "error") return transactionResult;
