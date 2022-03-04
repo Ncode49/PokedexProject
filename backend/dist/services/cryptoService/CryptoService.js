@@ -17,7 +17,7 @@ const compareHash = async (password, hash) => {
     try {
         const bool = await bcryptjs_1.default.compare(password, hash);
         return {
-            type: "success",
+            type: 'success',
             bool: bool,
         };
     }
@@ -29,7 +29,7 @@ const hashPassword = async (password) => {
     try {
         const hash = await bcryptjs_1.default.hash(password, 10);
         return {
-            type: "success",
+            type: 'success',
             hash: hash,
         };
     }

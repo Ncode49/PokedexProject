@@ -8,7 +8,7 @@ const express_1 = __importDefault(require("express"));
 const likeRouter = (likeController, extractJWT) => {
     const likeRouter = express_1.default.Router();
     likeRouter.post("/addLike", extractJWT, likeController.addLike);
-    likeRouter.post("/getLike", extractJWT, likeController.getLike);
+    likeRouter.post("/getPokemonlike", extractJWT, likeController.getPokemonlike);
     return likeRouter;
 };
 exports.likeRouter = likeRouter;

@@ -12,8 +12,10 @@ exports.LikeService = LikeService;
 // pokemon: string, like: number
 const addLike = (pokemonRepository) => async (pokemonName, action) => {
     try {
-        const likeNumber = action == "like" ? 1 : 0;
-        await pokemonRepository.addPokemonLike(pokemonName, likeNumber);
+        const likeNumber = action == 'like' ? 1 : -1;
+        const pokemonResult = await pokemonRepository.addPokemonLike(pokemonName, likeNumber);
+        console.log('result feedback:' + pokemonResult);
+        return pokemonResult;
     }
     catch (error) {
         (0, services_1.createCatchErrorMessage)(error);
