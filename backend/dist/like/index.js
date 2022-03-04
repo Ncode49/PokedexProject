@@ -14,7 +14,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-__exportStar(require("./AutControllerDI"), exports);
-__exportStar(require("./AuthService"), exports);
-__exportStar(require("./middleware/ExtractJWT"), exports);
-__exportStar(require("./AuthRouter"), exports);
+__exportStar(require("./LikeController"), exports);
+__exportStar(require("./likeRouter"), exports);
+__exportStar(require("./LikeService"), exports);

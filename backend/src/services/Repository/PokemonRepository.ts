@@ -3,11 +3,11 @@ import { APIError, createCatchErrorMessage } from "..";
 import { MessageS, oneTransaction } from "./utils";
 export type IPokemonLike = {
   name: string;
-  likes: number;
+  like: number;
 };
 export type Likes = {
   type: "success";
-  likes: number;
+  like: number;
 };
 export type AddPokemonLikeResultType = Promise<MessageS | APIError>;
 export type GetPokemonLikesResultType = Promise<Likes | APIError>;
@@ -39,7 +39,8 @@ const getPokemonLikes = (pool: Pool) => async (pokemonName: string) => {
     };
     return error;
   }
-  const likeResult: Likes = { type: "success", likes: rows[0].likes };
+  const likeResult: Likes = { type: "success", like: rows[0].like };
+  console.log(likeResult);
   return likeResult;
 };
 
@@ -71,7 +72,7 @@ const addPokemonLike =
         await client.query(addPokemonQuery);
         // pokemon == -1 => error
       }
-      const numberLikes = rows[0].likes;
+      const numberLikes = rows[0].like;
       const sum = numberLikes + likeNumber;
       if (sum == 0) {
         const deletePokemon = {
@@ -80,6 +81,13 @@ const addPokemonLike =
         };
         await client.query(deletePokemon);
         console.log("on le supprime de la bdd");
+      } else {
+        const updateLikePokemon = {
+          text: "UPDATE pokemon SET like = $1 WHERE name = $2 RETURNING *",
+          values: [sum, pokemonName],
+        };
+        await client.query(updateLikePokemon);
+        console.log("on a update le client");
       }
       // on l'ajoute en base de données
       await client.query("COMMIT");

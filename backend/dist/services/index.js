@@ -15,6 +15,6 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./cryptoService/CryptoService"), exports);
-__exportStar(require("./jwtService/jwtService"), exports);
+__exportStar(require("./jwtService/JwtService"), exports);
 __exportStar(require("./Repository/UserRepository"), exports);
 __exportStar(require("./Error"), exports);
