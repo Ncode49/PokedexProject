@@ -2,31 +2,30 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PokemonRepository = void 0;
 const Error_1 = require("../Error");
-const utils_1 = require("./utils");
-const PokemonRepository = (pool) => {
+const PokemonRepository = (baseRepository) => {
     return {
-        getPokemonLikes: getPokemonLikes(pool),
-        addPokemonLike: addPokemonLike(pool),
+        getPokemonLikes: getPokemonLikes(baseRepository),
+        addPokemonLike: addPokemonLike(baseRepository),
     };
 };
 exports.PokemonRepository = PokemonRepository;
-const getPokemonLikes = (pool) => async (pokemonName) => {
-    const transactionResult = await (0, utils_1.oneTransaction)(pool, {
-        text: 'SELECT *  FROM pokemon WHERE name = $1',
-        values: [pokemonName],
+const getPokemonLikes = (baseRepository) => async (pokemonName) => {
+    const transactionResult = await baseRepository.transaction((client) => {
+        return client.query({
+            text: 'SELECT *  FROM pokemon WHERE name = $1',
+            values: [pokemonName],
+        });
     });
     if (transactionResult.type == 'error')
         return transactionResult;
-    const { rows } = transactionResult.queryReturn;
+    const { rows } = transactionResult.result;
     if (rows.length == 0) {
-        const error = {
+        return {
             type: 'error',
             message: "le pokemon n'existe pas en base de données",
         };
-        return error;
     }
-    const likeResult = { type: 'success', like: rows[0].like };
-    return likeResult;
+    return { type: 'success', like: rows[0].like };
 };
 // function not finished
 const addPokemonLike = (pool) => async (pokemonName, likeNumber) => {

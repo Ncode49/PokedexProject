@@ -3,8 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseRepository = void 0;
 const __1 = require("..");
 // fonction utilitaire pour les transactions et repository
-const BaseRepository = () => {
-    return transaction;
+const BaseRepository = (pool) => {
+    return {
+        transaction: transaction(pool),
+    };
 };
 exports.BaseRepository = BaseRepository;
 // T is the Promise coming from the client
@@ -18,7 +20,6 @@ const transaction = (pool) => async (f) => {
             type: 'success',
             result: result,
         };
-        result;
     }
     catch (e) {
         await client.query('ROLLBACK');

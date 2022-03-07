@@ -16,6 +16,7 @@ export const getPokemonByName = async (
       return undefined
     }
     const pokemon: PokemonDTO = await res.json()
+
     return pokemon
   } catch (error) {
     console.error(error)

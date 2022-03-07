@@ -1,21 +1,29 @@
-import { Pool, PoolClient } from 'pg'
+import { Pool, PoolClient, QueryResult } from 'pg'
 import { APIError, createCatchErrorMessage } from '..'
-
+export type BaseRepositoryType = {
+  transaction: <Result>(
+    f: (client: PoolClient) => Promise<QueryResult<Result>>
+  ) => TransactionResult<Result>
+}
 // fonction utilitaire pour les transactions et repository
-export const BaseRepository = () => {
-  return transaction
+export const BaseRepository = (pool: Pool): BaseRepositoryType => {
+  return {
+    transaction: transaction(pool),
+  }
 }
 export type TransactionResult<Result> = Promise<
-  APIError | TransactionSucess<Result>
+  APIError | TransactionSuccess<Result>
 >
-export type TransactionSucess<Result> = {
+export type TransactionSuccess<Result> = {
   type: 'success'
-  result: Result
+  result: QueryResult<Result>
 }
 // T is the Promise coming from the client
 const transaction =
   (pool: Pool) =>
-  async <T>(f: (client: PoolClient) => T): TransactionResult<T> => {
+  async <Result>(
+    f: (client: PoolClient) => Promise<QueryResult<Result>>
+  ): TransactionResult<Result> => {
     const client = await pool.connect()
     try {
       await client.query('BEGIN')
@@ -25,7 +33,6 @@ const transaction =
         type: 'success',
         result: result,
       }
-      result
     } catch (e) {
       await client.query('ROLLBACK')
       return createCatchErrorMessage(e)

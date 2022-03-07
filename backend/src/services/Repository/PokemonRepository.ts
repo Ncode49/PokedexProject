@@ -1,5 +1,6 @@
-import { Pool, PoolClient, QueryResult } from 'pg'
+import { Pool } from 'pg'
 import { APIError, createCatchErrorMessage } from '../Error'
+import { BaseRepositoryType } from './BaseRepository'
 import { MessageS, oneTransaction, transaction } from './utils'
 export type IPokemonLike = {
   name: string
@@ -18,32 +19,35 @@ export type PokemonRepositoryType = {
     likeNumber: number
   ) => AddPokemonLikeResultType
 }
-export const PokemonRepository = (pool: Pool): PokemonRepositoryType => {
+export const PokemonRepository = (
+  baseRepository: BaseRepositoryType
+): PokemonRepositoryType => {
   return {
-    getPokemonLikes: getPokemonLikes(pool),
-    addPokemonLike: addPokemonLike(pool),
+    getPokemonLikes: getPokemonLikes(baseRepository),
+    addPokemonLike: addPokemonLike(baseRepository),
   }
 }
 
 const getPokemonLikes =
-  (pool: Pool) =>
+  (baseRepository: BaseRepositoryType) =>
   async (pokemonName: string): GetPokemonLikesResultType => {
-    const transactionResult = await oneTransaction<IPokemonLike>(pool, {
-      text: 'SELECT *  FROM pokemon WHERE name = $1',
-      values: [pokemonName],
-    })
-
+    const transactionResult = await baseRepository.transaction<IPokemonLike>(
+      (client) => {
+        return client.query<IPokemonLike>({
+          text: 'SELECT *  FROM pokemon WHERE name = $1',
+          values: [pokemonName],
+        })
+      }
+    )
     if (transactionResult.type == 'error') return transactionResult
-    const { rows } = transactionResult.queryReturn
+    const { rows } = transactionResult.result
     if (rows.length == 0) {
-      const error: APIError = {
+      return {
         type: 'error',
         message: "le pokemon n'existe pas en base de données",
       }
-      return error
     }
-    const likeResult: Likes = { type: 'success', like: rows[0].like }
-    return likeResult
+    return { type: 'success', like: rows[0].like }
   }
 
 // function not finished
