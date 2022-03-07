@@ -1,7 +1,12 @@
 import { Pool } from 'pg'
+import { createErrorMessage, createSuccessMessage } from '..'
 import { APIError } from '../Error'
-import { BaseRepositoryType } from './BaseRepository'
-import { MessageS, oneTransaction } from './utils'
+import {
+  BaseRepositoryType,
+  TransactionResult,
+  TransactionSuccess,
+} from './BaseRepository'
+import { MessageS } from './utils'
 export interface IUser {
   username: string
   password: string
@@ -37,40 +42,57 @@ const addUser =
   (baseRepository: BaseRepositoryType) =>
   async (username: string, hash: string): AddUserResultType => {
     const transactionResult = await baseRepository.transaction<IUser>(
-      (client) => {
-        return client.query({
+      async (client) => {
+        const res = await client.query<IUser>({
           text: 'INSERT INTO users("username","password") VALUES($1, $2) RETURNING *',
           values: [username, hash],
         })
+        const success: MessageS = {
+          type: 'success',
+          message: "l'utilisateur a été ajoute en base de donnée",
+        }
+        return success
       }
     )
-    if (transactionResult.type == 'error') return transactionResult
-    return {
-      type: 'success',
-      message: "l'utilisateur a été ajoute en base de donnée",
-    }
+    if (
+      transactionResult.type == 'error' ||
+      transactionResult.type == 'success'
+    )
+      return transactionResult
+    return createErrorMessage("success avec payload n'existe pas")
   }
 
 const getPasswordByUsername =
   (baseRepository: BaseRepositoryType) =>
   async (username: string): GetPasswordByUsernameResultType => {
     const transactionResult = await baseRepository.transaction<IUser>(
-      (client) => {
-        return client.query<IUser>({
+      async (client) => {
+        const result = await client.query<IUser>({
           text: 'SELECT * FROM users WHERE username = $1',
           values: [username],
         })
+        const successPayload: TransactionSuccess<IUser> = {
+          type: 'successPayload',
+          result: result,
+        }
+        return successPayload
       }
     )
     if (transactionResult.type == 'error') return transactionResult
-    const { rows } = transactionResult.result
-    if (rows.length == 0)
+    if (transactionResult.type == 'successPayload') {
+      const { rows } = transactionResult.result
+      if (rows.length == 0)
+        return createErrorMessage(
+          "l'utilisateur n'existe pas en base de données"
+        )
       return {
-        type: 'error',
-        message: "l'utilisateur n'existe pas en base de données",
+        type: 'success',
+        password: rows[0].password,
       }
-    return { type: 'success', password: rows[0].password }
+    }
+    return createErrorMessage("success sans payload n'existe pas")
   }
+
 // abstraction des transactions
 // cree une fonction qui fait le traitement
 // function(c client => client.query)

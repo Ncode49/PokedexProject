@@ -16,10 +16,7 @@ const transaction = (pool) => async (f) => {
         await client.query('BEGIN');
         const result = await f(client);
         await client.query('COMMIT');
-        return {
-            type: 'success',
-            result: result,
-        };
+        return result;
     }
     catch (e) {
         await client.query('ROLLBACK');
