@@ -1,43 +1,52 @@
-import { Request, Response } from "express";
-import { LikeServiceType } from ".";
-import { createCatchErrorMessage } from "../services";
-export type LikeAddLikeType = Promise<Response<any, Record<any, string>>>;
-export type LikeGetLikeType = Promise<Response<any, Record<any, string>>>;
+import { Request, Response } from 'express'
+import { LikeServiceType } from '.'
+import { createCatchErrorMessage } from '../services'
+export type LikeAddLikeControllerType = Promise<
+  Response<any, Record<any, string>>
+>
+export type LikeGetLikeControllerType = Promise<
+  Response<any, Record<any, string>>
+>
 export type LikeControllerType = {
-  addLike: (req: Request, res: Response) => LikeAddLikeType;
-  getPokemonlike: (req: Request, res: Response) => LikeGetLikeType;
-};
+  addLike: (req: Request, res: Response) => LikeAddLikeControllerType
+  getPokemonlike: (req: Request, res: Response) => LikeGetLikeControllerType
+}
 
 export const LikeController = (likeService: LikeServiceType) => {
   return {
     addLike: addLike(likeService),
     getPokemonlike: getPokemonlike(likeService),
-  };
-};
+  }
+}
 
 const addLike =
-  (likeService: LikeServiceType) => async (req: Request, res: Response) => {
+  (likeService: LikeServiceType) =>
+  async (req: Request, res: Response): LikeAddLikeControllerType => {
     try {
-      const { action, pokemonName } = req.body;
-      console.log("controlleur");
-      const message = await likeService.addLike(pokemonName, action);
-      console.log("controller result:" + message);
-      if (message.type == "success") return res.status(200).json(message);
-      return res.status(500).json(message);
+      const { action, pokemonName, pokemonId, username } = req.body
+      const message = await likeService.addLike(
+        pokemonId,
+        pokemonName,
+        action,
+        username
+      )
+      if (message.type == 'success') return res.status(200).json(message)
+      return res.status(500).json(message)
     } catch (error) {
-      console.log(error);
-      return res.status(400).json(createCatchErrorMessage(error));
+      console.log(error)
+      return res.status(400).json(createCatchErrorMessage(error))
     }
-  };
+  }
 
 const getPokemonlike =
-  (likeService: LikeServiceType) => async (req: Request, res: Response) => {
+  (likeService: LikeServiceType) =>
+  async (req: Request, res: Response): LikeGetLikeControllerType => {
     try {
-      const { pokemonName } = req.body;
-      const message = await likeService.getLike(pokemonName);
-      if (message.type == "success") return res.status(200).json(message);
-      return res.status(500).json(message);
+      const { pokemonId } = req.body
+      const message = await likeService.getLike(pokemonId)
+      if (message.type == 'success') return res.status(200).json(message)
+      return res.status(500).json(message)
     } catch (error) {
-      return res.status(400).json(createCatchErrorMessage(error));
+      return res.status(400).json(createCatchErrorMessage(error))
     }
-  };
+  }

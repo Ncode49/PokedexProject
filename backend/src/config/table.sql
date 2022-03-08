@@ -18,9 +18,7 @@ CREATE TABLE pokemon (
 
 CREATE TABLE "like" (
 	user_uuid UUID NOT NULL REFERENCES "user"(user_uuid),
-	pokemon_id INT NOT NULL REFERENCES pokemon(id),
-    UNIQUE(user_uuid),
-    UNIQUE(pokemon_id)
+	pokemon_id INT NOT NULL REFERENCES pokemon(id)
 );
 
 

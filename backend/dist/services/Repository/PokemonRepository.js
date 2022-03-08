@@ -10,15 +10,13 @@ const PokemonRepository = (baseRepository) => {
     };
 };
 exports.PokemonRepository = PokemonRepository;
-const getPokemonLikes = (baseRepository) => async (pokemonName) => {
+const getPokemonLikes = (baseRepository) => async (pokemonId) => {
+    console.log('here');
     const transactionResult = await baseRepository.transaction(async (client) => {
         const res = await client.query({
-            text: 'SELECT *  FROM pokemon WHERE name = $1',
-            values: [pokemonName],
+            text: 'SELECT COUNT(*) FROM "like" WHERE pokemon_id = $1',
+            values: [pokemonId],
         });
-        const { rows } = res;
-        if (rows.length == 0)
-            return (0, __1.createErrorMessage)("le pokemon n'existe pas en base de données");
         return {
             type: 'successPayload',
             result: res,
@@ -26,24 +24,37 @@ const getPokemonLikes = (baseRepository) => async (pokemonName) => {
     });
     if (transactionResult.type == 'successPayload') {
         const { rows } = transactionResult.result;
-        return { type: 'success', like: rows[0].like };
+        return { type: 'success', like: rows[0].count };
     }
     if (transactionResult.type == 'error')
         return transactionResult;
     return (0, __1.createErrorMessage)("success sans payload n'existe pas");
 };
-const addPokemonLike = (baseRepository) => async (pokemonName, likeNumber) => {
+// we need the username
+const addPokemonLike = (baseRepository) => async (pokemonId, pokemonName, likeNumber, username) => {
     const res = await baseRepository.transaction(async (client) => {
         const { rows } = await client.query({
-            text: 'SELECT * FROM pokemon WHERE name = $1',
-            values: [pokemonName],
+            text: 'SELECT * FROM "like" WHERE pokemon_id = $1',
+            values: [pokemonId],
         });
         if (rows.length == 0) {
             if (likeNumber == -1)
                 return (0, __1.createErrorMessage)('nombre de like negatifs');
+            // on cree le pokemon dans la table pokemon
             await client.query({
-                text: 'INSERT INTO pokemon("name", "like") VALUES($1, $2) RETURNING *',
-                values: [pokemonName, 1],
+                text: 'INSERT INTO "pokemon"("id", "name") VALUES($1, $2) RETURNING *',
+                values: [pokemonId, pokemonName],
+            });
+            // on cree le lien dans la table like
+            // d'abord, on recupere l'uuid dans la premiere table
+            const { rows } = await client.query({
+                text: 'SELECT "user_uuid" FROM "user" WHERE "username" = $1',
+                values: [username],
+            });
+            const user_uuid = rows[0].user_uuid;
+            await client.query({
+                text: 'INSERT INTO "like"("user_uuid","pokemon_id") VALUES($1,$2)',
+                values: [user_uuid, pokemonId],
             });
             return (0, Error_1.createSuccessMessage)("l'utilisateur a été crée");
         }

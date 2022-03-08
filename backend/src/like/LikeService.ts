@@ -1,11 +1,21 @@
-import { createCatchErrorMessage } from '../services'
-import { PokemonRepositoryType } from '../services/Repository/PokemonRepository'
+import { APIError, createCatchErrorMessage, MessageS } from '../services'
+import {
+  GetPokemonLikesResultType,
+  Likes,
+  PokemonRepositoryType,
+} from '../services/Repository/PokemonRepository'
 
-//
+export type GetLikeServiceType = Promise<APIError | Likes>
+export type AddLikeServiceType = Promise<APIError | MessageS>
 export type ActionType = 'like' | 'unlike'
 export type LikeServiceType = {
-  addLike: (pokemonName: string, action: string) => any
-  getLike: (pokemonName: string) => any
+  getLike: (id: number) => GetLikeServiceType
+  addLike: (
+    id: number,
+    pokemonName: string,
+    action: string,
+    username: string
+  ) => AddLikeServiceType
 }
 export const LikeService = (pokemonRepository: PokemonRepositoryType) => {
   return {
@@ -17,24 +27,32 @@ export const LikeService = (pokemonRepository: PokemonRepositoryType) => {
 // pokemon: string, like: number
 const addLike =
   (pokemonRepository: PokemonRepositoryType) =>
-  async (pokemonName: string, action: string) => {
+  async (
+    id: number,
+    pokemonName: string,
+    action: string,
+    username: string
+  ): AddLikeServiceType => {
     try {
       const likeNumber = action == 'like' ? 1 : -1
       const pokemonResult = await pokemonRepository.addPokemonLike(
+        id,
         pokemonName,
-        likeNumber
+        likeNumber,
+        username
       )
-      console.log('result feedback:' + pokemonResult)
       return pokemonResult
     } catch (error) {
-      createCatchErrorMessage(error)
+      return createCatchErrorMessage(error)
     }
   }
 const getLike =
-  (pokemonRepository: PokemonRepositoryType) => async (pokemonName: string) => {
+  (pokemonRepository: PokemonRepositoryType) =>
+  async (pokemonId: number): GetLikeServiceType => {
     try {
-      return await pokemonRepository.getPokemonLikes(pokemonName)
+      const res = await pokemonRepository.getPokemonLikes(pokemonId)
+      return res
     } catch (error) {
-      createCatchErrorMessage(error)
+      return createCatchErrorMessage(error)
     }
   }

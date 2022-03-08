@@ -8,6 +8,7 @@ import {
 } from './BaseRepository'
 import { MessageS } from './utils'
 export interface IUser {
+  user_uuid: string
   username: string
   password_hash: string
 }
