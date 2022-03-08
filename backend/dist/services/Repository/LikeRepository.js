@@ -25,8 +25,12 @@ const getUserLikedPokemons = (baseRepository) => async (username) => {
     });
     if (transactionresult.type == 'successPayload') {
         const { rows } = transactionresult.result;
-        return { type: 'success', pokemons: rows };
+        const ret = { type: 'success', pokemons: rows };
+        return ret;
     }
+    if (transactionresult.type == 'success')
+        return (0, __1.createCatchErrorMessage)('success sans payload impossible');
+    return transactionresult;
 };
 const getPokemonLikes = (baseRepository) => async (pokemonId) => {
     const transactionResult = await baseRepository.transaction(async (client) => {

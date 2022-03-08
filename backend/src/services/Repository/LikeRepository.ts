@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg'
-import { createErrorMessage, IUser } from '..'
+import { createCatchErrorMessage, createErrorMessage, IUser } from '..'
 import { APIError, createSuccessMessage } from '../Error'
 import { BaseRepositoryType } from './BaseRepository'
 import { MessageS } from './utils'
@@ -15,6 +15,10 @@ export type Likes = {
   type: 'success'
   like: number
 }
+export type PokemonIdListResult = {
+  type: 'success'
+  pokemons: ILike[]
+}
 export type AddPokemonLikeType = (
   pokemonId: number,
   likeNumber: 1 | -1,
@@ -23,10 +27,13 @@ export type AddPokemonLikeType = (
 export type GetPokemonLikesType = (
   pokemonId: number
 ) => Promise<Likes | APIError>
+export type GetUserLikedPokemonsLikeRepositoryType = (
+  username: string
+) => Promise<PokemonIdListResult | APIError>
 export type LikeRepositoryType = {
   getPokemonLikes: GetPokemonLikesType
   addPokemonLike: AddPokemonLikeType
-  getUserLikedPokemons: (username: string) => any
+  getUserLikedPokemons: GetUserLikedPokemonsLikeRepositoryType
 }
 
 export const LikeRepository = (
@@ -56,8 +63,12 @@ const getUserLikedPokemons =
     )
     if (transactionresult.type == 'successPayload') {
       const { rows } = transactionresult.result
-      return { type: 'success', pokemons: rows }
+      const ret: PokemonIdListResult = { type: 'success', pokemons: rows }
+      return ret
     }
+    if (transactionresult.type == 'success')
+      return createCatchErrorMessage('success sans payload impossible')
+    return transactionresult
   }
 
 const getPokemonLikes =

@@ -5,16 +5,16 @@ import {
 } from '../services/Repository/LikeRepository'
 export type ActionType = 'like' | 'unlike'
 
-export type GetLikeServiceType = (id: number) => Promise<APIError | Likes>
-export type AddLikeServiceType = (
+export type GetLikeLikeServiceType = (id: number) => Promise<APIError | Likes>
+export type AddLikeLikeServiceType = (
   action: string,
   pokemonId: number,
   username: string
 ) => Promise<APIError | MessageS>
-export type GetUserLikedPokemonsServiceType = (username: string) => any
+export type GetUserLikedPokemonsLikeServiceType = (username: string) => any
 export type LikeServiceType = {
-  getLike: GetLikeServiceType
-  addLike: AddLikeServiceType
+  getLike: GetLikeLikeServiceType
+  addLike: AddLikeLikeServiceType
   getUserLikedPokemons: (username: string) => Promise<APIError>
 }
 export const LikeService = (likeRepository: LikeRepositoryType) => {
@@ -25,7 +25,7 @@ export const LikeService = (likeRepository: LikeRepositoryType) => {
   }
 }
 const getUserLikedPokemons =
-  (likeRepository: LikeRepositoryType): GetUserLikedPokemonsServiceType =>
+  (likeRepository: LikeRepositoryType): GetUserLikedPokemonsLikeServiceType =>
   async (username: string) => {
     try {
       return await likeRepository.getUserLikedPokemons(username)
@@ -36,7 +36,7 @@ const getUserLikedPokemons =
 
 // pokemon: string, like: number
 const addLike =
-  (likeRepository: LikeRepositoryType): AddLikeServiceType =>
+  (likeRepository: LikeRepositoryType): AddLikeLikeServiceType =>
   async (action: string, pokemonId: number, username: string) => {
     try {
       const likeNumber = action == 'like' ? 1 : -1
@@ -50,7 +50,7 @@ const addLike =
     }
   }
 const getLike =
-  (likeRepository: LikeRepositoryType): GetLikeServiceType =>
+  (likeRepository: LikeRepositoryType): GetLikeLikeServiceType =>
   async (pokemonId: number) => {
     try {
       return await likeRepository.getPokemonLikes(pokemonId)
