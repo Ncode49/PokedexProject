@@ -18,8 +18,7 @@ const addLike = (likeService) => async (req, res) => {
         return res.status(500).json(message);
     }
     catch (error) {
-        console.log(error);
-        return res.status(400).json((0, services_1.createCatchErrorMessage)(error));
+        return res.status(500).json((0, services_1.createCatchErrorMessage)(error));
     }
 };
 const getPokemonlike = (likeService) => async (req, res) => {
@@ -31,6 +30,6 @@ const getPokemonlike = (likeService) => async (req, res) => {
         return res.status(500).json(message);
     }
     catch (error) {
-        return res.status(400).json((0, services_1.createCatchErrorMessage)(error));
+        return res.status(500).json((0, services_1.createCatchErrorMessage)(error));
     }
 };

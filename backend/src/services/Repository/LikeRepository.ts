@@ -24,6 +24,7 @@ export type LikeRepositoryType = {
     likeNumber: 1 | -1,
     username: string
   ) => AddPokemonLikeResultType
+  getUserLikedPokemons: (username: string) => any
 }
 export const LikeRepository = (
   baseRepository: BaseRepositoryType
@@ -31,8 +32,30 @@ export const LikeRepository = (
   return {
     getPokemonLikes: getPokemonLikes(baseRepository),
     addPokemonLike: addPokemonLike(baseRepository),
+    getUserLikedPokemons: getUserLikedPokemons(baseRepository),
   }
 }
+const getUserLikedPokemons =
+  (baseRepository: BaseRepositoryType) => async (username: string) => {
+    const transactionresult = await baseRepository.transaction<ILike>(
+      async (client) => {
+        const user_uuid = await getUserUuid(client, username)
+
+        const res = await client.query<ILike>({
+          text: 'SELECT pokemon_id FROM "like" WHERE user_uuid = $1',
+          values: [user_uuid],
+        })
+        return {
+          type: 'successPayload',
+          result: res,
+        }
+      }
+    )
+    if (transactionresult.type == 'successPayload') {
+      const { rows } = transactionresult.result
+      return { type: 'success', pokemons: rows }
+    }
+  }
 
 const getPokemonLikes =
   (baseRepository: BaseRepositoryType) =>
@@ -108,7 +131,7 @@ const deleteLikeEntry = async (
   pokemonId: number,
   user_uuid: string
 ): Promise<MessageS> => {
-  await client.query({
+  const { rows } = await client.query({
     text: 'DELETE FROM "like" WHERE user_uuid = $1 AND pokemon_id = $2',
     values: [user_uuid, pokemonId],
   })

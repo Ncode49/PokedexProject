@@ -15,17 +15,27 @@ export type LikeServiceType = {
     pokemonId: number,
     username: string
   ) => AddLikeServiceType
+  getUserLikedPokemons: (username: string) => any
 }
-export const LikeService = (pokemonRepository: LikeRepositoryType) => {
+export const LikeService = (likeRepository: LikeRepositoryType) => {
   return {
-    getLike: getLike(pokemonRepository),
-    addLike: addLike(pokemonRepository),
+    getLike: getLike(likeRepository),
+    addLike: addLike(likeRepository),
+    getUserLikedPokemons: getUserLikedPokemons(likeRepository),
   }
 }
+const getUserLikedPokemons =
+  (likeRepository: LikeRepositoryType) => async (username: string) => {
+    try {
+      return await likeRepository.getUserLikedPokemons(username)
+    } catch (error) {
+      return createCatchErrorMessage(error)
+    }
+  }
 
 // pokemon: string, like: number
 const addLike =
-  (pokemonRepository: LikeRepositoryType) =>
+  (likeRepository: LikeRepositoryType) =>
   async (
     action: string,
     pokemonId: number,
@@ -33,22 +43,20 @@ const addLike =
   ): AddLikeServiceType => {
     try {
       const likeNumber = action == 'like' ? 1 : -1
-      const pokemonResult = await pokemonRepository.addPokemonLike(
+      return await likeRepository.addPokemonLike(
         pokemonId,
         likeNumber,
         username
       )
-      return pokemonResult
     } catch (error) {
       return createCatchErrorMessage(error)
     }
   }
 const getLike =
-  (pokemonRepository: LikeRepositoryType) =>
+  (likeRepository: LikeRepositoryType) =>
   async (pokemonId: number): GetLikeServiceType => {
     try {
-      const res = await pokemonRepository.getPokemonLikes(pokemonId)
-      return res
+      return await likeRepository.getPokemonLikes(pokemonId)
     } catch (error) {
       return createCatchErrorMessage(error)
     }

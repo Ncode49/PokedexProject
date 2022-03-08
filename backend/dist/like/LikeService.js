@@ -2,28 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.LikeService = void 0;
 const services_1 = require("../services");
-const LikeService = (pokemonRepository) => {
+const LikeService = (likeRepository) => {
     return {
-        getLike: getLike(pokemonRepository),
-        addLike: addLike(pokemonRepository),
+        getLike: getLike(likeRepository),
+        addLike: addLike(likeRepository),
+        getUserLikedPokemons: getUserLikedPokemons(likeRepository),
     };
 };
 exports.LikeService = LikeService;
-// pokemon: string, like: number
-const addLike = (pokemonRepository) => async (action, pokemonId, username) => {
+const getUserLikedPokemons = (likeRepository) => async (username) => {
     try {
-        const likeNumber = action == 'like' ? 1 : -1;
-        const pokemonResult = await pokemonRepository.addPokemonLike(pokemonId, likeNumber, username);
-        return pokemonResult;
+        return await likeRepository.getUserLikedPokemons(username);
     }
     catch (error) {
         return (0, services_1.createCatchErrorMessage)(error);
     }
 };
-const getLike = (pokemonRepository) => async (pokemonId) => {
+// pokemon: string, like: number
+const addLike = (likeRepository) => async (action, pokemonId, username) => {
     try {
-        const res = await pokemonRepository.getPokemonLikes(pokemonId);
-        return res;
+        const likeNumber = action == 'like' ? 1 : -1;
+        return await likeRepository.addPokemonLike(pokemonId, likeNumber, username);
+    }
+    catch (error) {
+        return (0, services_1.createCatchErrorMessage)(error);
+    }
+};
+const getLike = (likeRepository) => async (pokemonId) => {
+    try {
+        return await likeRepository.getPokemonLikes(pokemonId);
     }
     catch (error) {
         return (0, services_1.createCatchErrorMessage)(error);

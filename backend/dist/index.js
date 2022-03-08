@@ -33,12 +33,12 @@ const jwtService = (0, services_1.JWTService)();
 const cryptoService = (0, services_1.CryptService)();
 const baseRepository = (0, BaseRepository_1.BaseRepository)(pool);
 const userRepository = (0, services_1.UserRepository)(baseRepository);
-const pokemonRepository = (0, LikeRepository_1.LikeRepository)(baseRepository);
+const likeRepository = (0, LikeRepository_1.LikeRepository)(baseRepository);
 // instanciation des middleware
 const extractJWT = (0, authentification_1.ExtractJWT)(jwtService);
 // instantiation du service spécifique
 const authService = (0, authentification_1.AuthService)(userRepository, cryptoService, jwtService);
-const likeService = (0, like_1.LikeService)(pokemonRepository);
+const likeService = (0, like_1.LikeService)(likeRepository);
 // instanciation du controller globale
 const authController = (0, authentification_1.AuthControllerDI)(authService);
 const likeController = (0, LikeController_1.LikeController)(likeService);
