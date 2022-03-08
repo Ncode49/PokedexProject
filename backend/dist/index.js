@@ -11,7 +11,7 @@ const AuthRouter_1 = require("./authentification/AuthRouter");
 const services_1 = require("./services");
 const likeRouter_1 = require("./like/likeRouter");
 const LikeController_1 = require("./like/LikeController");
-const PokemonRepository_1 = require("./services/Repository/PokemonRepository");
+const LikeRepository_1 = require("./services/Repository/LikeRepository");
 const like_1 = require("./like");
 const BaseRepository_1 = require("./services/Repository/BaseRepository");
 const app = (0, express_1.default)();
@@ -33,7 +33,7 @@ const jwtService = (0, services_1.JWTService)();
 const cryptoService = (0, services_1.CryptService)();
 const baseRepository = (0, BaseRepository_1.BaseRepository)(pool);
 const userRepository = (0, services_1.UserRepository)(baseRepository);
-const pokemonRepository = (0, PokemonRepository_1.PokemonRepository)(baseRepository);
+const pokemonRepository = (0, LikeRepository_1.LikeRepository)(baseRepository);
 // instanciation des middleware
 const extractJWT = (0, authentification_1.ExtractJWT)(jwtService);
 // instantiation du service spécifique

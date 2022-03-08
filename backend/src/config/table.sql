@@ -9,17 +9,12 @@ CREATE TABLE "user" (
 	UNIQUE(username)
 );
 
-CREATE TABLE pokemon (
-	id INT NOT NULL PRIMARY KEY,
-	name VARCHAR(50) NOT NULL,
-	UNIQUE(name)
-);
-
-
 CREATE TABLE "like" (
 	user_uuid UUID NOT NULL REFERENCES "user"(user_uuid),
-	pokemon_id INT NOT NULL REFERENCES pokemon(id)
+	pokemon_id INT NOT NULL, 
+    UNIQUE(user_uuid,pokemon_id)
 );
 
 
-
+DROP TABLE "like";
+DROP TABLE "user";

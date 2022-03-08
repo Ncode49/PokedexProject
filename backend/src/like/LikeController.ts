@@ -23,13 +23,8 @@ const addLike =
   (likeService: LikeServiceType) =>
   async (req: Request, res: Response): LikeAddLikeControllerType => {
     try {
-      const { action, pokemonName, pokemonId, username } = req.body
-      const message = await likeService.addLike(
-        pokemonId,
-        pokemonName,
-        action,
-        username
-      )
+      const { action, pokemonId, username } = req.body
+      const message = await likeService.addLike(action, pokemonId, username)
       if (message.type == 'success') return res.status(200).json(message)
       return res.status(500).json(message)
     } catch (error) {

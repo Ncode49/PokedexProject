@@ -10,10 +10,10 @@ const LikeService = (pokemonRepository) => {
 };
 exports.LikeService = LikeService;
 // pokemon: string, like: number
-const addLike = (pokemonRepository) => async (id, pokemonName, action, username) => {
+const addLike = (pokemonRepository) => async (action, pokemonId, username) => {
     try {
         const likeNumber = action == 'like' ? 1 : -1;
-        const pokemonResult = await pokemonRepository.addPokemonLike(id, pokemonName, likeNumber, username);
+        const pokemonResult = await pokemonRepository.addPokemonLike(pokemonId, likeNumber, username);
         return pokemonResult;
     }
     catch (error) {

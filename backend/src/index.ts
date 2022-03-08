@@ -6,7 +6,7 @@ import { authRouter } from './authentification/AuthRouter'
 import { JWTService, CryptService, UserRepository } from './services'
 import { likeRouter } from './like/likeRouter'
 import { LikeController } from './like/LikeController'
-import { PokemonRepository } from './services/Repository/PokemonRepository'
+import { LikeRepository } from './services/Repository/LikeRepository'
 import { LikeService } from './like'
 import { BaseRepository } from './services/Repository/BaseRepository'
 
@@ -36,7 +36,7 @@ const jwtService = JWTService()
 const cryptoService = CryptService()
 const baseRepository = BaseRepository(pool)
 const userRepository = UserRepository(baseRepository)
-const pokemonRepository = PokemonRepository(baseRepository)
+const pokemonRepository = LikeRepository(baseRepository)
 // instanciation des middleware
 const extractJWT = ExtractJWT(jwtService)
 // instantiation du service spécifique
