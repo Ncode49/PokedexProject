@@ -8,5 +8,6 @@ export const likeRouter = (
   const likeRouter = express.Router()
   likeRouter.post('/addLike', extractJWT, likeController.addLike)
   likeRouter.post('/getPokemonlike', extractJWT, likeController.getPokemonlike)
+  likeRouter.post('/getUserPokemon', extractJWT, likeController.getPokemonsUser)
   return likeRouter
 }

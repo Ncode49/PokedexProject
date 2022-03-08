@@ -70,3 +70,4 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoia2lsaWFkc
 GET http://localhost:3000/auth/validateToken 
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoia2lsaWFkc2RzZHNyZXIiLCJpYXQiOjE2NDY3MjgwOTEsImV4cCI6MTY3ODI4NTY5MX0.nNzloNZ8cEAYrLWuDaXxWLVqzvONrgOmimrOOPU650o
 ###
+

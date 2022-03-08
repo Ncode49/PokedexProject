@@ -2,6 +2,7 @@ import { APIError, createCatchErrorMessage, MessageS } from '../services'
 import {
   Likes,
   LikeRepositoryType,
+  PokemonIdListResult,
 } from '../services/Repository/LikeRepository'
 export type ActionType = 'like' | 'unlike'
 
@@ -11,11 +12,13 @@ export type AddLikeLikeServiceType = (
   pokemonId: number,
   username: string
 ) => Promise<APIError | MessageS>
-export type GetUserLikedPokemonsLikeServiceType = (username: string) => any
+export type GetUserLikedPokemonsLikeServiceType = (
+  username: string
+) => Promise<APIError | PokemonIdListResult>
 export type LikeServiceType = {
   getLike: GetLikeLikeServiceType
   addLike: AddLikeLikeServiceType
-  getUserLikedPokemons: (username: string) => Promise<APIError>
+  getUserLikedPokemons: GetUserLikedPokemonsLikeServiceType
 }
 export const LikeService = (likeRepository: LikeRepositoryType) => {
   return {

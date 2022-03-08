@@ -6,6 +6,7 @@ const LikeController = (likeService) => {
     return {
         addLike: addLike(likeService),
         getPokemonlike: getPokemonlike(likeService),
+        getPokemonsUser: getPokemonsUser(likeService),
     };
 };
 exports.LikeController = LikeController;
@@ -25,6 +26,18 @@ const getPokemonlike = (likeService) => async (req, res) => {
     try {
         const { pokemonId } = req.body;
         const message = await likeService.getLike(pokemonId);
+        if (message.type == 'success')
+            return res.status(200).json(message);
+        return res.status(500).json(message);
+    }
+    catch (error) {
+        return res.status(500).json((0, services_1.createCatchErrorMessage)(error));
+    }
+};
+const getPokemonsUser = (likeService) => async (req, res) => {
+    try {
+        const { username } = req.body;
+        const message = await likeService.getUserLikedPokemons(username);
         if (message.type == 'success')
             return res.status(200).json(message);
         return res.status(500).json(message);
