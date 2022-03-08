@@ -8,7 +8,7 @@ CREATE TABLE "user" (
 	password VARCHAR(100) NOT NULL,
 	UNIQUE(username)
 );
-
+/*id ou slug les deux marchent slug (nom par exemple a voir si pas duplication)*/
 CREATE TABLE "like" (
 	user_uuid UUID NOT NULL REFERENCES "user"(user_uuid),
 	pokemon_id INT NOT NULL, 

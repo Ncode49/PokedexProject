@@ -5,15 +5,16 @@ exports.ExtractJWT = void 0;
 // How to eliminate the any ???
 const ExtractJWT = (jwtService) => (req, res, next) => {
     try {
-        const authHeader = req.headers["authorization"];
-        const token = authHeader && authHeader.split(" ")[1];
+        const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1];
         if (token == null)
             return res
                 .status(401)
-                .json({ type: "middleware error", message: "token in empty" });
+                .json({ type: 'middleware error', message: 'token in empty' });
         const jwtResult = jwtService.verifyAccessToken(token);
-        if (jwtResult.type == "error")
+        if (jwtResult.type == 'error')
             return res.status(401).json({ jwtResult });
+        // decode et le passe a la suite
         next();
     }
     catch (error) {

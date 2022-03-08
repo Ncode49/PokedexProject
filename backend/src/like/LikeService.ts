@@ -43,6 +43,7 @@ const addLike =
   async (action: string, pokemonId: number, username: string) => {
     try {
       const likeNumber = action == 'like' ? 1 : -1
+      // cree userSErvice pour récupérer user extrait id
       return await likeRepository.addPokemonLike(
         pokemonId,
         likeNumber,

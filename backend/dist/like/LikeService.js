@@ -22,6 +22,7 @@ const getUserLikedPokemons = (likeRepository) => async (username) => {
 const addLike = (likeRepository) => async (action, pokemonId, username) => {
     try {
         const likeNumber = action == 'like' ? 1 : -1;
+        // cree userSErvice pour récupérer user extrait id
         return await likeRepository.addPokemonLike(pokemonId, likeNumber, username);
     }
     catch (error) {

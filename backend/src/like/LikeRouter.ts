@@ -11,3 +11,5 @@ export const likeRouter = (
   likeRouter.post('/getUserPokemon', extractJWT, likeController.getPokemonsUser)
   return likeRouter
 }
+// deux route diff pour like add delete, get a la place de post
+// 403 forbiddon pour error
