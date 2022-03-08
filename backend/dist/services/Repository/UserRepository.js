@@ -5,14 +5,14 @@ const __1 = require("..");
 const UserRepository = (baseRepository) => {
     return {
         addUser: addUser(baseRepository),
-        getPasswordByUsername: getPasswordByUsername(baseRepository),
+        getPasswordHashByUsername: getPasswordHashByUsername(baseRepository),
     };
 };
 exports.UserRepository = UserRepository;
 const addUser = (baseRepository) => async (username, hash) => {
     const transactionResult = await baseRepository.transaction(async (client) => {
         const res = await client.query({
-            text: 'INSERT INTO "user"("user_uuid","username","password") VALUES(uuid_generate_v4(),$1, $2) RETURNING *',
+            text: 'INSERT INTO "user"("user_uuid","username","password_hash") VALUES(uuid_generate_v4(),$1, $2) RETURNING *',
             values: [username, hash],
         });
         const success = {
@@ -26,7 +26,7 @@ const addUser = (baseRepository) => async (username, hash) => {
         return transactionResult;
     return (0, __1.createErrorMessage)("success avec payload n'existe pas");
 };
-const getPasswordByUsername = (baseRepository) => async (username) => {
+const getPasswordHashByUsername = (baseRepository) => async (username) => {
     const transactionResult = await baseRepository.transaction(async (client) => {
         const result = await client.query({
             text: 'SELECT * FROM "user" WHERE username = $1',
@@ -46,7 +46,7 @@ const getPasswordByUsername = (baseRepository) => async (username) => {
             return (0, __1.createErrorMessage)("l'utilisateur n'existe pas en base de données");
         return {
             type: 'success',
-            password: rows[0].password,
+            password_hash: rows[0].password_hash,
         };
     }
     return (0, __1.createErrorMessage)("success sans payload n'existe pas");

@@ -9,22 +9,24 @@ import {
 import { MessageS } from './utils'
 export interface IUser {
   username: string
-  password: string
+  password_hash: string
 }
 
-type PasswordS = {
+type PasswordHashS = {
   type: 'success'
-  password: string
+  password_hash: string
 }
-export type GetPasswordByUsernameResultType = Promise<APIError | PasswordS>
+export type GetPasswordHashByUsernameResultType = Promise<
+  APIError | PasswordHashS
+>
 export type AddUserResultType = Promise<MessageS | APIError>
 
 export type UserRepositoryType = {
   addUser: (username: string, password: string) => AddUserResultType
-  getPasswordByUsername: (
+  getPasswordHashByUsername: (
     username: string,
     password: string
-  ) => GetPasswordByUsernameResultType
+  ) => GetPasswordHashByUsernameResultType
 }
 
 export const UserRepository = (
@@ -32,7 +34,7 @@ export const UserRepository = (
 ): UserRepositoryType => {
   return {
     addUser: addUser(baseRepository),
-    getPasswordByUsername: getPasswordByUsername(baseRepository),
+    getPasswordHashByUsername: getPasswordHashByUsername(baseRepository),
   }
 }
 
@@ -42,7 +44,7 @@ const addUser =
     const transactionResult = await baseRepository.transaction<IUser>(
       async (client) => {
         const res = await client.query<IUser>({
-          text: 'INSERT INTO "user"("user_uuid","username","password") VALUES(uuid_generate_v4(),$1, $2) RETURNING *',
+          text: 'INSERT INTO "user"("user_uuid","username","password_hash") VALUES(uuid_generate_v4(),$1, $2) RETURNING *',
           values: [username, hash],
         })
         const success: MessageS = {
@@ -60,9 +62,9 @@ const addUser =
     return createErrorMessage("success avec payload n'existe pas")
   }
 
-const getPasswordByUsername =
+const getPasswordHashByUsername =
   (baseRepository: BaseRepositoryType) =>
-  async (username: string): GetPasswordByUsernameResultType => {
+  async (username: string): GetPasswordHashByUsernameResultType => {
     const transactionResult = await baseRepository.transaction<IUser>(
       async (client) => {
         const result = await client.query<IUser>({
@@ -85,7 +87,7 @@ const getPasswordByUsername =
         )
       return {
         type: 'success',
-        password: rows[0].password,
+        password_hash: rows[0].password_hash,
       }
     }
     return createErrorMessage("success sans payload n'existe pas")
