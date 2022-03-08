@@ -1,7 +1,7 @@
 import { createErrorMessage } from '..'
 import { APIError, createSuccessMessage } from '../Error'
 import { BaseRepositoryType } from './BaseRepository'
-import { MessageS, oneTransaction, transaction } from './utils'
+import { MessageS } from './utils'
 export type IPokemonLike = {
   name: string
   like: number

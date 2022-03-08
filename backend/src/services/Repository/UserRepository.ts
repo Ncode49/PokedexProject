@@ -36,20 +36,18 @@ export const UserRepository = (
   }
 }
 
-// transaction((client) => client.query({text: ...., values: [...]}))
-
 const addUser =
   (baseRepository: BaseRepositoryType) =>
   async (username: string, hash: string): AddUserResultType => {
     const transactionResult = await baseRepository.transaction<IUser>(
       async (client) => {
         const res = await client.query<IUser>({
-          text: 'INSERT INTO users("username","password") VALUES($1, $2) RETURNING *',
+          text: 'INSERT INTO "user"("user_uuid","username","password") VALUES(uuid_generate_v4(),$1, $2) RETURNING *',
           values: [username, hash],
         })
         const success: MessageS = {
           type: 'success',
-          message: "l'utilisateur a été ajoute en base de donnée",
+          message: "l'utilisateur a été ajouté en base de donnée",
         }
         return success
       }
@@ -68,7 +66,7 @@ const getPasswordByUsername =
     const transactionResult = await baseRepository.transaction<IUser>(
       async (client) => {
         const result = await client.query<IUser>({
-          text: 'SELECT * FROM users WHERE username = $1',
+          text: 'SELECT * FROM "user" WHERE username = $1',
           values: [username],
         })
         const successPayload: TransactionSuccess<IUser> = {

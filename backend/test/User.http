@@ -18,7 +18,7 @@ POST http://localhost:3000/auth/login
 Content-Type: application/json 
 
 {
-    "username":"Kyles",
+    "username":"kiliadsdsdsrer",
     "password": "cc"
 }
 
@@ -63,10 +63,10 @@ Content-Type: application/json
 
 ### RefreshToken test 
 POST http://localhost:3000/auth/refreshToken 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiTmlja3kiLCJpYXQiOjE2NDU3NzI2NzAsImV4cCI6MTY3NzMzMDI3MH0.rc7kODyJI7vGgfJSGF3I4m35FrPpfQ8sRs2iLi3d_do
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoia2lsaWFkc2RzZHNyZXIiLCJpYXQiOjE2NDY3MjgxODUsImV4cCI6MTY3ODI4NTc4NX0.24P6363PLgvOV-jC2-Nh69hr91pJ13ioj-ksJ24lMjE
 
 
 ### Test new accessToken
 GET http://localhost:3000/auth/validateToken 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoia2lsaWFkc2RzZHNyZXIiLCJpYXQiOjE2NDY3MjgwOTEsImV4cCI6MTY3ODI4NTY5MX0.nNzloNZ8cEAYrLWuDaXxWLVqzvONrgOmimrOOPU650o
 ###
