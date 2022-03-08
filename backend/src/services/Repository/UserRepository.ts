@@ -17,17 +17,18 @@ type PasswordHashS = {
   type: 'success'
   password_hash: string
 }
-export type GetPasswordHashByUsernameResultType = Promise<
-  APIError | PasswordHashS
->
-export type AddUserResultType = Promise<MessageS | APIError>
+export type GetPasswordHashByUsernameUserRepositoryType = (
+  username: string,
+  password: string
+) => Promise<APIError | PasswordHashS>
+export type AddUserUserRepositoryServiceType = (
+  username: string,
+  password: string
+) => Promise<MessageS | APIError>
 
 export type UserRepositoryType = {
-  addUser: (username: string, password: string) => AddUserResultType
-  getPasswordHashByUsername: (
-    username: string,
-    password: string
-  ) => GetPasswordHashByUsernameResultType
+  addUser: AddUserUserRepositoryServiceType
+  getPasswordHashByUsername: GetPasswordHashByUsernameUserRepositoryType
 }
 
 export const UserRepository = (
@@ -40,8 +41,8 @@ export const UserRepository = (
 }
 
 const addUser =
-  (baseRepository: BaseRepositoryType) =>
-  async (username: string, hash: string): AddUserResultType => {
+  (baseRepository: BaseRepositoryType): AddUserUserRepositoryServiceType =>
+  async (username: string, hash: string) => {
     const transactionResult = await baseRepository.transaction<IUser>(
       async (client) => {
         const res = await client.query<IUser>({
@@ -64,8 +65,10 @@ const addUser =
   }
 
 const getPasswordHashByUsername =
-  (baseRepository: BaseRepositoryType) =>
-  async (username: string): GetPasswordHashByUsernameResultType => {
+  (
+    baseRepository: BaseRepositoryType
+  ): GetPasswordHashByUsernameUserRepositoryType =>
+  async (username: string) => {
     const transactionResult = await baseRepository.transaction<IUser>(
       async (client) => {
         const result = await client.query<IUser>({

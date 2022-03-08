@@ -15,17 +15,20 @@ export type Likes = {
   type: 'success'
   like: number
 }
-export type AddPokemonLikeResultType = Promise<MessageS | APIError>
-export type GetPokemonLikesResultType = Promise<Likes | APIError>
+export type AddPokemonLikeType = (
+  pokemonId: number,
+  likeNumber: 1 | -1,
+  username: string
+) => Promise<MessageS | APIError>
+export type GetPokemonLikesType = (
+  pokemonId: number
+) => Promise<Likes | APIError>
 export type LikeRepositoryType = {
-  getPokemonLikes: (pokemonId: number) => GetPokemonLikesResultType
-  addPokemonLike: (
-    pokemonId: number,
-    likeNumber: 1 | -1,
-    username: string
-  ) => AddPokemonLikeResultType
+  getPokemonLikes: GetPokemonLikesType
+  addPokemonLike: AddPokemonLikeType
   getUserLikedPokemons: (username: string) => any
 }
+
 export const LikeRepository = (
   baseRepository: BaseRepositoryType
 ): LikeRepositoryType => {
@@ -58,8 +61,8 @@ const getUserLikedPokemons =
   }
 
 const getPokemonLikes =
-  (baseRepository: BaseRepositoryType) =>
-  async (pokemonId: number): GetPokemonLikesResultType => {
+  (baseRepository: BaseRepositoryType): GetPokemonLikesType =>
+  async (pokemonId: number) => {
     const transactionResult = await baseRepository.transaction(
       async (client) => {
         const res = await client.query<ICount>({
@@ -81,12 +84,8 @@ const getPokemonLikes =
   }
 
 const addPokemonLike =
-  (baseRepository: BaseRepositoryType) =>
-  async (
-    pokemonId: number,
-    likeNumber: 1 | -1,
-    username: string
-  ): AddPokemonLikeResultType => {
+  (baseRepository: BaseRepositoryType): AddPokemonLikeType =>
+  async (pokemonId: number, likeNumber: 1 | -1, username: string) => {
     const res = await baseRepository.transaction(async (client) => {
       const user_uuid = await getUserUuid(client, username)
       const pokemonLikes = await getPokemonLike(client, pokemonId)

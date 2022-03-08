@@ -12,13 +12,19 @@ type AccessRefreshTokenS = {
   accessToken: string
   refreshToken: string
 }
-export type LoginResultType = Promise<APIError | AccessRefreshTokenS>
-export type RefreshTokenResultType = TokenS | APIError
-export type RegisterResultType = Promise<MessageS | APIError>
+export type LoginAuthServiceType = (
+  username: string,
+  password: string
+) => Promise<APIError | AccessRefreshTokenS>
+export type RegisterAuthServiceType = (
+  username: string,
+  password: string
+) => Promise<MessageS | APIError>
+export type RefreshAuthServiceType = (token: string) => TokenS | APIError
 export type AuthServiceType = {
-  login: (username: string, password: string) => LoginResultType
-  register: (username: string, password: string) => RegisterResultType
-  refreshToken: (token: string) => RefreshTokenResultType
+  login: LoginAuthServiceType
+  register: RegisterAuthServiceType
+  refreshToken: RefreshAuthServiceType
 }
 export const AuthService = (
   userRepository: UserRepositoryType,
@@ -37,8 +43,8 @@ const login =
     userRepository: UserRepositoryType,
     cryptoService: CryptoServiceType,
     jwtService: JWTServiceType
-  ) =>
-  async (username: string, password: string): LoginResultType => {
+  ): LoginAuthServiceType =>
+  async (username: string, password: string) => {
     try {
       const data = await userRepository.getPasswordHashByUsername(
         username,
@@ -74,8 +80,8 @@ const login =
   }
 
 const refreshToken =
-  (jwtService: JWTServiceType) =>
-  (token: string): RefreshTokenResultType => {
+  (jwtService: JWTServiceType): RefreshAuthServiceType =>
+  (token: string) => {
     try {
       const payload = jwtService.verifyRefreshToken(token)
       if (payload.type === 'error') return payload
@@ -85,8 +91,11 @@ const refreshToken =
     }
   }
 const register =
-  (userRepository: UserRepositoryType, cryptoService: CryptoServiceType) =>
-  async (username: string, password: string): RegisterResultType => {
+  (
+    userRepository: UserRepositoryType,
+    cryptoService: CryptoServiceType
+  ): RegisterAuthServiceType =>
+  async (username: string, password: string) => {
     try {
       const hashResult = await cryptoService.hashPassword(password)
       if (hashResult.type == 'error') return hashResult

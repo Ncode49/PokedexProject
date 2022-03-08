@@ -1,15 +1,17 @@
 import { Request, Response } from 'express'
 import { LikeServiceType } from '.'
 import { createCatchErrorMessage } from '../services'
-export type LikeAddLikeControllerType = Promise<
-  Response<any, Record<any, string>>
->
-export type LikeGetLikeControllerType = Promise<
-  Response<any, Record<any, string>>
->
+export type LikeAddLikeControllerType = (
+  req: Request,
+  res: Response
+) => Promise<Response<any, Record<any, string>>>
+export type LikeGetLikeControllerType = (
+  req: Request,
+  res: Response
+) => Promise<Response<any, Record<any, string>>>
 export type LikeControllerType = {
-  addLike: (req: Request, res: Response) => LikeAddLikeControllerType
-  getPokemonlike: (req: Request, res: Response) => LikeGetLikeControllerType
+  addLike: LikeAddLikeControllerType
+  getPokemonlike: LikeGetLikeControllerType
 }
 
 export const LikeController = (likeService: LikeServiceType) => {
@@ -20,8 +22,8 @@ export const LikeController = (likeService: LikeServiceType) => {
 }
 
 const addLike =
-  (likeService: LikeServiceType) =>
-  async (req: Request, res: Response): LikeAddLikeControllerType => {
+  (likeService: LikeServiceType): LikeAddLikeControllerType =>
+  async (req: Request, res: Response) => {
     try {
       const { action, pokemonId, username } = req.body
       const message = await likeService.addLike(action, pokemonId, username)
@@ -33,8 +35,8 @@ const addLike =
   }
 
 const getPokemonlike =
-  (likeService: LikeServiceType) =>
-  async (req: Request, res: Response): LikeGetLikeControllerType => {
+  (likeService: LikeServiceType): LikeGetLikeControllerType =>
+  async (req: Request, res: Response) => {
     try {
       const { pokemonId } = req.body
       const message = await likeService.getLike(pokemonId)

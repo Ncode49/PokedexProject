@@ -21,7 +21,7 @@ const verifyToken = (token, secret) => {
         jsonwebtoken_1.default.verify(token, secret);
         const decoded = jsonwebtoken_1.default.decode(token);
         return {
-            type: "success",
+            type: 'success',
             payload: decoded,
         };
     }
@@ -39,7 +39,7 @@ const generateToken = (user, config, tokenOptions) => {
     try {
         const token = jsonwebtoken_1.default.sign({ user }, config, tokenOptions);
         return {
-            type: "success",
+            type: 'success',
             token: token,
         };
     }
@@ -50,16 +50,16 @@ const generateToken = (user, config, tokenOptions) => {
 // durée de vie courte
 const generateAccessToken = (user) => {
     return generateToken(user, config_1.default.server.token.accessTokenSecret, {
-        algorithm: "HS256",
-        expiresIn: "1y",
+        algorithm: 'HS256',
+        expiresIn: '1y',
     });
 };
 exports.generateAccessToken = generateAccessToken;
 // durée de vie longue
 const generateRefreshToken = (user) => {
     return generateToken(user, config_1.default.server.token.refreshTokenSecret, {
-        algorithm: "HS256",
-        expiresIn: "1y",
+        algorithm: 'HS256',
+        expiresIn: '1y',
     });
 };
 exports.generateRefreshToken = generateRefreshToken;

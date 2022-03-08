@@ -9,11 +9,16 @@ type BoolS = {
   bool: boolean
 }
 
-export type CompareHashResultType = Promise<BoolS | APIError>
-export type HashPasswordResultType = Promise<HashS | APIError>
+export type CompareHashServiceType = (
+  password: string,
+  hash: string
+) => Promise<BoolS | APIError>
+export type HashPasswordServiceType = (
+  password: string
+) => Promise<HashS | APIError>
 export type CryptoServiceType = {
-  compareHash: (password: string, hash: string) => CompareHashResultType
-  hashPassword: (password: string) => HashPasswordResultType
+  compareHash: CompareHashServiceType
+  hashPassword: HashPasswordServiceType
 }
 
 export const CryptService = (): CryptoServiceType => {
@@ -23,10 +28,10 @@ export const CryptService = (): CryptoServiceType => {
   }
 }
 
-const compareHash = async (
+const compareHash: CompareHashServiceType = async (
   password: string,
   hash: string
-): CompareHashResultType => {
+) => {
   try {
     const bool = await bcryptjs.compare(password, hash)
     return {
@@ -38,7 +43,7 @@ const compareHash = async (
   }
 }
 
-const hashPassword = async (password: string): HashPasswordResultType => {
+const hashPassword: HashPasswordServiceType = async (password: string) => {
   try {
     const hash = await bcryptjs.hash(password, 10)
     return {

@@ -8,10 +8,11 @@ export type TransactionSuccess<Result> = {
   type: 'successPayload'
   result: QueryResult<Result>
 }
+export type TransactionBaseRepositoryType = <Result>(
+  f: (client: PoolClient) => TransactionResult<Result>
+) => TransactionResult<Result>
 export type BaseRepositoryType = {
-  transaction: <Result>(
-    f: (client: PoolClient) => TransactionResult<Result>
-  ) => TransactionResult<Result>
+  transaction: TransactionBaseRepositoryType
 }
 // fonction utilitaire pour les transactions et repository
 export const BaseRepository = (pool: Pool): BaseRepositoryType => {
@@ -22,7 +23,7 @@ export const BaseRepository = (pool: Pool): BaseRepositoryType => {
 
 // T is the Promise coming from the client
 const transaction =
-  (pool: Pool) =>
+  (pool: Pool): TransactionBaseRepositoryType =>
   async <Result>(
     f: (client: PoolClient) => TransactionResult<Result>
   ): TransactionResult<Result> => {
