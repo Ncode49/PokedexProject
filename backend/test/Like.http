@@ -1,0 +1,125 @@
+
+###
+POST http://localhost:3000/like/getPokemonlike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+    "pokemonId": 1
+}
+###
+
+POST http://localhost:3000/like/getPokemonlike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+    "pokemonId": 2
+}
+### 
+
+POST http://localhost:3000/like/addLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "action": "like",
+   "pokemonId": "1",
+   "username": "kiliadsdsdsrer"
+}
+### 
+
+POST http://localhost:3000/like/addLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "action": "unlike",
+   "pokemonId": "1",
+   "username": "kiliadsdsdsrer"
+}
+### 
+
+POST http://localhost:3000/like/addLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "action": "like",
+   "pokemonId": "2",
+   "username": "kiliadsdsdsrer"
+}
+###
+
+POST http://localhost:3000/like/addLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "action": "unlike",
+   "pokemonId": "2",
+   "username": "kiliadsdsdsrer"
+}
+
+
+
+
+
+
+
+###
+
+
+POST http://localhost:3000/like/addLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "action": "like",
+   "pokemonId": "1",
+   "username": "Kyless"
+}
+### 
+
+POST http://localhost:3000/like/addLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "action": "unlike",
+   "pokemonId": "1",
+   "username": "Kyless"
+}
+### 
+
+POST http://localhost:3000/like/addLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "action": "like",
+   "pokemonName": "ivysaur",
+   "pokemonId": "2",
+   "username": "Kyless"
+}
+###
+
+POST http://localhost:3000/like/addLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "action": "unlike",
+   "pokemonName": "ivysaur",
+   "pokemonId": "2",
+   "username": "Kyless"
+}
+###
+POST http://localhost:3000/like/getUserPokemon
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDYzMTc0MDMsImV4cCI6MTY3Nzg3NTAwM30.9KvABJ3dTy99loO7slnsgtQVNXCqjdlmOhG0u74s3NY
+Content-Type: application/json 
+
+{
+   "username": "Kyless"
+}
+###
