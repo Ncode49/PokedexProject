@@ -17,12 +17,14 @@ export type GetUserLikedPokemonsLikeServiceType = (
 export type LikeServiceType = {
   getLike: GetLikeLikeServiceType
   addLike: AddLikeLikeServiceType
+  removeLike: AddLikeLikeServiceType
   getUserLikedPokemons: GetUserLikedPokemonsLikeServiceType
 }
 export const LikeService = (likeRepository: LikeRepositoryType) => {
   return {
     getLike: getLike(likeRepository),
     addLike: addLike(likeRepository),
+    removeLike: removeLike(likeRepository),
     getUserLikedPokemons: getUserLikedPokemons(likeRepository),
   }
 }
@@ -42,6 +44,16 @@ const addLike =
   async (user_uuid: string, pokemonId: number) => {
     try {
       return await likeRepository.addPokemonLike(user_uuid, pokemonId)
+    } catch (error) {
+      return createCatchErrorMessage(error)
+    }
+  }
+
+const removeLike =
+  (likeRepository: LikeRepositoryType): AddLikeLikeServiceType =>
+  async (user_uuid: string, pokemonId: number) => {
+    try {
+      return await likeRepository.removePokemonLike(user_uuid, pokemonId)
     } catch (error) {
       return createCatchErrorMessage(error)
     }

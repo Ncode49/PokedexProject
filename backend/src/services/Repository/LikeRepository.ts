@@ -32,6 +32,7 @@ export type GetUserLikedPokemonsLikeRepositoryType = (
 export type LikeRepositoryType = {
   getPokemonLikes: GetPokemonLikesType
   addPokemonLike: AddPokemonLikeType
+  removePokemonLike: AddPokemonLikeType
   getUserLikedPokemons: GetUserLikedPokemonsLikeRepositoryType
 }
 
@@ -41,6 +42,7 @@ export const LikeRepository = (
   return {
     getPokemonLikes: getPokemonLikes(baseRepository),
     addPokemonLike: addPokemonLike(baseRepository),
+    removePokemonLike: removePokemonLike(baseRepository),
     getUserLikedPokemons: getUserLikedPokemons(baseRepository),
   }
 }
@@ -97,16 +99,16 @@ const addPokemonLike =
     return res
   }
 
-const getUserUuid = async (
-  client: PoolClient,
-  username: string
-): Promise<string> => {
-  const { rows } = await client.query<IUser>({
-    text: 'SELECT "user_uuid" FROM "user" WHERE "username" = $1',
-    values: [username],
-  })
-  return rows[0].user_uuid
-}
+const removePokemonLike =
+  (baseRepository: BaseRepositoryType): AddPokemonLikeType =>
+  async (user_uuid: string, pokemonId: number) => {
+    const res = await baseRepository.transaction(async (client) => {
+      return await deleteLikeEntry(client, pokemonId, user_uuid)
+    })
+    if (res.type == 'successPayload')
+      return createErrorMessage("success sans payload n'existe pas")
+    return res
+  }
 
 const addLikeEntry = async (
   client: PoolClient,

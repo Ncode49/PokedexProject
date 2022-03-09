@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { LikeServiceType } from '.'
 import { CustomRequest } from '../expressType'
-import { createCatchErrorMessage } from '../services'
+import { createCatchErrorMessage, createErrorMessage } from '../services'
 export type LikeAddLikeControllerType = (
   req: CustomRequest<PokemonId>,
   res: Response
@@ -20,6 +20,7 @@ export type RemoveLikeControllerType = (
 ) => Promise<Response<any, Record<any, string>>>
 export type LikeControllerType = {
   addLike: LikeAddLikeControllerType
+  removeLike: LikeAddLikeControllerType
   getPokemonlike: GetLikeControllerType
   getPokemonsUser: GetPokemonsUserControllerType
 }
@@ -31,6 +32,7 @@ export const LikeController = (
 ): LikeControllerType => {
   return {
     addLike: addLike(likeService),
+    removeLike: removeLike(likeService),
     getPokemonlike: getPokemonlike(likeService),
     getPokemonsUser: getPokemonsUser(likeService),
   }
@@ -50,13 +52,31 @@ const addLike =
       return res.status(500).json(createCatchErrorMessage(error))
     }
   }
-
+const removeLike =
+  (likeService: LikeServiceType): LikeAddLikeControllerType =>
+  async (req: CustomRequest<PokemonId>, res: Response) => {
+    try {
+      const { user_uuid } = req.token
+      const { pokemonId } = req.body
+      console.log(user_uuid, pokemonId)
+      const message = await likeService.removeLike(user_uuid, pokemonId)
+      if (message.type == 'success') return res.status(200).json(message)
+      return res.status(500).json(message)
+    } catch (error) {
+      return res.status(500).json(createCatchErrorMessage(error))
+    }
+  }
 const getPokemonlike =
   (likeService: LikeServiceType): GetLikeControllerType =>
   async (req: CustomRequest<PokemonId>, res: Response) => {
     try {
-      const { pokemonId } = req.body
-      const message = await likeService.getLike(pokemonId)
+      const { pokemonId } = req.query
+      if (typeof pokemonId !== 'string')
+        return res
+          .status(400)
+          .json(createErrorMessage('query must be a string'))
+      const id = parseInt(pokemonId)
+      const message = await likeService.getLike(id)
       if (message.type == 'success') return res.status(200).json(message)
       return res.status(500).json(message)
     } catch (error) {

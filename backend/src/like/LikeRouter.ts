@@ -7,8 +7,8 @@ export const likeRouter = (
 ) => {
   const likeRouter = express.Router()
   likeRouter.post('/addLike', extractJWT, likeController.addLike)
-  //likeRouter.post('removeLike', extractJWT, likeController.removeLike)
-  likeRouter.post('/getPokemonlike', extractJWT, likeController.getPokemonlike)
-  likeRouter.post('/getUserPokemon', extractJWT, likeController.getPokemonsUser)
+  likeRouter.delete('/removeLike', extractJWT, likeController.removeLike)
+  likeRouter.get('/getPokemonlike', extractJWT, likeController.getPokemonlike)
+  likeRouter.get('/getUserPokemon', extractJWT, likeController.getPokemonsUser)
   return likeRouter
 }

@@ -15,3 +15,25 @@ Content-Type: application/json
 {
    "pokemonId": 1
 }
+
+###
+DELETE http://localhost:3000/like/removeLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3V1aWQiOiIwNjk3OTNkOC1mY2Q3LTRjZWUtYjkyZC0yYjc3ZGQ1OTgwMjQiLCJpYXQiOjE2NDY4MjkxODQsImV4cCI6MTY3ODM4Njc4NH0.3XqjUVSSHXTVMU5mzsS6S5CbH3tOF3Ecnf4hPtyOXqU
+Content-Type: application/json 
+
+{
+   "pokemonId": 1
+}
+###
+
+DELETE http://localhost:3000/like/removeLike
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3V1aWQiOiI1MTlhMmQwMy00OWY0LTQwNjUtYjdkMS00MDRmYzMzMWNlNzMiLCJpYXQiOjE2NDY4Mjg0OTksImV4cCI6MTY3ODM4NjA5OX0.2f0Xfw1sUtBnFjRf-fiE1Aw3x21b4ggu4MUc8Rx--ZQ
+Content-Type: application/json 
+
+{
+   "pokemonId": 1
+}
+###
+GET http://localhost:3000/like/getPokemonlike?pokemonId=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3V1aWQiOiIwNjk3OTNkOC1mY2Q3LTRjZWUtYjkyZC0yYjc3ZGQ1OTgwMjQiLCJpYXQiOjE2NDY4MjkxODQsImV4cCI6MTY3ODM4Njc4NH0.3XqjUVSSHXTVMU5mzsS6S5CbH3tOF3Ecnf4hPtyOXqU
+
