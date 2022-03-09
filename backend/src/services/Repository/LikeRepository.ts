@@ -47,11 +47,9 @@ export const LikeRepository = (
   }
 }
 const getUserLikedPokemons =
-  (baseRepository: BaseRepositoryType) => async (username: string) => {
+  (baseRepository: BaseRepositoryType) => async (user_uuid: string) => {
     const transactionresult = await baseRepository.transaction<ILike>(
       async (client) => {
-        const user_uuid = await getUserUuid(client, username)
-
         const res = await client.query<ILike>({
           text: 'SELECT pokemon_id FROM "like" WHERE user_uuid = $1',
           values: [user_uuid],

@@ -30,9 +30,9 @@ export const LikeService = (likeRepository: LikeRepositoryType) => {
 }
 const getUserLikedPokemons =
   (likeRepository: LikeRepositoryType): GetUserLikedPokemonsLikeServiceType =>
-  async (username: string) => {
+  async (user_uuid: string) => {
     try {
-      return await likeRepository.getUserLikedPokemons(username)
+      return await likeRepository.getUserLikedPokemons(user_uuid)
     } catch (error) {
       return createCatchErrorMessage(error)
     }

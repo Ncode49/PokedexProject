@@ -9,6 +9,6 @@ export const likeRouter = (
   likeRouter.post('/addLike', extractJWT, likeController.addLike)
   likeRouter.delete('/removeLike', extractJWT, likeController.removeLike)
   likeRouter.get('/getPokemonlike', extractJWT, likeController.getPokemonlike)
-  likeRouter.get('/getUserPokemon', extractJWT, likeController.getPokemonsUser)
+  likeRouter.get('/getUserPokemons', extractJWT, likeController.getPokemonsUser)
   return likeRouter
 }
