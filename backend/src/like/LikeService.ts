@@ -4,7 +4,6 @@ import {
   LikeRepositoryType,
   PokemonIdListResultSuccess,
 } from '../services/Repository/LikeRepository'
-export type ActionType = 'like' | 'unlike'
 
 export type GetLikeLikeServiceType = (id: number) => Promise<APIError | Likes>
 export type AddLikeLikeServiceType = (

@@ -17,8 +17,6 @@ export const ExtractJWT =
       if (jwtResult.type == 'error') return res.status(401).json(jwtResult)
       // pass the data to the next middleware
       req.token = jwtResult.payload
-      console.log(req.token)
-
       next()
     } catch (error) {
       const err = error as Error

@@ -101,6 +101,8 @@ const removePokemonLike =
   (baseRepository: BaseRepositoryType): AddPokemonLikeType =>
   async (user_uuid: string, pokemonId: number) => {
     const res = await baseRepository.transaction(async (client) => {
+      const likenumber = await getPokemonLike(client, pokemonId, user_uuid)
+      if (likenumber == 0) return createErrorMessage('number of like is < 0')
       return await deleteLikeEntry(client, pokemonId, user_uuid)
     })
     if (res.type == 'successPayload')
@@ -134,11 +136,12 @@ const deleteLikeEntry = async (
 
 const getPokemonLike = async (
   client: PoolClient,
-  pokemonId: number
+  pokemonId: number,
+  user_uuid: string
 ): Promise<number> => {
   const { rows } = await client.query<ICount>({
-    text: 'SELECT COUNT(*) FROM "like" WHERE pokemon_id = $1',
-    values: [pokemonId],
+    text: 'SELECT COUNT(*) FROM "like" WHERE pokemon_id = $1 AND user_uuid = $2',
+    values: [pokemonId, user_uuid],
   })
   return rows[0].count
 }

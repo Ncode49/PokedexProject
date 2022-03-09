@@ -32,7 +32,7 @@ export const AuthControllerDI = (authService: AuthServiceType) => {
     validateToken: validateToken,
   }
 }
-// authcontroller.register(service a utiliser par a injecter par AuthService) qui sont les méthodes a utiliser
+
 const login =
   (authService: AuthServiceType): AuthLoginType =>
   async (req: Request, res: Response) => {
