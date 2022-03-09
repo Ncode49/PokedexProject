@@ -13,14 +13,19 @@ export type GetPokemonsUserControllerType = (
   req: Request,
   res: Response
 ) => Promise<Response<any, Record<any, string>>>
-
+export type RemoveLikeControllerType = (
+  req: Request,
+  res: Response
+) => Promise<Response<any, Record<any, string>>>
 export type LikeControllerType = {
   addLike: LikeAddLikeControllerType
   getPokemonlike: LikeGetLikeControllerType
   getPokemonsUser: GetPokemonsUserControllerType
 }
 
-export const LikeController = (likeService: LikeServiceType) => {
+export const LikeController = (
+  likeService: LikeServiceType
+): LikeControllerType => {
   return {
     addLike: addLike(likeService),
     getPokemonlike: getPokemonlike(likeService),

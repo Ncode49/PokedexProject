@@ -2,7 +2,7 @@ import { PoolClient } from 'pg'
 import { createCatchErrorMessage, createErrorMessage, IUser } from '..'
 import { APIError, createSuccessMessage } from '../Error'
 import { BaseRepositoryType } from './BaseRepository'
-import { MessageS } from './utils'
+import { MessageS, transactionPayloadSuccess } from './utils'
 
 export type ILike = {
   user_uuid: string
@@ -15,7 +15,7 @@ export type Likes = {
   type: 'success'
   like: number
 }
-export type PokemonIdListResult = {
+export type PokemonIdListResultSuccess = {
   type: 'success'
   pokemons: ILike[]
 }
@@ -29,7 +29,7 @@ export type GetPokemonLikesType = (
 ) => Promise<Likes | APIError>
 export type GetUserLikedPokemonsLikeRepositoryType = (
   username: string
-) => Promise<PokemonIdListResult | APIError>
+) => Promise<PokemonIdListResultSuccess | APIError>
 export type LikeRepositoryType = {
   getPokemonLikes: GetPokemonLikesType
   addPokemonLike: AddPokemonLikeType
@@ -55,16 +55,12 @@ const getUserLikedPokemons =
           text: 'SELECT pokemon_id FROM "like" WHERE user_uuid = $1',
           values: [user_uuid],
         })
-        return {
-          type: 'successPayload',
-          result: res,
-        }
+        return transactionPayloadSuccess<ILike>(res)
       }
     )
     if (transactionresult.type == 'successPayload') {
       const { rows } = transactionresult.result
-      const ret: PokemonIdListResult = { type: 'success', pokemons: rows }
-      return ret
+      return pokemonListSuccess(rows)
     }
     if (transactionresult.type == 'success')
       return createCatchErrorMessage('success sans payload impossible')
@@ -80,15 +76,12 @@ const getPokemonLikes =
           text: 'SELECT COUNT(*) FROM "like" WHERE pokemon_id = $1',
           values: [pokemonId],
         })
-        return {
-          type: 'successPayload',
-          result: res,
-        }
+        return transactionPayloadSuccess<ICount>(res)
       }
     )
     if (transactionResult.type == 'successPayload') {
       const { rows } = transactionResult.result
-      return { type: 'success', like: rows[0].count }
+      return likeCountSuccess(rows[0].count)
     }
     if (transactionResult.type == 'error') return transactionResult
     return createErrorMessage("success sans payload n'existe pas")
@@ -141,7 +134,7 @@ const deleteLikeEntry = async (
   pokemonId: number,
   user_uuid: string
 ): Promise<MessageS> => {
-  const { rows } = await client.query({
+  await client.query({
     text: 'DELETE FROM "like" WHERE user_uuid = $1 AND pokemon_id = $2',
     values: [user_uuid, pokemonId],
   })
@@ -157,4 +150,14 @@ const getPokemonLike = async (
     values: [pokemonId],
   })
   return rows[0].count
+}
+
+const likeCountSuccess = (count: number): Likes => {
+  return { type: 'success', like: count }
+}
+
+const pokemonListSuccess = (
+  pokemonlists: ILike[]
+): PokemonIdListResultSuccess => {
+  return { type: 'success', pokemons: pokemonlists }
 }

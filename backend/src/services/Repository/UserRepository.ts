@@ -1,12 +1,8 @@
-import { Pool } from 'pg'
+import { Pool, QueryResult } from 'pg'
 import { createErrorMessage, createSuccessMessage } from '..'
 import { APIError } from '../Error'
-import {
-  BaseRepositoryType,
-  TransactionResult,
-  TransactionSuccess,
-} from './BaseRepository'
-import { MessageS } from './utils'
+import { BaseRepositoryType, TransactionSuccess } from './BaseRepository'
+import { MessageS, messageSuccess, transactionPayloadSuccess } from './utils'
 export interface IUser {
   user_uuid: string
   username: string
@@ -49,11 +45,7 @@ const addUser =
           text: 'INSERT INTO "user"("user_uuid","username","password_hash") VALUES(uuid_generate_v4(),$1, $2) RETURNING *',
           values: [username, hash],
         })
-        const success: MessageS = {
-          type: 'success',
-          message: "l'utilisateur a été ajouté en base de donnée",
-        }
-        return success
+        return messageSuccess("l'utilisateur a été ajouté en base de donnée")
       }
     )
     if (
@@ -75,28 +67,22 @@ const getPasswordHashByUsername =
           text: 'SELECT * FROM "user" WHERE username = $1',
           values: [username],
         })
-        const successPayload: TransactionSuccess<IUser> = {
-          type: 'successPayload',
-          result: result,
-        }
-        return successPayload
+        return transactionPayloadSuccess<IUser>(result)
       }
     )
     if (transactionResult.type == 'error') return transactionResult
-    if (transactionResult.type == 'successPayload') {
-      const { rows } = transactionResult.result
-      if (rows.length == 0)
-        return createErrorMessage(
-          "l'utilisateur n'existe pas en base de données"
-        )
-      return {
-        type: 'success',
-        password_hash: rows[0].password_hash,
-      }
-    }
-    return createErrorMessage("success sans payload n'existe pas")
+    if (transactionResult.type == 'success')
+      return createErrorMessage("success sans payload n'existe pas")
+
+    const { rows } = transactionResult.result
+    if (rows.length == 0)
+      return createErrorMessage("l'utilisateur n'existe pas en base de données")
+    return passworHashSuccess(rows[0].password_hash)
   }
 
-// abstraction des transactions
-// cree une fonction qui fait le traitement
-// function(c client => client.query)
+const passworHashSuccess = (passwordHash: string): PasswordHashS => {
+  return {
+    type: 'success',
+    password_hash: passwordHash,
+  }
+}

@@ -5,6 +5,7 @@ import {
   TokenS,
   JWTServiceType,
   UserRepositoryType,
+  createErrorMessage,
 } from '../services'
 import { MessageS } from '../services/Repository/utils'
 type AccessRefreshTokenS = {
@@ -57,11 +58,7 @@ const login =
       )
       if (message.type === 'error') return message
       if (!message.bool) {
-        const err: APIError = {
-          type: 'error',
-          message: 'password incorrect',
-        }
-        return err
+        return createErrorMessage('password incorrect')
       }
       const accessTokenResult = jwtService.generateAccessToken(username)
       if (accessTokenResult.type === 'error') return accessTokenResult

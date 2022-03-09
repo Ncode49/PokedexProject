@@ -1,5 +1,6 @@
 import { Pool, PoolClient, QueryResult } from 'pg'
 import { APIError, createCatchErrorMessage } from '..'
+import { TransactionSuccess } from './BaseRepository'
 export type TransactionType<QueryReturn> = Promise<
   QueryType<QueryReturn> | APIError
 >
@@ -17,47 +18,17 @@ export type MessageS = {
   message: string
 }
 
-export const transaction = async <Data>(
-  pool: Pool,
-  f: (client: PoolClient) => Promise<QueryResult<Data>>
-): TransactionType<Data> => {
-  const client = await pool.connect()
-  try {
-    await client.query('BEGIN')
-    const result = await f(client)
-    await client.query('COMMIT')
-
-    return {
-      type: 'success',
-      queryReturn: result,
-    }
-  } catch (error) {
-    await client.query('ROLLBACK')
-    return createCatchErrorMessage(error)
-  } finally {
-    client.release()
+export const transactionPayloadSuccess = <T>(
+  result: QueryResult<T>
+): TransactionSuccess<T> => {
+  return {
+    type: 'successPayload',
+    result: result,
   }
 }
-
-export const oneTransaction = async <QueryReturn>(
-  pool: Pool,
-  query: PgQuery
-): TransactionType<QueryReturn> => {
-  const client = await pool.connect()
-  try {
-    await client.query('BEGIN')
-    const queryReturn: QueryResult<QueryReturn> =
-      await client.query<QueryReturn>(query)
-    await client.query('COMMIT')
-
-    return {
-      type: 'success',
-      queryReturn: queryReturn,
-    }
-  } catch (error) {
-    await client.query('ROLLBACK')
-    return createCatchErrorMessage(error)
-  } finally {
-    client.release()
+export const messageSuccess = (message: string): MessageS => {
+  return {
+    type: 'success',
+    message: message,
   }
 }

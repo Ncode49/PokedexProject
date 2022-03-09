@@ -34,10 +34,7 @@ const compareHash: CompareHashServiceType = async (
 ) => {
   try {
     const bool = await bcryptjs.compare(password, hash)
-    return {
-      type: 'success',
-      bool: bool,
-    }
+    return boolHashSuccess(bool)
   } catch (error) {
     return createCatchErrorMessage(error)
   }
@@ -46,11 +43,21 @@ const compareHash: CompareHashServiceType = async (
 const hashPassword: HashPasswordServiceType = async (password: string) => {
   try {
     const hash = await bcryptjs.hash(password, 10)
-    return {
-      type: 'success',
-      hash: hash,
-    }
+    return hashSuccess(hash)
   } catch (error) {
     return createCatchErrorMessage(error)
+  }
+}
+
+const boolHashSuccess = (bool: boolean): BoolS => {
+  return {
+    type: 'success',
+    bool: bool,
+  }
+}
+const hashSuccess = (hash: string): HashS => {
+  return {
+    type: 'success',
+    hash: hash,
   }
 }

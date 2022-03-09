@@ -1,13 +1,37 @@
 import jwt from 'jsonwebtoken'
 import config from '../../config/config'
 import { createCatchErrorMessage, APIError } from '../Error'
+export type TokenS = {
+  type: 'success'
+  token: string
+}
+
+export type PayloadTokenSuccess = {
+  type: 'success'
+  payload: PayLoadToken
+}
+export type PayLoadToken = {
+  user_uuid: string
+}
+export type TokenOptions = {
+  algorithm: string
+  expiresIn: string
+}
 export type GenerateToken = TokenS | APIError
-export type GenerateAccessTokenServiceType = (user: string) => GenerateToken
-export type GenerateRefreshTokenServiceType = (user: string) => GenerateToken
-type VerifyTokenResultType = PayloadS | APIError
+export type GenerateAccessTokenServiceType = (
+  payload: PayLoadToken
+) => GenerateToken
+export type GenerateRefreshTokenServiceType = (
+  payload: PayLoadToken
+) => GenerateToken
+type VerifyTokenResultType = PayloadTokenSuccess | APIError
 type SignOptions = jwt.SignOptions
-type VerifyAccessTokenServiceType = (token: string) => PayloadS | APIError
-type VerifyRefreshTokenServiceType = (token: string) => PayloadS | APIError
+type VerifyAccessTokenServiceType = (
+  token: string
+) => PayloadTokenSuccess | APIError
+type VerifyRefreshTokenServiceType = (
+  token: string
+) => PayloadTokenSuccess | APIError
 export type JWTServiceType = {
   generateAccessToken: GenerateAccessTokenServiceType
   generateRefreshToken: GenerateRefreshTokenServiceType
@@ -23,32 +47,12 @@ export const JWTService = (): JWTServiceType => {
     verifyAccessToken: verifyAccessToken,
   }
 }
-export type TokenS = {
-  type: 'success'
-  token: string
-}
 
-export type PayloadS = {
-  type: 'success'
-  payload: Payload
-}
-
-export type TokenOptions = {
-  algorithm: string
-  expiresIn: string
-}
-
-export type Payload = {
-  username: string
-}
 const verifyToken = (token: string, secret: string): VerifyTokenResultType => {
   try {
     jwt.verify(token, secret)
-    const decoded = jwt.decode(token) as Payload
-    return {
-      type: 'success',
-      payload: decoded,
-    }
+    const decoded = jwt.decode(token) as PayLoadToken
+    return payloadSuccess(decoded)
   } catch (error) {
     return createCatchErrorMessage(error)
   }
@@ -62,37 +66,49 @@ const verifyAccessToken: VerifyRefreshTokenServiceType = (token: string) => {
   return verifyToken(token, config.server.token.accessTokenSecret)
 }
 
+// use uuid in the payload
+
 const generateToken = (
-  user: string,
+  payload: PayLoadToken,
   config: string,
   tokenOptions: SignOptions
 ): GenerateToken => {
   try {
-    const token = jwt.sign({ user }, config, tokenOptions)
-    return {
-      type: 'success',
-      token: token,
-    }
+    const token = jwt.sign(payload, config, tokenOptions)
+    return tokenSuccess(token)
   } catch (error) {
     return createCatchErrorMessage(error)
   }
 }
-// durée de vie courte
+
 export const generateAccessToken: GenerateAccessTokenServiceType = (
-  user: string
+  payload: PayLoadToken
 ) => {
-  return generateToken(user, config.server.token.accessTokenSecret, {
+  return generateToken(payload, config.server.token.accessTokenSecret, {
     algorithm: 'HS256',
     expiresIn: '1y',
   })
 }
 
-// durée de vie longue
 export const generateRefreshToken: GenerateRefreshTokenServiceType = (
-  user: string
+  payload: PayLoadToken
 ) => {
-  return generateToken(user, config.server.token.refreshTokenSecret, {
+  return generateToken(payload, config.server.token.refreshTokenSecret, {
     algorithm: 'HS256',
     expiresIn: '1y',
   })
+}
+
+const tokenSuccess = (token: string): TokenS => {
+  return {
+    type: 'success',
+    token: token,
+  }
+}
+
+const payloadSuccess = (decoded: PayLoadToken): PayloadTokenSuccess => {
+  return {
+    type: 'success',
+    payload: decoded,
+  }
 }
