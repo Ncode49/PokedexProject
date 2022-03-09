@@ -1,11 +1,12 @@
 import { Request, Response } from 'express'
 import { LikeServiceType } from '.'
+import { CustomRequest } from '../expressType'
 import { createCatchErrorMessage } from '../services'
 export type LikeAddLikeControllerType = (
-  req: Request,
+  req: CustomRequest<PokemonId>,
   res: Response
 ) => Promise<Response<any, Record<any, string>>>
-export type LikeGetLikeControllerType = (
+export type GetLikeControllerType = (
   req: Request,
   res: Response
 ) => Promise<Response<any, Record<any, string>>>
@@ -14,15 +15,17 @@ export type GetPokemonsUserControllerType = (
   res: Response
 ) => Promise<Response<any, Record<any, string>>>
 export type RemoveLikeControllerType = (
-  req: Request,
+  req: CustomRequest<PokemonId>,
   res: Response
 ) => Promise<Response<any, Record<any, string>>>
 export type LikeControllerType = {
   addLike: LikeAddLikeControllerType
-  getPokemonlike: LikeGetLikeControllerType
+  getPokemonlike: GetLikeControllerType
   getPokemonsUser: GetPokemonsUserControllerType
 }
-
+type PokemonId = {
+  pokemonId: number
+}
 export const LikeController = (
   likeService: LikeServiceType
 ): LikeControllerType => {
@@ -35,10 +38,12 @@ export const LikeController = (
 
 const addLike =
   (likeService: LikeServiceType): LikeAddLikeControllerType =>
-  async (req: Request, res: Response) => {
+  async (req: CustomRequest<PokemonId>, res: Response) => {
     try {
-      const { action, pokemonId, username } = req.body
-      const message = await likeService.addLike(action, pokemonId, username)
+      const { user_uuid } = req.token
+      const { pokemonId } = req.body
+      console.log(user_uuid, pokemonId)
+      const message = await likeService.addLike(user_uuid, pokemonId)
       if (message.type == 'success') return res.status(200).json(message)
       return res.status(500).json(message)
     } catch (error) {
@@ -47,8 +52,8 @@ const addLike =
   }
 
 const getPokemonlike =
-  (likeService: LikeServiceType): LikeGetLikeControllerType =>
-  async (req: Request, res: Response) => {
+  (likeService: LikeServiceType): GetLikeControllerType =>
+  async (req: CustomRequest<PokemonId>, res: Response) => {
     try {
       const { pokemonId } = req.body
       const message = await likeService.getLike(pokemonId)
@@ -63,8 +68,8 @@ const getPokemonsUser =
   (likeService: LikeServiceType): GetPokemonsUserControllerType =>
   async (req: Request, res: Response) => {
     try {
-      const { username } = req.body
-      const message = await likeService.getUserLikedPokemons(username)
+      const { user_uuid } = req.token
+      const message = await likeService.getUserLikedPokemons(user_uuid)
       if (message.type == 'success') return res.status(200).json(message)
       return res.status(500).json(message)
     } catch (error) {

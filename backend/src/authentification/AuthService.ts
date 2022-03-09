@@ -47,10 +47,7 @@ const login =
   ): LoginAuthServiceType =>
   async (username: string, password: string) => {
     try {
-      const data = await userRepository.getPasswordHashByUsername(
-        username,
-        password
-      )
+      const data = await userRepository.getPasswordHashByUsername(username)
       if (data.type === 'error') return data
       const message = await cryptoService.compareHash(
         password,
@@ -60,9 +57,16 @@ const login =
       if (!message.bool) {
         return createErrorMessage('password incorrect')
       }
-      const accessTokenResult = jwtService.generateAccessToken(username)
+      // use uuid to generate token from the database
+      const uuidResult = await userRepository.getUuidByUsername(username)
+      if (uuidResult.type == 'error') return uuidResult
+      const accessTokenResult = jwtService.generateAccessToken({
+        user_uuid: uuidResult.user_uuid,
+      })
       if (accessTokenResult.type === 'error') return accessTokenResult
-      const refreshTokenResult = jwtService.generateRefreshToken(username)
+      const refreshTokenResult = jwtService.generateRefreshToken({
+        user_uuid: uuidResult.user_uuid,
+      })
       if (refreshTokenResult.type === 'error') return refreshTokenResult
       // obliger pour typer le retour
       const success: AccessRefreshTokenS = {
@@ -82,7 +86,7 @@ const refreshToken =
     try {
       const payload = jwtService.verifyRefreshToken(token)
       if (payload.type === 'error') return payload
-      return jwtService.generateAccessToken(payload.payload.username)
+      return jwtService.generateAccessToken(payload.payload)
     } catch (error) {
       return createCatchErrorMessage(error)
     }

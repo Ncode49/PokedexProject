@@ -20,9 +20,8 @@ export type PokemonIdListResultSuccess = {
   pokemons: ILike[]
 }
 export type AddPokemonLikeType = (
-  pokemonId: number,
-  likeNumber: 1 | -1,
-  username: string
+  user_uuid: string,
+  pokemonId: number
 ) => Promise<MessageS | APIError>
 export type GetPokemonLikesType = (
   pokemonId: number
@@ -89,18 +88,10 @@ const getPokemonLikes =
 
 const addPokemonLike =
   (baseRepository: BaseRepositoryType): AddPokemonLikeType =>
-  async (pokemonId: number, likeNumber: 1 | -1, username: string) => {
+  async (user_uuid: string, pokemonId: number) => {
     const res = await baseRepository.transaction(async (client) => {
-      const user_uuid = await getUserUuid(client, username)
-      const pokemonLikes = await getPokemonLike(client, pokemonId)
-      if (pokemonLikes == 0 && likeNumber == -1) {
-        return createErrorMessage('nombre de like finaux negatifs')
-      }
-      if (likeNumber == 1)
-        return await addLikeEntry(client, pokemonId, user_uuid)
-      return await deleteLikeEntry(client, pokemonId, user_uuid)
+      return await addLikeEntry(client, pokemonId, user_uuid)
     })
-
     if (res.type == 'successPayload')
       return createErrorMessage("success sans payload n'existe pas")
     return res

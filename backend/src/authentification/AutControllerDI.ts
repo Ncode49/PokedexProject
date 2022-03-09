@@ -56,7 +56,7 @@ const refreshToken =
           .status(400)
           .json(createErrorMessage('token is undefined unauthorized'))
 
-      const tokenOrError = await authService.refreshToken(token)
+      const tokenOrError = authService.refreshToken(token)
       if (tokenOrError.type == 'error')
         return res.status(400).json(tokenOrError)
 
@@ -67,6 +67,7 @@ const refreshToken =
   }
 
 const validateToken: AuthValidateTokenType = (req: Request, res: Response) => {
+  console.log(req.token.user_uuid)
   return res.status(200).json({
     message: 'Token(s) validated',
   })

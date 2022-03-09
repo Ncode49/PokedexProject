@@ -2,47 +2,38 @@ POST http://localhost:3000/auth/register
 Content-Type: application/json 
 
 {
-    "username":"kiliadsdsdsrer",
-    "password": "cc"
+    "username":"Michel",
+    "password": "mcihelpassword"
 }
 ###
 POST http://localhost:3000/auth/register
 Content-Type: application/json 
 
 {
-    "username":"Kyless",
-    "password": "ccoucou"
+    "username":"Kyles",
+    "password": "coucou"
 }
-### bon mot de passe
-POST http://localhost:3000/auth/login
-Content-Type: application/json 
-
-{
-    "username":"kiliadsdsdsrer",
-    "password": "cc"
-}
-
-### Mauvais mot de passe
+###
 POST http://localhost:3000/auth/login
 Content-Type: application/json 
 
 {
     "username":"Kyles",
-    "password": "ccc"
+    "password": "coucou"
 }
 
+###
+POST http://localhost:3000/auth/login
+Content-Type: application/json 
 
-### Test le token est correct expirée ici
-GET http://localhost:3000/auth/validateToken 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikt5bGVzIiwiaWF0IjoxNjQ1NzY5NjQ5LCJleHAiOjE2NDU3Njk3MDl9.DPpm5qWqHA2d-wUkByYuAo9VVGI3R_eUCvw84zOlcLI
-
-### Test le token est incorrect 
+{
+    "username":"Michel",
+    "password": "mcihelpassword"
+}
+### bas token
 GET http://localhost:3000/auth/validateToken 
 Authorization: Bearer salut
 
-###
-GET http://localhost:3000/auth/validateToken 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Ikt5bGVzIiwiaWF0IjoxNjQ1NzA3OTA0LCJleHAiOjE2NDU3MDc5NjR9.DMPkxakAj7d6qc8y_qjHQ3cCWDowm9r7ubOW6UJ3ne8
 ###
 POST http://localhost:3000/auth/register
 Content-Type: application/json 
@@ -61,13 +52,16 @@ Content-Type: application/json
 }
 
 
-### RefreshToken test 
-POST http://localhost:3000/auth/refreshToken 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoia2lsaWFkc2RzZHNyZXIiLCJpYXQiOjE2NDY3MjgxODUsImV4cCI6MTY3ODI4NTc4NX0.24P6363PLgvOV-jC2-Nh69hr91pJ13ioj-ksJ24lMjE
-
 
 ### Test new accessToken
 GET http://localhost:3000/auth/validateToken 
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoia2lsaWFkc2RzZHNyZXIiLCJpYXQiOjE2NDY3MjgwOTEsImV4cCI6MTY3ODI4NTY5MX0.nNzloNZ8cEAYrLWuDaXxWLVqzvONrgOmimrOOPU650o
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3V1aWQiOiI1MTlhMmQwMy00OWY0LTQwNjUtYjdkMS00MDRmYzMzMWNlNzMiLCJpYXQiOjE2NDY4Mjg0OTksImV4cCI6MTY3ODM4NjA5OX0.2f0Xfw1sUtBnFjRf-fiE1Aw3x21b4ggu4MUc8Rx--ZQ
 ###
+
+GET http://localhost:3000/auth/validateToken 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3V1aWQiOiIwNjk3OTNkOC1mY2Q3LTRjZWUtYjkyZC0yYjc3ZGQ1OTgwMjQiLCJpYXQiOjE2NDY4MjkxODQsImV4cCI6MTY3ODM4Njc4NH0.3XqjUVSSHXTVMU5mzsS6S5CbH3tOF3Ecnf4hPtyOXqU
+###
+### Test refreshToken
+POST http://localhost:3000/auth/refreshToken 
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX3V1aWQiOiJjZTlkNDIzMy1hN2ZmLTQ1YTYtYjkzMy02NjJjNTNhNzE5MzUiLCJpYXQiOjE2NDY4Mjg2NjYsImV4cCI6MTY3ODM4NjI2Nn0.NmsVzH4comusuMsUXhWd4v2dReLzUus3VsD4Uj9RHLw
 

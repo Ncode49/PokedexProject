@@ -1,7 +1,6 @@
 // take token,
 import { Request, Response, NextFunction } from 'express'
 import { JWTServiceType } from '../../services'
-export type ExtractJWTType = Response<any, Record<string, any>> | undefined
 // 401 unauthorized
 // How to eliminate the any ???
 export const ExtractJWT =
@@ -15,8 +14,11 @@ export const ExtractJWT =
           .status(401)
           .json({ type: 'middleware error', message: 'token in empty' })
       const jwtResult = jwtService.verifyAccessToken(token)
-      if (jwtResult.type == 'error') return res.status(401).json({ jwtResult })
-      // decode et le passe a la suite
+      if (jwtResult.type == 'error') return res.status(401).json(jwtResult)
+      // pass the data to the next middleware
+      req.token = jwtResult.payload
+      console.log(req.token)
+
       next()
     } catch (error) {
       const err = error as Error
