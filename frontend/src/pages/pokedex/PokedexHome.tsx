@@ -1,15 +1,13 @@
-import React, {
-  ChangeEvent,
-  MouseEventHandler,
-  SyntheticEvent,
-  useEffect,
-  useState,
-} from 'react'
-import { PokemonListCards } from '../components/PokemonListCards'
-import { PokemonCard as PokemonCardProps } from '../services/PokemonType'
-import { SearchBar } from '../components/SearchBar'
-import { createCards, createOneCard } from '../services/retrievePokemonData'
-import { getPokemonByName } from '../services/PokemonRestAPI'
+import { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react'
+import { PokemonListCards } from '../../components/PokemonListCards'
+import { PokemonCard as PokemonCardProps } from '../../services/pokemon/PokemonType'
+import { SearchBar } from '../../components/SearchBar'
+import { getPokemonByName } from '../../services/pokemon/PokemonRestAPI'
+import {
+  createCards,
+  createOneCard,
+} from '../../services/pokemon/retrievePokemonData'
+
 type PokemonSearch = string
 export const PokedexHome = () => {
   // list of pokemons a undefined si pas de pokemon

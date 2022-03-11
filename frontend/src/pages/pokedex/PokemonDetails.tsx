@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import { TypesPokemon } from '../services/PokemonType'
+import { DetailCaption } from '../../components/DetailCaption'
+import { Table } from '../../components/Table'
+import { TypesPokemon } from '../../services/pokemon/PokemonType'
 import {
   Abilities,
-  getPokemonDetails,
   StatPokemon,
-} from '../services/retrievePokemonData'
-import { Table } from '../components/Table'
-import { DetailCaption } from '../components/DetailCaption'
+  getPokemonDetails,
+} from '../../services/pokemon/retrievePokemonData'
 
 type PokemonDetailsType = {
   id: number
