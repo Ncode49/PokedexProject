@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { PokemonCard as PokemonCardProps } from '../services/PokemonType'
-import { imageTheme, theme } from '../styles/TypeStyle'
+import { PokemonCard as PokemonCardProps } from '../services/pokemon/PokemonType'
+import { imageTheme } from '../styles/TypeStyle'
 import { CardCaption } from './CardCaption'
 
 export const PokemonCard = ({ id, types, name, sprite }: PokemonCardProps) => {
@@ -8,7 +8,7 @@ export const PokemonCard = ({ id, types, name, sprite }: PokemonCardProps) => {
     <>
       {id ? (
         <>
-          <Link to={`/${name}`} key={id}>
+          <Link to={`${name}`} key={id}>
             <figure className="  text-center flex flex-col justify-center">
               <img
                 src={sprite}

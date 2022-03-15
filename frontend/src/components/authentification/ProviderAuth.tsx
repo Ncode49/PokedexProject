@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useContext, useState } from 'react'
 type Auth =
   | {
       user: string | null
@@ -10,7 +10,7 @@ const authContext = createContext<Auth>(undefined)
 
 // fourni les 3 methodes user, sign in sign out a tous les composants (pages) de l'application
 // se place au dessus de tous les arbres et les entoures du provider
-function ProvideAuth({ children }: any) {
+export const ProviderAuth = ({ children }: any) => {
   const auth = useProvideAuth()
   return <authContext.Provider value={auth}>{children}</authContext.Provider>
 }
@@ -51,4 +51,9 @@ const fakeAuth = {
     fakeAuth.isAuthenticated = false
     setTimeout(cb, 100)
   },
+}
+
+// hook utilse pour recuperer l'etat du contexte
+export const useAuth = () => {
+  return useContext(authContext)
 }
