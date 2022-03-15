@@ -11,8 +11,10 @@ export const Login = (authService: AuthServiceType) => {
       target.username.value,
       target.password.value
     )
-    if (response.type == 'success')
+    if (response.type == 'success') {
       localStorage.setItem('tokens', JSON.stringify(response))
+      // use history object to change the page
+    }
   }
   return (
     <form className="flex flex-col" onSubmit={handleSubmit}>

@@ -3,20 +3,6 @@
 import { SyntheticEvent } from 'react'
 import { AuthServiceType } from '../../services/authentification'
 
-const register = async (username: string, password: string) => {
-  const headers = new Headers()
-  headers.append('Content-Type', 'application/json')
-  const response = await fetch('http://localhost:3000/auth/register', {
-    method: 'POST',
-    body: JSON.stringify({
-      username,
-      password,
-    }),
-    headers,
-  })
-  return response.json()
-}
-
 export const Register = (authService: AuthServiceType) => {
   const handleSubmit = async (event: SyntheticEvent) => {
     event.preventDefault()

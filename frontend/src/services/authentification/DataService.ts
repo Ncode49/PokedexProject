@@ -3,7 +3,7 @@ export type Token = {
   refreshToken: string
 } | null
 
-export const getAuthHeader = () => {
+export const createAuthHeader = () => {
   const userStr = localStorage.getItem('tokens')
   let user: Token = null
   if (userStr) user = JSON.parse(userStr)

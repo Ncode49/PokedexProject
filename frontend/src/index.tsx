@@ -4,12 +4,4 @@ import { App } from './App'
 import { PokemonDetails } from './pages/pokedex/PokemonDetails'
 
 import './styles.css'
-ReactDOM.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<App />}></Route>
-      <Route path="/:pokemonName" element={<PokemonDetails />} />
-    </Routes>
-  </BrowserRouter>,
-  document.getElementById('root')
-)
+ReactDOM.render(<App />, document.getElementById('root'))
