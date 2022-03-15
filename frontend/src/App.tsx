@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { HomeButton } from './components/HomeButton'
+import { HomeButton } from './components/authentification/HomeButton'
 import './index'
 import { Login } from './pages/authentification/Login'
 import { Register } from './pages/authentification/Register'
